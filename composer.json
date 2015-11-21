@@ -3,6 +3,9 @@
     "description": "Lil plugin for CakePHP",
     "version": 1.0.0,
     "type": "cakephp-plugin",
+    "homepage": "https://github.com/malamalca/lil",
+    "license": "MIT",
+    
     "require": {
         "php": ">=5.4",
         "cakephp/cakephp": "~3.0"
