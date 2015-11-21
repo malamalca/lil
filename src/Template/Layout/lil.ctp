@@ -1,5 +1,6 @@
 <?php
     use Cake\Core\Configure;
+    use Cake\Routing\Router;
     use Lil\Lib\LilFloatEngine;
 ?>
 <!DOCTYPE html>
@@ -30,7 +31,7 @@
     //printf($this->Html->css('/lil/css/jquery.dataTables.min') . PHP_EOL);
     printf($this->Html->css('/lil/css/Aristo/Aristo') . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_print',  ['media' => 'print']) . PHP_EOL);
-    printf($this->Html->css('/lil/css/lil_mobile', ['media' => 'only screen and (max-device-width: 480px)']) . PHP_EOL);
+    printf($this->Html->css('/lil/css/lil_mobile', ['media' => 'only screen and (max-device-width: 600px)']) . PHP_EOL);
     
     print ($this->fetch('css') . PHP_EOL);
     
@@ -47,6 +48,9 @@
         printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
         printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
         printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
+    }
+    if ($this->request->is('mobile')) {
+        printf($this->Html->script('/lil/js/lil_mobile') . PHP_EOL);
     }
 ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -67,15 +71,20 @@
     }
             
     printf('<div id="header-logo">%s</div>' . PHP_EOL, $admin_logo);
-            
+    if ($this->request->is('mobile')) {
+        echo $this->Html->image('/lil/img/menu.png', ['class' => 'popup_link', 'id' => 'popup_header-menu']);
+    }
+          
     if (empty($admin_title)) {
         $admin_title = __d('lil', 'Welcome');
     }
     printf('<h1>%s</h1>' . PHP_EOL, $admin_title);
+    
             
     if ($currentUser) {
         $userTitle = $currentUser[Configure::read('Lil.userDisplayField')];
-        if (!$userTitle) { $userTitle = __d('lil', 'Unknown'); 
+        if (!$userTitle) {
+            $userTitle = __d('lil', 'Unknown'); 
         }
                 
         printf(
@@ -89,22 +98,22 @@
         );
                 
         $popup_link_user = ['items' => [
-                    'settings' => [
-                        'title' => __d('lil', 'Settings'),
-                        'url' => [
-                            'plugin'     => 'Lil',
-                            'controller' => 'Users',
-                            'action'     => 'properties'
-                        ]
-                    ],
-                    'logout' => [
-                        'title' => __d('lil', 'Logout'),
-                        'url' => [
-                            'plugin'     => 'Lil',
-                            'controller' => 'Users',
-                            'action'     => 'logout'
-                        ]
-                    ]
+            'settings' => [
+                'title' => __d('lil', 'Settings'),
+                'url' => [
+                    'plugin'     => 'Lil',
+                    'controller' => 'Users',
+                    'action'     => 'properties'
+                ]
+            ],
+            'logout' => [
+                'title' => __d('lil', 'Logout'),
+                'url' => [
+                    'plugin'     => 'Lil',
+                    'controller' => 'Users',
+                    'action'     => 'logout'
+                ]
+            ]
         ]];
 
         $this->Lil->popup('link_user', $popup_link_user, true);
@@ -149,21 +158,35 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+	    var dataTablesGlobals = {
+	        <?php
+	           // turn off table scrolling on mobile access
+	           if ($this->request->is('mobile')) {
+            ?>
+                "scrollY": null,
+                "drawCallback": null,
+            <?php
+                }
+            ?>
+            language: {
+                "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'pages', 'action' => 'datatables']); ?>"
+			}
+	    };
+	    
 		$(document).ready(function() {
 			$.ajaxSetup ({ cache: false });
 			
     <?php
-                $locale = ini_get('intl.default_locale') ?: 'en_US';
-                $nf = new NumberFormatter($locale, NumberFormatter::PATTERN_DECIMAL);
-                $decimalSeparator = $nf->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
-                $thousandsSeparator = $nf->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL)
+            $locale = ini_get('intl.default_locale') ?: 'en_US';
+            $nf = new NumberFormatter($locale, NumberFormatter::PATTERN_DECIMAL);
+            $decimalSeparator = $nf->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
+            $thousandsSeparator = $nf->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
+            
+            printf('lilFloatSetup.decimalSeparator = "%s";', $decimalSeparator);
+            printf('lilFloatSetup.thousandsSeparator = "%s";', $thousandsSeparator);
+            
+            echo $this->Lil->jsReadyOut();
     ?>
-			
-			lilFloatSetup.decimalSeparator = "<?= $decimalSeparator; ?>";
-			lilFloatSetup.thousandsSeparator = "<?= $thousandsSeparator; ?>";
-			
-    <?= $this->Lil->jsReadyOut(); ?>
-			
 		});
 		
 		// Prevent jQuery UI dialog from blocking focus

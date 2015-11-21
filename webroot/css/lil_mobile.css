@@ -3,24 +3,52 @@ html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pr
 html, body {
 	height: auto !important;
 }
-#header, #sidebar {
+#sidebar {
 	display: none;
 	width: 0px !important;
 }
 
+#header h1 {
+    margin-left: 0px !important;
+}
+#header-logo {
+	display: none !important;
+	width: 0px !important;
+}
+#header-user {
+	display: none;
+	width: 0px !important;
+}
+
+#popup_header-menu {
+    display: block;
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+
 div#main-menu {
+
 }
 div#main-menu h1 {
 	display: none;
 	width: 0px !important;
 }
 div#main-menu ul {
-	top: 0px;
+	top: 60px;
 	left: 0px;
 	right: 0px;
 	
 	height: 30px;
 	padding-left: 10px;
+	
+    white-space: nowrap;
+	overflow-y: hidden;
+	overflow-x: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+div#main-menu ul li {
+    display : inline-block;
 }
 
 div#main {

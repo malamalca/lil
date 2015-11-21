@@ -6,7 +6,8 @@ var lilDateSetup = {
 function adjustBody(scrollBody) {
 	var wrapper = $(scrollBody).closest('.dataTables_wrapper');
 	var w_pos = $(wrapper).position();
-	$(scrollBody).height($('#main').height() - w_pos.top - (wrapper.height() - $(scrollBody).height()))
+	$(scrollBody).height($('#main')
+        .height() - w_pos.top - (wrapper.height() - $(scrollBody).height()))
 		.width($(scrollBody).width() - 2);
 }
 	
@@ -20,12 +21,14 @@ $(document).ready(function() {
 			autoWidth: true,
 			drawCallback: function( settings ) { adjustBody($(this).closest('.dataTables_scrollBody')); },
 			language: {
-                "url": "../lil/pages/datatables"
+                //"url": "../lil/pages/datatables"
 			}
 		};
+		var layoutSettings = {};
+		if (typeof dataTablesGlobals != "undefined") layoutSettings = dataTablesGlobals;
 		
 		var settings = jQuery.data(this, "settings");
-		var oTable = $(this).DataTable($.extend(defaults, settings));
+		var oTable = $(this).DataTable($.extend(defaults, layoutSettings, settings));
 		
 		$(window).resize(function() { oTable.columns.adjust().draw(); });
 	});
