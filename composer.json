@@ -1,0 +1,23 @@
+{
+    "name": "malamalca/lil",
+    "description": "Lil plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "require": {
+        "php": ">=5.4",
+        "cakephp/cakephp": "3.0.x-dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lil\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lil\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

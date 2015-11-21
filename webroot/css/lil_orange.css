@@ -1,0 +1,54 @@
+#main a {
+	color: #6F3E25 !important;	
+}
+
+div#main-menu h1 {
+	background: #E37E4C url(../img/css/menu_title_shadow_orange.png) no-repeat right top;
+}
+
+
+div#sidebar {
+    background: #FEEEDB url(../img/css/sidebar_shadow_orange.png) repeat-y right top;
+}
+
+ul#sidebar-panels li.active {
+	border-top: solid 1px #E77F36;
+	background: #E37E4C url(../img/css/sidebar_btn_bg2_orange.png) repeat-x left top !important;
+}
+ul#sidebar-panels li.active a {
+	background: transparent url(../img/css/sidebar_btn_shadow2_orange.png) repeat-y right top !important;
+}
+
+
+ul.sidebar-menu li.active {
+	background-color: #E37E4C !important;
+}
+
+ul.sidebar-menu li ul li {
+	background-color: #FEEEDB !important;
+}
+
+ul.sidebar-menu li ul li.active {
+	background-color: #E37E4C !important;
+}
+
+
+table.index-static tbody tr:nth-child(odd) {
+	background-color: #FEEEDB !important;
+}
+tr.odd {
+	background-color: #FEEEDB !important;
+}
+
+/* For the standard odd/even */
+tr.odd td.sorting_1 {
+	background-color: #F7DABE !important;
+}
+
+tr.even td.sorting_1 {
+	background-color: #FEEEDB !important;
+}
+
+.popup ul li.active a {
+	background-color: #FEEEDB !important;
+}

@@ -1,0 +1,52 @@
+html, body {
+	height: auto !important;
+}
+#header, #sidebar, div#main-menu {
+	display: none;
+	width: 0px !important;
+}
+div#main {
+	position: inherit !important;
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+	padding: 0px !important;
+}
+
+div#main h1, div#main h1 * {
+	font-size: 24px;
+}
+
+a {
+	text-decoration: none !important;
+	color: #000 !important;
+}
+a.action {
+	display: none;
+}
+
+.dataTables_wrapper {
+	width: 670px;
+}
+.dataTables_wrapper, .dataTables_scrollBody {
+	height: auto !important;
+	overflow: hidden !important;
+}
+table.dataTable {
+	width: 670px !important;
+}
+/*.dataTables_scrollBody table thead *, .dataTables_scrollBody table tfoot * {
+	height: 20px !important;
+}*/
+.dataTables_filter/*, .dataTables_scrollHead, .dataTables_scrollFoot*/ {
+	display: none !important;
+}
+table.index {
+	border: solid 1px black !important;
+}
+table.index td, table.index th {
+	border: solid 1px black !important;
+}
+table.index th {
+	background-color: #606060 !important;
+}

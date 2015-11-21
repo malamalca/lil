@@ -1,0 +1,44 @@
+body {
+    margin:     0;
+    padding:    1cm;
+    padding-left:    2cm !important;
+    
+    width:      18cm;
+/*    height:     29.7cm;*/
+    -webkit-transform: scale(1);
+    
+}
+
+h1 {
+	font-size: 1.5em;
+}
+h2 {
+	font-size: 1.1em;
+}
+.center {
+	text-align: center;
+}
+.right {
+	text-align: right;
+}
+.light {
+	color: #606060;
+}
+.small {
+	font-size: 80%;
+}
+.pagebreak {
+	font-size: 1px;
+	line-height: 1px;
+}
+.top_line {
+	border-top: solid 1px #000000;
+}
+th {
+	background-color: #c0c0c0;
+	border: solid 1px #000000;
+}
+
+td {
+	border: solid 1px #404040;
+}
