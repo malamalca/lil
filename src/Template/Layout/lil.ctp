@@ -27,8 +27,9 @@
         printf($this->Html->css('/lil/css/lil_'. $colorScheme) . PHP_EOL);
     }
     
-    printf($this->Html->css('/lil/css/jquery-ui.min') . PHP_EOL);
-    //printf($this->Html->css('/lil/css/jquery.dataTables.min') . PHP_EOL);
+    printf($this->Html->css('/lil/js/jquery-ui/jquery-ui.min') . PHP_EOL);
+    printf($this->Html->css('/lil/js/datatables/css/dataTables.jqueryui.min') . PHP_EOL);
+    printf($this->Html->css('/lil/js/responsive/css/responsive.jqueryui.min') . PHP_EOL);
     printf($this->Html->css('/lil/css/Aristo/Aristo') . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_print',  ['media' => 'print']) . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_mobile', ['media' => 'only screen and (max-device-width: 600px)']) . PHP_EOL);
@@ -36,19 +37,22 @@
     print ($this->fetch('css') . PHP_EOL);
     
     printf($this->Html->script('/lil/js/jquery.min') . PHP_EOL);
-    printf($this->Html->script('/lil/js/jquery-ui') . PHP_EOL);
-    printf($this->Html->script('/lil/js/jquery.dataTables.min') . PHP_EOL);
-    printf($this->Html->script('/lil/js/jquery.mousewheel.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/jquery-ui/jquery-ui.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/datatables/js/jquery.dataTables.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/datatables/js/dataTables.jqueryui.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/responsive/js/dataTables.responsive.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/responsive/js/responsive.jqueryui.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/lil_datatables') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_popups') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_float') . PHP_EOL);
     
     print ($this->fetch('script') . PHP_EOL);
     
-    if ($this->request->is('iphone')) {
-        printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
-        printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
-        printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
-    }
+    //if ($this->request->is('iphone')) {
+    //    printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
+    //    printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
+    //    printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
+    //}
     if ($this->request->is('mobile')) {
         printf($this->Html->script('/lil/js/lil_mobile') . PHP_EOL);
     }
@@ -59,18 +63,14 @@
 
 </head>
 <body>
-	<div id="container">
-		<div id="header">
+    <div id="container">
+        <div id="header">
     <?php
     if (empty($admin_logo)) {
-        $admin_logo = $this->Html->link(
-            $this->Html->image('/lil/img/logo.gif'),
-            '/',
-            ['escape' => false]
-        );
-    }
-            
+        $admin_logo = $this->Html->link($this->Html->image('/lil/img/logo.gif'), '/', ['escape' => false]);
+    }      
     printf('<div id="header-logo">%s</div>' . PHP_EOL, $admin_logo);
+    
     if ($this->request->is('mobile')) {
         echo $this->Html->image('/lil/img/menu.png', ['class' => 'popup_link', 'id' => 'popup_header-menu']);
     }
@@ -119,84 +119,69 @@
         $this->Lil->popup('link_user', $popup_link_user, true);
     }
     ?>
-		</div>
-		<div id="main-menu">
-			<h1>&nbsp;</h1>
+        </div>
+        <div id="main-menu">
+            <h1>&nbsp;</h1>
     <?php
     if (!empty($main_menu)) {
         $this->Lil->menu($main_menu);
     }
     ?>
-		</div>
-		<div id="content">
-			<div id="sidebar">
+        </div>
+        <div id="content">
+            <div id="sidebar">
                 <?= $this->element('Lil.sidebar'); ?>
-			</div>
-			<div id="main">
-				<?= $this->Flash->render() ?>
-				<?= $this->Flash->render('auth') ?>
-    <?php
-    if (!isset($head_for_layout) || ($head_for_layout !== false)) {
-        if (!empty($head_for_layout)) {
-            if (is_string($head_for_layout)) {
-                printf($this->element($head_for_layout));
-            } else {
-                printf($this->element($head_for_layout['element'], $head_for_layout['params']));
-            }
-        } else {
-            printf('<div class="head"><h1>%s</h1></div>', $this->fetch('title'));
-        }
-    }
-                
-                echo $this->fetch('popups');
-                echo $this->fetch('content');
-                
-                printf($this->Html->script('/lil/js/lil_datatables') . PHP_EOL);
-    ?>
-			</div>
-			<div style="clear: both;"></div>
-		</div>
-	</div>
-	<script type="text/javascript">
-	    var dataTablesGlobals = {
-	        <?php
-	           // turn off table scrolling on mobile access
-	           if ($this->request->is('mobile')) {
+            </div>
+            <div id="main">
+                <?= $this->Flash->render() ?>
+                <?= $this->Flash->render('auth') ?>
+                <?= $this->element('Lil.head'); ?>
+                <?= $this->fetch('popups'); ?>
+                <?= $this->fetch('content'); ?>
+            </div>
+        <div style="clear: both;"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var dataTablesGlobals = {
+            <?php
+               // turn off table scrolling on mobile access
+               if ($this->request->is('mobile')) {
             ?>
                 "scrollY": null,
                 "drawCallback": null,
             <?php
                 }
             ?>
+            dateSettings: {
+                "dateFormat": "<?= Configure::read('Lil.dateFormat'); ?>",
+                "dateSeparator": "<?= Configure::read('Lil.dateSeparator'); ?>"
+            },
             language: {
                 "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'pages', 'action' => 'datatables']); ?>"
-			}
-	    };
-	    
-		$(document).ready(function() {
-			$.ajaxSetup ({ cache: false });
-			
-    <?php
-            $locale = ini_get('intl.default_locale') ?: 'en_US';
-            $nf = new NumberFormatter($locale, NumberFormatter::PATTERN_DECIMAL);
-            $decimalSeparator = $nf->getSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL);
-            $thousandsSeparator = $nf->getSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL);
+        }
+        };
+        
+        $(document).ready(function() {
+            initDatatables();
             
-            printf('lilFloatSetup.decimalSeparator = "%s";', $decimalSeparator);
-            printf('lilFloatSetup.thousandsSeparator = "%s";', $thousandsSeparator);
+            $.ajaxSetup ({ cache: false });
             
-            echo $this->Lil->jsReadyOut();
-    ?>
-		});
-		
-		// Prevent jQuery UI dialog from blocking focus
-		$(document).on('focusin', function(e) {
-			if ($(event.target).closest(".mce-window").length) {
-				e.stopImmediatePropagation();
-			}
-		});
-	</script>
-	
-	<iframe id="lil_post_iframe" name="lil_post_iframe" src="about:blank" style="display:none;"></iframe>
+            lilFloatSetup.decimalSeparator = "<?= Configure::read('Lil.decimalSeparator'); ?>";
+            lilFloatSetup.thousandsSeparator = "<?= Configure::read('Lil.thousandsSeparator'); ?>";
+            
+            <?= $this->Lil->jsReadyOut(); ?>
+            
+        });
+
+        // Prevent jQuery UI dialog from blocking focus
+        $(document).on('focusin', function(e) {
+            if ($(event.target).closest(".mce-window").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+    </script>
+
+    <iframe id="lil_post_iframe" name="lil_post_iframe" src="about:blank" style="display:none;"></iframe>
 </body>
 </html>

@@ -159,6 +159,7 @@ div#main {
     padding: 20px;
 }
 #main h1 {
+    height: auto !important;
 	font-family: Cambria, Georgia, serif;
 	font-size: 1.8em;
 	
@@ -507,23 +508,27 @@ table.index-static tr td  {
 	margin: 0px;
 }
 
-/********************************************************/
+/***************************************************************************************************
+ * DataTables display
+ */
+
 .dataTables_wrapper {
+}
+
+
+.dataTables_scrollBody {
+    box-sizing: border-box;
+	border-left: solid 1px #aaa;
+	border-right: solid 1px #aaa;
 }
 
 /*
  * jQuery UI specific styling
  */
  
-.dataTables_info {
-	padding-top: 3px;
-}
-
 table.index thead th {
 	font-family: Cambria, Georgia, serif;
 	font-size: 0.8em;
-	
-	padding: 3px 0px 3px 10px;
 	cursor: pointer;
 	* cursor: hand;
 }
@@ -533,43 +538,6 @@ table.index tfoot th, table.index tfoot td {
 	font-size: 0.8em;
 }
 
-/*
- * Sort arrow icon positioning
- */
-table.index thead th div.DataTables_sort_wrapper {
-	position: relative;
-	padding-right: 20px;
-}
-
-table.index thead th div.DataTables_sort_wrapper span {
-	position: absolute;
-	top: 50%;
-	margin-top: -8px;
-	right: 0;
-}
-
-
-.dataTables_processing {
-	font-family: Cambria, Georgia, serif;
-	position: absolute;
-	top: 0px;
-	left: 50%;
-	width: 250px;
-	margin-left: -125px;
-	border: 1px solid #ddd;
-	text-align: center;
-	color: #999;
-	font-size: 11px;
-	padding: 2px 0;
-}
-
-
-.dataTables_filter {
-	font-family: Cambria, Georgia, serif;
-	float: right;
-	text-align: right;
-	font-weight: normal;
-}
 
 .dataTables_info {
 	float: left;
@@ -577,26 +545,14 @@ table.index thead th div.DataTables_sort_wrapper span {
 	font-family: Cambria, Georgia, serif;
 	font-size: .8em;
 	font-weight: normal;
-	
-	padding-left: 10px;
+	padding: 0px !important;
 }
 
-/*.dataTables_scroll {
-	padding-left: 1px;
-	padding-right: 1px;
-}*/
-.dataTables_scrollBody {
-	border-left: solid 1px #aaa;
-	border-right: solid 1px #aaa;
-}
 
 .dataTables_empty {
 	text-align: center;
 }
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * DataTables display
- */
 table.index tfoot th {
 	padding: 3px 20px 3px 10px;
 	font-weight: normal;
@@ -630,7 +586,9 @@ tr.even td.sorting_1 {
 	background-color: #e7f0fa;
 }
 
-/* Poupups */
+/***************************************************************************************************
+ * Poupups
+ */
 .popup {
 	position: absolute;
 	top: 0;
