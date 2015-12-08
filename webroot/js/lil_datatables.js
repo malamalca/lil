@@ -9,16 +9,10 @@ function initDatatables() {
 	var tables = $('div.index table, table.index').each(function() {
 		var t_pos = $(this).position();
 		var defaults = { 
-			scrollY:   ($('#main').height() - t_pos.top - 150) + "px",
-			paging:    false,
+			scrollY: ($('#main').height() - t_pos.top - 150) + "px",
+			paging: false,
 			autoWidth: true,
 			responsive: true,
-			//drawCallback: function( settings ) { 
-                //adjustBody($(this).closest('.dataTables_scrollBody'));
-            //    var table = $(settings.nTable);
-            //    var dataTable = table.dataTable();
-            //    dataTable.columns.adjust().draw();
-            //},
 			language: {
                 //"url": "../lil/pages/datatables"
 			}

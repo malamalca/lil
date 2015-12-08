@@ -42,17 +42,13 @@
     printf($this->Html->script('/lil/js/datatables/js/dataTables.jqueryui.min') . PHP_EOL);
     printf($this->Html->script('/lil/js/responsive/js/dataTables.responsive.min') . PHP_EOL);
     printf($this->Html->script('/lil/js/responsive/js/responsive.jqueryui.min') . PHP_EOL);
+    printf($this->Html->script('/lil/js/jquery.mousewheel.min') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_datatables') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_popups') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_float') . PHP_EOL);
     
     print ($this->fetch('script') . PHP_EOL);
     
-    //if ($this->request->is('iphone')) {
-    //    printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
-    //    printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
-    //    printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
-    //}
     if ($this->request->is('mobile')) {
         printf($this->Html->script('/lil/js/lil_mobile') . PHP_EOL);
     }
@@ -149,7 +145,6 @@
                if ($this->request->is('mobile')) {
             ?>
                 "scrollY": null,
-                "drawCallback": null,
             <?php
                 }
             ?>
@@ -159,7 +154,7 @@
             },
             language: {
                 "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'pages', 'action' => 'datatables']); ?>"
-        }
+            }
         };
         
         $(document).ready(function() {
