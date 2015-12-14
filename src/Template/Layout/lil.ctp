@@ -72,7 +72,9 @@
     printf('<div id="header-logo">%s</div>' . PHP_EOL, $admin_logo);
     
     if ($this->request->is('mobile')) {
-        echo $this->Html->image('/lil/img/menu.png', ['class' => 'popup_link', 'id' => 'popup_header-menu']);
+        echo '<div class="popup_link" id="popup_header-menu">';
+        echo $this->Html->image('/lil/img/menu.png');
+        echo '</div>';
     }
           
     if (empty($admin_title)) {

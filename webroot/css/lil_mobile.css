@@ -9,6 +9,8 @@ html, body {
 }
 
 #header h1 {
+    display: block;
+    height: 40px !important;
     margin-left: 0px !important;
 }
 #header-logo {
@@ -23,8 +25,12 @@ html, body {
 #popup_header-menu {
     display: block;
     position: absolute;
-    top: 25px;
-    right: 25px;
+    top: 0px;
+    right: 0px;
+    width: 55px;
+    height: 40px;
+    line-height: 40px;
+    padding-top: 15px;
 }
 
 div#main-menu {

@@ -573,7 +573,7 @@ class LilHelper extends Helper
                     $this->Html->link(
                         $menu_item['title'] . (empty($menu_item['submenu']) 
                             ? '' 
-                            : ' ▼'
+                            : ' Ă˘â€“Ä˝'
                         ),
                         empty($menu_item['url']) ? '#' : $menu_item['url'],
                         isset($menu_item['params']) 
@@ -916,6 +916,8 @@ class LilHelper extends Helper
                             
                             if (!empty($line['text'])) {
                                 $ret .= $line['text']; 
+                            } else if (!empty($line['html'])) {
+                                $ret .= $line['html']; 
                             } else if (!empty($line['table'])) {
                                 $ret .= $this->table($line['table']); 
                             } else {
