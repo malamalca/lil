@@ -301,15 +301,17 @@ class LilHelper extends Helper
             $pee = preg_replace('|\s*<param([^>]*)>\s*|', "<param$1>", $pee);
             $pee = preg_replace('|\s*</embed>\s*|', '</embed>', $pee);
         }
-        $pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
+        //$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
         // make paragraphs, including one at the end
-        $pees = preg_split('/\n\s*\n/', $pee, -1, PREG_SPLIT_NO_EMPTY);
+        //miha: $pees = preg_split('/\n\s*\n/', $pee, -1, PREG_SPLIT_NO_EMPTY);
+        $pees = preg_split('/\n/', $pee, -1);
         $pee = '';
         foreach ( $pees as $tinkle ) {
             $pee .= '<p>' . trim($tinkle, "\n") . "</p>\n"; 
         }
         // under certain conditions it could create a P of entirely whitespace
-        $pee = preg_replace('|<p>\s*</p>|', '', $pee); 
+        // miha: $pee = preg_replace('|<p>\s*</p>|', '', $pee); 
+        $pee = preg_replace('|<p>\s*</p>|', '<br />', $pee); 
         $pee = preg_replace(
             '!<p>([^<]+)</(div|address|form)>!',
             "<p>$1</p></$2>",
@@ -573,7 +575,7 @@ class LilHelper extends Helper
                     $this->Html->link(
                         $menu_item['title'] . (empty($menu_item['submenu']) 
                             ? '' 
-                            : ' Ă˘â€“Ä˝'
+                            : ' ▼'
                         ),
                         empty($menu_item['url']) ? '#' : $menu_item['url'],
                         isset($menu_item['params']) 
