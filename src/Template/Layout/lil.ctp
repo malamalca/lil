@@ -164,8 +164,10 @@
             
             $.ajaxSetup ({ cache: false });
             
-            lilFloatSetup.decimalSeparator = "<?= Configure::read('Lil.decimalSeparator'); ?>";
-            lilFloatSetup.thousandsSeparator = "<?= Configure::read('Lil.thousandsSeparator'); ?>";
+            <?php $formatter = $this->Number->formatter(); ?>
+            
+            lilFloatSetup.decimalSeparator = "<?= $formatter->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL); ?>";
+            lilFloatSetup.thousandsSeparator = "<?= $formatter->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL); ?>";
             
             <?= $this->Lil->jsReadyOut(); ?>
             

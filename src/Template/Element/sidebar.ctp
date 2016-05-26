@@ -67,7 +67,7 @@ if ($this->request->is('mobile')) {
     $this->Lil->popup('header-menu', $popup_headerMenu);
 } else {
     foreach ($admin_sidebar as $panel_name => $panel) {
-    	if (!empty($panel['active']) && !empty($panel['items'])) {
+    	if (!empty($panel['active']) && !empty($panel['items']) && !empty($panel['visible'])) {
     		printf('<ul class="sidebar-menu">' . PHP_EOL);
     		foreach ($panel['items'] as $li_name => $li) {
     			if (!empty($li['visible'])) {
