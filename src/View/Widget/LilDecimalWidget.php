@@ -82,7 +82,7 @@ class LilDecimalWidget implements WidgetInterface
         ];
         
         if (is_numeric($data['val'])) {
-            $data['value'] = $this->view->Number->precision($data['val'], 2);
+            $data['value'] = $this->view->Number->precision($data['val'], $data['precision']);
         } else {
             $data['value'] = $data['val'];
         }
