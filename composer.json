@@ -1,7 +1,6 @@
 {
     "name": "malamalca/lil",
     "description": "Lil plugin for CakePHP",
-    "version": "1.0.0",
     "type": "cakephp-plugin",
     "homepage": "https://github.com/malamalca/lil",
     "license": "MIT",
