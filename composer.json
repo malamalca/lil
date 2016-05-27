@@ -1,7 +1,7 @@
 {
     "name": "malamalca/lil",
     "description": "Lil plugin for CakePHP",
-    "version": 1.0.0,
+    "version": "1.0.0",
     "type": "cakephp-plugin",
     "homepage": "https://github.com/malamalca/lil",
     "license": "MIT",
@@ -11,8 +11,7 @@
         "cakephp/cakephp": "~3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "cakephp/cakephp-codesniffer": "dev-master"
+        "phpunit/phpunit": "*"
     },
     "autoload": {
         "psr-4": {
@@ -21,8 +20,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Lil\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+            "Lil\\Test\\": "tests"
         }
     }
 }
