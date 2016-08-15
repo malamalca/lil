@@ -621,7 +621,11 @@ class LilHelper extends Helper
      */
     public function popup($name, $data, $inline = false) 
     {
-        $items = $data['items']; unset($data['items']);
+        $items = [];
+        if (isset($data['items'])) {
+            $items = $data['items']; unset($data['items']);
+        }
+        
         
         $class = 'popup_%1$s popup ui-widget ui-widget-content ' .
             'ui-helper-clearfix ui-corner-all';

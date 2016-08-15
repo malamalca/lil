@@ -79,7 +79,7 @@
     printf('<h1>%s</h1>' . PHP_EOL, $admin_title);
     
             
-    if ($currentUser) {
+    if (!empty($currentUser)) {
         $userTitle = $currentUser[Configure::read('Lil.userDisplayField')];
         if (!$userTitle) {
             $userTitle = __d('lil', 'Unknown'); 
@@ -155,7 +155,7 @@
                 "dateSeparator": "<?= Configure::read('Lil.dateSeparator'); ?>"
             },
             language: {
-                "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'pages', 'action' => 'datatables']); ?>"
+                "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'Pages', 'action' => 'datatables']); ?>"
             }
         };
         
