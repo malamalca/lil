@@ -66,8 +66,9 @@ class LilDateWidget implements WidgetInterface
             'val' => '',
             'name' => '',
         ];
-        
-        if (is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date')) {
+        if (is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date') 
+            || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate'))
+        {
             $data['value'] = $data['val']->toDateString();
         } else if ($theDate = Time::parseDate($data['val'], 'yyyy-MM-dd')) {
             $data['value'] = $theDate->toDateString();
