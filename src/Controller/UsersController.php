@@ -88,7 +88,8 @@ class UsersController extends AppController
     public function login() 
     {
         if ($this->Auth->user()) {
-            $this->redirect($this->Auth->loginRedirect); 
+            if (!$redirect = $this->Auth->loginRedirect) $redirect = '/';
+            $this->redirect($redirect); 
         }
         
         if ($user = $this->Auth->identify()) {

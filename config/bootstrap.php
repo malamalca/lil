@@ -55,9 +55,12 @@
     function checkAjaxRedirect($event, $url, $response)
     {
         $controller = $event->subject;
-        if ($controller->request->query('lil_submit')) {
+        if ($submitKind = $controller->request->query('lil_submit')) {
             $controller->autoRender = false;
             $controller->set('popupRedirect', true);
             $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe');
+            $event->result->statusCode(200);
+            $event->stopPropagation();
+            return $event->result;
         }
     }
