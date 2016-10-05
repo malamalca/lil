@@ -2,6 +2,6 @@
 
 <script type="text/javascript">
 	$(function() {
-        var to = window.setTimeout(function() {window.location.reload();}, 300);
+        var to = window.setTimeout(function() {window.location = window.location.href;}, 300);
 	});
 </script>

@@ -176,9 +176,12 @@ class UsersController extends AppController
         
         if ($this->request->is('post')) {
             $emailField = Configure::read('Lil.userEmailField');
-            $finderFunction = 'findBy' . Inflector::camelize($emailField);
-            $email = $this->request->data('email');
-            if ($email && $user = $this->Users->$finderFunction($email)) {
+            $user = $this->Users->find()
+                ->select()
+                ->where([$emailField => $this->request->data('email')])
+                ->first();
+                
+            if ($user) {
                 $this->Users->sendResetEmail($user->first());
                 $this->Flash->success(
                     __d(
