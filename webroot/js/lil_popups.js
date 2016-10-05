@@ -86,7 +86,7 @@ function popup(title, url, h, w) {
 		}
 	}
 	
-	$this.popupFormSubmit = function() {
+	$this.popupFormSubmit = function(e) {
 		var post_iframe = $('#lil_post_iframe');
 		
 		// do a ajax submit if frame does not exist
@@ -110,6 +110,7 @@ function popup(title, url, h, w) {
 		} else {
 			var to = window.setTimeout($this.submitToIframe, 10);
 		}
+		e.preventDefault();		
 		return false;
 	}
 

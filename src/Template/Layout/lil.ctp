@@ -182,7 +182,7 @@
     </script>
 
     <?php
-        //echo '<iframe id="lil_post_iframe" name="lil_post_iframe" src="about:blank" style="display:none;"></iframe>';
+        echo '<iframe id="lil_post_iframe" name="lil_post_iframe" src="about:blank" style="display:none;"></iframe>';
     ?>
 </body>
 </html>
