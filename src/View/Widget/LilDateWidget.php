@@ -12,6 +12,7 @@
  */
 namespace Lil\View\Widget;
 
+use Cake\Core\Configure;
 use Cake\I18n\Time;
 use Cake\View\Form\ContextInterface;
 use Cake\View\Widget\WidgetInterface;
@@ -33,14 +34,23 @@ class LilDateWidget implements WidgetInterface
      * @var \Cake\View\StringTemplate
      */
     protected $templates;
+    
+    /**
+     * View instance.
+     *
+     * @var \Cake\View\View
+     */
+    protected $view;
+    
     /**
      * Constructor.
      *
      * @param \Cake\View\StringTemplate $templates Templates list.
      */
-    public function __construct($templates)
+    public function __construct($templates, $view)
     {
         $this->templates = $templates;
+        $this->view = $view;
     }
     
     /**
@@ -66,6 +76,7 @@ class LilDateWidget implements WidgetInterface
             'val' => '',
             'name' => '',
         ];
+        
         if (is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date') 
             || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate'))
         {
@@ -74,9 +85,35 @@ class LilDateWidget implements WidgetInterface
             $data['value'] = $theDate->toDateString();
         }
         
+        // default field type is HTML5 date
+        $fieldType = 'date';
+        
+        // localized date input with jquery date picker
+        if (Configure::read('Lil.legacyDateFields')) {
+            $fieldType = 'text';
+            if ($theDate = Time::parseDate($data['value'], 'yyyy-MM-dd')) {
+                $parts = str_split(Configure::read('Lil.dateFormat'));
+                for ($i = 0; $i < sizeof($parts); $i++) {
+                    $parts[$i] = strtr($parts[$i], [
+                        'D' => str_pad($theDate->day, 2, '0', STR_PAD_LEFT), 
+                        'M' => str_pad($theDate->month, 2, '0', STR_PAD_LEFT), 
+                        'Y' => $theDate->year
+                    ]);
+                }
+                
+                $data['value'] = implode(Configure::read('Lil.dateSeparator'), $parts);
+    		}
+            $this->view->Lil->jsReady(
+                sprintf(
+                    '$("#%1$s").datepicker(%2$s);',
+                    $data['id'], $this->_jsOptions()
+                )
+            );
+        }
+        
         return $this->templates->format(
             'input', [
-            'type' => 'date',
+            'type' => $fieldType,
             'name' => $data['name'],
             'attrs' => $this->templates->formatAttributes($data, ['name', 'val'])
             ]
@@ -93,5 +130,39 @@ class LilDateWidget implements WidgetInterface
     public function secureFields(array $data)
     {
         return [$data['name']];
+    }
+
+    /**
+     * Prepares js parameters for jQuery datepicker object
+     * 
+     * @return string
+     */
+    private function _jsOptions()
+    {
+        $jsOptions = array();
+		
+		// UI datepicker format
+		$dateFormat = implode(Configure::read('Lil.dateSeparator'),
+			str_split(strtr(Configure::read('Lil.dateFormat'), array(
+				'D' => 'dd', 'M' => 'mm', 'Y' => 'yy'
+			)), 2)
+		);
+		$jsOptions['dateFormat'] = sprintf('"%s"', $dateFormat);
+		$jsOptions['firstDay'] = 1;
+		
+		// datepicker methods
+		if (isset($options['onSelect'])) {
+			$jsOptions['onSelect'] = $options['onSelect'];
+			unset($options['onSelect']);
+		}
+		
+		$jsImploded = '';
+		foreach ($jsOptions as $jsK => $jsV) {
+			if (!empty($jsImploded)) $jsImploded .= ', ';
+			$jsImploded .= $jsK . ': ' . $jsV;
+		}
+		if (!empty($jsImploded)) $jsImploded = '{' . $jsImploded . '}';
+		
+		return $jsImploded;
     }
 }

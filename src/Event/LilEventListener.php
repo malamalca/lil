@@ -1,36 +1,27 @@
 <?php
-    use Lil\Event\LilEventListener;
+namespace Lil\Event;
+
+use Cake\Event\EventListenerInterface;
+use Cake\Event\Event;
+
+class LilEventListener implements EventListenerInterface
+{
+    public function implementedEvents()
+    {
+        return [
+            'Controller.beforeRender' => 'beforeRender',
+            'Controller.beforeRedirect', 'checkAjaxRedirect',
+            //'Model.beforeMarshal', 'convertLilFields',
+        ];
+    }
     
-	use Cake\Routing\Router;
-	use Cake\Core\Configure;
-	use Cake\Core\Configure\Engine\PhpConfig;
-	use Cake\Event\Event;
-    use Cake\Event\EventManager;
-    use Cake\Network\Request;
-    use Cake\Network\Session;
-    
-	
-	Router::plugin('Lil', function ($routes) { $routes->connect('/:controller/:action/*'); });
-	
-	Configure::load('Lil.config', 'default', true);
-	
-/*	Request::addDetector('lilPopup', function($request) { return $request->query('lil_submit') == 'dialog'; } );
-	
-	$LilEventListener = new LilEventListener();
-    EventManager::instance()->on($LilEventListener);*/
-    
-    	EventManager::instance()->on('Controller.beforeRender', 'beforeRender');
-	EventManager::instance()->on('Controller.beforeRedirect', 'checkAjaxRedirect');
-	
-	Request::addDetector('lilPopup', function($request) { return $request->query('lil_submit') == 'dialog'; } );
-	
     /**
      * beforeRender hook method.
      *
      * @param object $event Event object.
      * @return void
      */
-    function beforeRender(Event $event)
+    public function beforeRender(Event $event)
     {   
         $controller = $event->subject;
         
@@ -59,10 +50,10 @@
      * @param object $response Response object.
      * @return void
      */
-    function checkAjaxRedirect($event, $url, $response)
+    public function checkAjaxRedirect($event, $url, $response)
     {
         $controller = $event->subject;
-        if ($controller->request->query('lil_submit')) {
+        if ($submitKind = $controller->request->query('lil_submit')) {
             $controller->autoRender = false;
             $controller->set('popupRedirect', true);
             $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe');
@@ -71,3 +62,15 @@
             return $event->result;
         }
     }
+
+    /**
+     * Convert fields to their actual representation
+     *
+     * @param object $event Event object.
+     * @return void
+     */
+    public function convertLilFields($event)
+    {
+        //return $evc
+    }
+}

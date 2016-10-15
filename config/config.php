@@ -25,9 +25,10 @@
             // Default page options
             'disable-smart-shrinking',
             'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
-    	]
+    	],
 		
-		//'dateFormat'          => 'YMD',
-		//'dateSeparator'       => '-',
-		//'timeFormat'          => '12',
+		'legacyDateFields' => false,
+		'dateFormat'          => 'YMD',
+		'dateSeparator'       => '-',
+		'timeFormat'          => '12',
 	]];

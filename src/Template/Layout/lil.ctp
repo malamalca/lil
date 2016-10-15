@@ -31,6 +31,7 @@
     printf($this->Html->css('/lil/js/datatables/css/dataTables.jqueryui.min') . PHP_EOL);
     printf($this->Html->css('/lil/js/responsive/css/responsive.jqueryui.min') . PHP_EOL);
     printf($this->Html->css('/lil/css/Aristo/Aristo') . PHP_EOL);
+    printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_print',  ['media' => 'print']) . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_mobile', ['media' => 'only screen and (max-device-width: 600px)']) . PHP_EOL);
     
@@ -46,6 +47,8 @@
     printf($this->Html->script('/lil/js/lil_datatables') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_popups') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_float') . PHP_EOL);
+    printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
+    printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
     
     print ($this->fetch('script') . PHP_EOL);
     
