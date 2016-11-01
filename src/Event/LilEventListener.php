@@ -1,20 +1,25 @@
 <?php
 namespace Lil\Event;
 
-use Cake\Event\EventListenerInterface;
 use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
 
 class LilEventListener implements EventListenerInterface
 {
+    /**
+     * Application's implemented events
+     *
+     * @return array
+     */
     public function implementedEvents()
     {
         return [
             'Controller.beforeRender' => 'beforeRender',
-            'Controller.beforeRedirect', 'checkAjaxRedirect',
+            'Controller.beforeRedirect' => 'checkAjaxRedirect',
             //'Model.beforeMarshal', 'convertLilFields',
         ];
     }
-    
+
     /**
      * beforeRender hook method.
      *
@@ -22,33 +27,33 @@ class LilEventListener implements EventListenerInterface
      * @return void
      */
     public function beforeRender(Event $event)
-    {   
+    {
         $controller = $event->subject;
-        
+
         if (empty($controller->viewClass)) {
             $controller->viewBuilder()->layout('Lil.lil');
         }
-        
+
         if (isset($controller->Auth)) {
             $controller->set('currentUser', $controller->Auth->user());
         }
-        
+
         if ($controller->request->is('ajax')) {
             $controller->viewBuilder()->layout('Lil.popup');
         }
-        
+
         if ($controller->request->query('lil_submit')) {
-       		$controller->viewBuilder()->layout('Lil.popup_iframe');
+            $controller->viewBuilder()->layout('Lil.popup_iframe');
         }
     }
-    
+
     /**
      * checkAjaxRedirect hook method.
      *
      * @param object $event Event object.
      * @param string $url Redirect url.
      * @param object $response Response object.
-     * @return void
+     * @return object
      */
     public function checkAjaxRedirect($event, $url, $response)
     {
@@ -59,6 +64,7 @@ class LilEventListener implements EventListenerInterface
             $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe');
             $event->result->statusCode(200);
             $event->stopPropagation();
+
             return $event->result;
         }
     }

@@ -7,6 +7,9 @@
                 printf($this->element($head_for_layout['element'], $head_for_layout['params']));
             }
         } else {
-            printf('<div class="head"><h1>%s</h1></div>', $this->fetch('title'));
+            $title = $this->fetch('title');
+            if ($title !== false) {
+                printf('<div class="head"><h1>%s</h1></div>', $title);
+            }
         }
     }

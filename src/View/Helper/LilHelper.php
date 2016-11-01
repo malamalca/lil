@@ -841,6 +841,10 @@ class LilHelper extends Helper
             $panels->title = isset($data['title_for_layout']) 
                 ? $data['title_for_layout'] 
                 : null;
+            
+            if (isset($data['head_for_layout'])) {
+                $this->_View->set('head_for_layout', $data['head_for_layout']);
+            }
         } else {
             $panels = $data; 
         }
