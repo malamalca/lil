@@ -21,7 +21,7 @@ class LilPdfFactory
     {
         switch ($engine) {
             case 'TCPDF':
-                return new LilTCPdfEngine($options);
+                return new LilTCPDFEngine($options);
                 break;
             case 'WKHTML2PDF':
                 return new LilWKHTML2PDFEngine($options);
