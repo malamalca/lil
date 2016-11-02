@@ -36,33 +36,33 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
 
     private $_defaultOptions = [
         'orientation' => PDF_PAGE_ORIENTATION, // 'P' or 'L'
-        'unit'        => PDF_UNIT,             // default 'mm'
-        'format'      => PDF_PAGE_FORMAT,      // default 'A4'
-        'unicode'     => true,
-        'encoding'    => 'UTF-8',
-        'diskcache'   => false,
-        'creator'     => 'Lil',
-        'author'      => 'Lil',
-        'title'       => 'Lil PDF Report',
-        'subject'     => 'PDF',
-        'keywords'    => '',
-        'font'        => 'dejavusans',
-        'font_size'   => 10,
-        'language'    => [
-            'a_meta_charset'  => 'UTF-8',
-            'a_meta_dir'      => 'ltr',
+        'unit' => PDF_UNIT, // default 'mm'
+        'format' => PDF_PAGE_FORMAT, // default 'A4'
+        'unicode' => true,
+        'encoding' => 'UTF-8',
+        'diskcache' => false,
+        'creator' => 'Lil',
+        'author' => 'Lil',
+        'title' => 'Lil PDF Report',
+        'subject' => 'PDF',
+        'keywords' => '',
+        'font' => 'dejavusans',
+        'font_size' => 10,
+        'language' => [
+            'a_meta_charset' => 'UTF-8',
+            'a_meta_dir' => 'ltr',
             'a_meta_language' => 'sl'
         ],
-        'margin'     => [
-            'left'  => PDF_MARGIN_LEFT,
-            'top'   => PDF_MARGIN_TOP,
+        'margin' => [
+            'left' => PDF_MARGIN_LEFT,
+            'top' => PDF_MARGIN_TOP,
             'right' => PDF_MARGIN_RIGHT
         ],
-        'header'      => [
+        'header' => [
             'margin' => PDF_MARGIN_HEADER, // minimum distance between header and top page margin
             'font_size' => 8,
         ],
-        'footer'      => [
+        'footer' => [
             'margin' => PDF_MARGIN_FOOTER, // minimum distance between footer and bottom page margin
             'font_size' => 8,
         ],
@@ -208,7 +208,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    function Header()
+    public function Header()
     {
         $this->SetFont(
             $this->_options['font'],
@@ -278,7 +278,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    function Footer()
+    public function Footer()
     {
         $this->SetFont(
             $this->_options['font'],
