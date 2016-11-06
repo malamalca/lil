@@ -16,6 +16,7 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\View\Helper;
+use Lil\Auth\LilAuthTrait;
 
 /**
  * LilForm Helper class for passing forms by reference.
@@ -50,7 +51,6 @@ class LilPanels
     public $entity = null;
     public $panels = [];
 }
-
 /**
  * LilHelper Lil Helper Class.
  *
@@ -62,6 +62,7 @@ class LilPanels
  */
 class LilHelper extends Helper
 {
+    use LilAuthTrait;
     /**
      * Helpers property
      *
@@ -98,6 +99,19 @@ class LilHelper extends Helper
         }
         return false;
     }
+    
+     /**
+     * Initialize method
+     *
+     * @param array $config Config Data.
+     * 
+     * @return void
+     */        
+    public function initialize(array $config)
+    {
+        if (isset($config['Auth'])) $this->setAuth($config['Auth']);
+    }
+    
     /**
      * JsReady method
      *

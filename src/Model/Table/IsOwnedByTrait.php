@@ -1,5 +1,5 @@
 <?php
-namespace Lil\Model;
+namespace Lil\Model\Table;
 
 trait IsOwnedByTrait
 {
