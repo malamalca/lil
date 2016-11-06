@@ -31,4 +31,8 @@
 		'dateFormat'          => 'YMD',
 		'dateSeparator'       => '-',
 		'timeFormat'          => '12',
+        
+        'userLevelField' => 'privileges',
+        'userLevelRoot' => 2,
+        'userLevelAdmin' => 5,
 	]];
