@@ -32,6 +32,8 @@
 		'dateSeparator'       => '-',
 		'timeFormat'          => '12',
         
+        'ownerIdField' => 'company_id',
+        
         'userLevelField' => 'privileges',
         'userLevelRoot' => 2,
         'userLevelAdmin' => 5,

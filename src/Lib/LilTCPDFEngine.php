@@ -87,6 +87,8 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
             $options['encoding'],
             $options['diskcache']
         );
+        
+        mb_internal_encoding('UTF-8');
 
         $this->SetCreator($options['creator']);
         $this->SetAuthor($options['author']);

@@ -77,4 +77,4 @@ $user_properties = [
 	]
 ];
 
-echo $this->Lil->form($user_properties, 'users-properties');
+echo $this->Lil->form($user_properties, 'Lil.Users.properties');
