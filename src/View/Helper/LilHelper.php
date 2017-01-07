@@ -91,7 +91,7 @@ class LilHelper extends Helper
      */
     function __call($method, $params) 
     {
-        if (!empty($params[0]) && ($model = ClassRegistry::Init($params[0]))) {
+        if (!empty($params[0]) && ($model = TableRegistry::get($params[0]))) {
             if (is_callable(array($model, $method))) {
                 unset($params[0]);
                 return (call_user_func_array(array($model, $method), $params));

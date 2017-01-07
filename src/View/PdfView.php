@@ -12,14 +12,13 @@
  */
 namespace Lil\View;
 
-use \NumberFormatter;
+use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\View\View;
 
-use Lil\Lib\LilPdf;
-use \TCPDF;
+use Lil\Lib\LilPdfFactory;
 
 /**
  * PdfView Pdf view class
@@ -51,11 +50,17 @@ class PdfView extends View
      */
     public $subDir = 'pdf';
     /**
-     * FPdf Class
+     * pdf Class
      *
      * @var object
      */
     protected $pdf = null;    
+    /**
+     * viewOptions Class
+     *
+     * @var array
+     */
+    protected $viewOptions = [];
     /**
      * Constructor
      *
@@ -72,7 +77,11 @@ class PdfView extends View
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
         
-        $this->initPdf($this->passedArgs);
+        $this->viewOptions = $viewOptions;
+        
+        $pdfEngine = Configure::read('Lil.pdfEngine');
+        $pdfOptions = Configure::read('Lil.' . $pdfEngine);
+        $this->pdf = LilPdfFactory::create($pdfEngine, (array)$pdfOptions);
         
         if ($response && $response instanceof Response) {
             $response->type('pdf');
@@ -111,118 +120,23 @@ class PdfView extends View
             $rendered = explode('<!-- NEW PAGE -->', $data);
             
             foreach ($rendered as $page) {
-                $this->pdf->AddPage();
-                $this->pdf->writeHTML($page);
+                $this->pdf->newPage($page);
             }
         }
         
-        $res = $this->pdf->Output(
-            $this->options['file_name'], 
-            $this->options['dest']
-        );
-        if (in_array($this->options['dest'], ['S', 'E'])) {
-            return $res; 
+        $tmpFilename = TMP . uniqid('xml2pdf') . '.pdf';
+        if (!$this->pdf->saveAs($tmpFilename)) {
+            $this->lastError = $this->pdf->getError();
+            return false;
         }
+        $result = file_get_contents($tmpFilename);
+        unlink($tmpFilename);
         
-        return $data;
-    }
-    
-    /**
-     * Init PDF class
-     *
-     * @param array $options The pdf options.
-     * 
-     * @return void
-     */
-    protected function initPdf($options)
-    {
-        $_defaults = array(
-        'orientation' => 'P',                     // 'P' or 'L'
-        'unit'        => 'mm',                   // default 'mm'
-        'format'      => 'A4',                  // default 'A4'
-        'unicode'     => true,
-        'encoding'    => 'UTF-8',
-        'diskcache'   => false,
-        'creator'     => 'LilIntranet',
-        'author'      => 'ARHIM d.o.o.',
-        'title'       => 'PDF document',
-        'subject'     => '',
-        'keywords'    => '',
-        'font'        => 'dejavusans',
-        'font_size'   => 10,
-        'language'    => array(
-        'a_meta_charset'  => 'UTF-8',
-        'a_meta_dir'      => 'ltr',
-        'a_meta_language' => 'sl'
-        ),
-        'margin'     => array(
-        'left'  => 15,
-        'top'   => 27,
-        'right' => 15
-        ),
-        'header'      => array(
-        'margin' => 5, // minimum distance between header and top page margin
-        'font_size' => 8,
-        'lines'  => array(
-        //0 => array('image' => APP . 'uploads' . DS . 'report_header.png')
-        )
-        ),
-        'footer'      => array(
-        'margin' => 10, // minimum distance between footer and bottom page margin
-        'font_size' => 8,
-        'lines'  => array(
-        //0 => array('image' => APP . 'uploads' . DS . 'report_footer.png')
-        )
-        ),
-        'file_name' => 'untitled.pdf',
-        'dest' => 'I'
-        );
-        
-        if (isset($options['download']) && $options['download'] == true) {
-            $options['dest'] = 'D';
-            unset($options['download']);
-        }        
-        
-        $this->options = array_replace_recursive($_defaults, (array)$options);
-        
-        
-        $this->pdf = new LilPdf($this->options);
-        
-        // set document information
-        $this->pdf->SetCreator($this->options['creator']);
-        $this->pdf->SetAuthor($this->options['author']);
-        $this->pdf->SetTitle($this->options['title']);
-        $this->pdf->SetSubject($this->options['subject']);
-        $this->pdf->SetKeywords($this->options['keywords']);
-        
-        // lang
-        $this->pdf->setLanguageArray($this->options['language']);
-        
-        //set auto page breaks
-        $this->pdf->SetAutoPageBreak(true, $this->options['footer']['margin']);
-        
-        // set font
-        $this->pdf->SetFont($this->options['font'], '', $this->options['font_size']);
-        $this->pdf->SetCellPadding(2);
-        
-        // margins
-        $this->pdf->SetMargins(
-            $this->options['margin']['left'],
-            $this->options['margin']['top'],
-            $this->options['margin']['right'],
-            true // keep margins
-        );
-        
-        //if (empty($this->options['header'])) {
-        //$this->pdf->SetPrintHeader(false);
-        //} else {
-        $this->pdf->SetHeaderMargin($this->options['header']['margin']);
+        //if (isset($this->viewOptions['dest']) && in_array($this->viewOptions['dest'], ['S', 'E'])) {
+        //    return $result; 
         //}
-        
-        //if (empty($this->options['footer'])) {
-        //	$this->pdf->SetPrintFooter(false);
-        //} else {
-        $this->pdf->SetFooterMargin($this->options['footer']['margin']);
-        //}
+        //return $data;
+        return $result;
     }
+
 }
