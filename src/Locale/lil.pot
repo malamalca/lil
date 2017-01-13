@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2015-09-16 06:32+0000\n"
+"POT-Creation-Date: 2017-01-13 13:57+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -14,267 +14,381 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:50
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:130
+msgid "The user has been saved."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:134
+msgid "The user could not be saved. Please, try again."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:153
+msgid "The user has been deleted."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:155
+msgid "The user could not be deleted. Please, try again."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:187
 msgid "Invalid username or password, try again"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:77
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:237
 msgid "The user has been registered."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:80
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:241
 msgid "Unable to add the user."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:100
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:267
 msgid "An email with password reset instructions has been sent."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:102
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:274
 msgid "No user with specified email has been found."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:114
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:292
+msgid "Reset key does not exist."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:298;335
+msgid "User does not exist."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:310;352
 msgid "Properties have been saved."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Controller/UsersController.php:117
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Controller/UsersController.php:314;356
 msgid "Please verify that the information is correct."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Model/Table/UsersTable.php:105
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/reset.ctp:5
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Model/Table/UsersTable.php:261
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/reset.ctp:5
 msgid "Password Reset"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Element/sidebar.ctp:16
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Element/sidebar.ctp:16
 msgid "Dashboard"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Email/text/reset.ctp:12
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:70
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Email/text/reset.ctp:13
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:70
 msgid "Forgot your password?"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Email/text/reset.ctp:14
-msgid "You've received this mail from password reset request on \"%s\""
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Email/text/reset.ctp:15
+msgid "You've received this mail from password reset request on \"{0}\""
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Email/text/reset.ctp:15
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Email/text/reset.ctp:20
 msgid "Please follow this url to change your password:"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Email/text/reset.ctp:19
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Email/text/reset.ctp:24
 msgid "Please discard this email if you did not want to change your password."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Email/text/reset.ctp:22
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Email/text/reset.ctp:27
 msgid "Best Regards."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Layout/lil.ctp:69
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Layout/lil.ctp:80
 msgid "Welcome"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Layout/lil.ctp:75
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Layout/lil.ctp:88
 msgid "Unknown"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Layout/lil.ctp:86
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Layout/lil.ctp:103
 msgid "Settings"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Layout/lil.ctp:94
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/dashboard.ctp:35
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Layout/lil.ctp:111
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/dashboard.ctp:35
 msgid "Logout"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/dashboard.ctp:13
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/dashboard.ctp:13
 msgid "Welcome. What would you like to do?"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/dashboard.ctp:24
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/dashboard.ctp:24
 msgid "Edit user profile and password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:2
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:2
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:2
 msgid "No data available in table"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:3
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:3
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:3
 msgid "Showing _START_ to _END_ of _TOTAL_ entries"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:4
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:4
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:4
 msgid "Showing 0 to 0 of 0 entries"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:5
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:5
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:5
 msgid "(filtered from _MAX_ total entries)"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:6
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:6
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:6
 msgid ""
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:7
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:7
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:7
 msgid ","
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:8
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:8
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:8
 msgid "Show _MENU_ entries"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:9
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:9
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:9
 msgid "Loading..."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:10
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:10
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:10
 msgid "Processing..."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:11
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:11
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:11
 msgid "Search:"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:12
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:12
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:12
 msgid "No matching records found"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:14
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:14
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:14
 msgid "First"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:15
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:15
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:15
 msgid "Last"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:16
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:16
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:16
 msgid "Next"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:17
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:17
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:17
 msgid "Previous"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:20
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:20
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:20
 msgid ": activate to sort column ascending"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Pages/datatables.ctp:21
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/datatables.ctp:21
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Pages/json/datatables.ctp:21
 msgid ": activate to sort column descending"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:12
-msgid "Set New Password for \"%1$s\""
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:7
+msgid "Set New Password for \"{0}\""
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:42
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:36
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:64
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:40
 msgid "Change password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:44
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:40
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:68
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:44
+msgid "Old password"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:41
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:69
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:45
+msgid "Invalid old password."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:47
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:75
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:51
 msgid "New password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:45
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:77
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:48
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:76
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:52
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:77
 msgid "Password is required, format must be valid."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:49
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:55
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:83
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:59
 msgid "Repeat password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:50
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:56
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:84
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:60
 msgid "Passwords do not match."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/change_password.ctp:60
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/change_password.ctp:65
 msgid "Change"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:7
-msgid "Login"
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:10
+msgid "Add User"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:32
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:46
-msgid "Username"
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:10
+msgid "Edit User"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:43
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:68;76
-msgid "Password"
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:13
+msgid "Delete"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:55
-msgid "Remember me on this computer"
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:19
+msgid "Are you sure you want to delete this user?"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:62
-msgid "OK"
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/login.ctp:78
-msgid "Register as new user"
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:6
-msgid "User Registration"
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:27
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:43
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:28
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:27
 msgid "Basics"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:34
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:47
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:32
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:34
 msgid "Name"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:35
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:48
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:33
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:35
 msgid "User's name is required."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:48
-msgid "Username is required, format must be valid."
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:55
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/index.ctp:23
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:32
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:46
+msgid "Username"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:49
-msgid "Username already exists."
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:56
+msgid "Username is required."
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:60
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/reset.ctp:27
-msgid "Email"
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:64;75
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:43
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:68;76
+msgid "Password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:61
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/reset.ctp:28
-msgid "Email is required, format must be valid."
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:88
-msgid "Repeat Password"
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:89
-msgid "Please retype your password."
-msgstr ""
-
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/register.ctp:98
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/edit.ctp:93
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:69
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:98
 msgid "Save"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/Template/Users/reset.ctp:37
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/index.ctp:6
+msgid "Users"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/index.ctp:9
+msgid "Add"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/index.ctp:22
+msgid "Title"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/index.ctp:30
+msgid "N/A"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:7
+msgid "Login"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:55
+msgid "Remember me on this computer"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:62
+msgid "OK"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/login.ctp:78
+msgid "Register as new user"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/properties.ctp:8
+msgid "User Properties"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:6
+msgid "User Registration"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:48
+msgid "Username is required, format must be valid."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:49
+msgid "Username already exists."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:60
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/reset.ctp:27
+msgid "Email"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:61
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/reset.ctp:28
+msgid "Email is required, format must be valid."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:88
+msgid "Repeat Password"
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/register.ctp:89
+msgid "Please retype your password."
+msgstr ""
+
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/Template/Users/reset.ctp:37
 msgid "Request new Password"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/View/Helper/LilHelper.php:158
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/View/Helper/LilHelper.php:221
 msgid "Are you sure you want to delete this record?"
 msgstr ""
 
-#: D:/xampp/htdocs/arhint/plugins/Lil/src/View/Helper/LilHelper.php:631
+#: C:/xampp/htdocs/eHotelDesk/vendor/malamalca/lil/src/View/Helper/LilHelper.php:825
 msgid "No records found."
 msgstr ""
 

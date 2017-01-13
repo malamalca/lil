@@ -140,7 +140,7 @@ class UsersTable extends Table
             ->notEmpty('id')
             ->add('id', 'valid', ['rule' => 'uuid'])
             
-            ->notEmpty('name')
+            ->notEmpty(Configure::read('Lil.userDisplayField'))
             
             ->allowEmpty(
                 'old_pass', function ($context) {

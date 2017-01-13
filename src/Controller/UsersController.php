@@ -73,11 +73,91 @@ class UsersController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($this->request->action, ['properties'])) {
+        if (in_array($this->request->action, ['properties', 'index', 'edit', 'add', 'delete'])) {
             return $this->Auth->user('id');
         }
         return parent::isAuthorized($user);
     }
+    
+    /**
+     * Index method
+     *
+     * @return \Cake\Network\Response|void
+     */
+    public function index()
+    {
+        $users = $this->Users->find()
+            ->all();
+
+        $this->set(compact('users'));
+        $this->set('_serialize', ['users']);
+    }
+    
+    /**
+     * Add method
+     *
+     * @return \Cake\Network\Response|void Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $this->setAction('edit');
+    }
+    
+    /**
+     * Edit method
+     *
+     * @param string|null $id Service Type id.
+     * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $user_fields = Configure::read('Lil.authFields');
+        
+        if ($id) {
+            $user = $this->Users->get($id);
+        } else {
+            $user = $this->Users->newEntity();
+        }
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            // remove user password when empty
+            if (empty($this->request->data[$user_fields['password']])) {
+                unset($this->request->data[$user_fields['password']]);
+            }
+            
+            $user = $this->Users->patchEntity($user, $this->request->data, ['validate' => ($id ? 'properties' : 'registration')]);
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__d('lil', 'The user has been saved.'));
+
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__d('lil', 'The user could not be saved. Please, try again.'));
+            }
+        }
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
+    }
+    
+    /**
+     * Delete method
+     *
+     * @param string|null $id Service Type id.
+     * @return \Cake\Network\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete', 'get']);
+        $user = $this->Users->get($id);
+        if ($this->Users->delete($user)) {
+            $this->Flash->success(__d('lil', 'The user has been deleted.'));
+        } else {
+            $this->Flash->error(__d('lil', 'The user could not be deleted. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
+    
     /**
      * Login method.
      *
