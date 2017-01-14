@@ -107,4 +107,4 @@ $user_edit = array(
 	)
 );
 
-echo $this->Lil->form($user_edit, 'lil-users-register');
+echo $this->Lil->form($user_edit, 'Lil.Users.register');

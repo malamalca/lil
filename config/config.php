@@ -13,19 +13,22 @@
 		
 		'from' => ['email' => 'info@lil.si', 'name' => 'Lil'],
 		
-		'xml2pdf' => [
-            'binary' => 'D:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
-            'no-outline',         // Make Chrome not complain
+        'pdfEngine' => 'TCPDF',
+        'TCPDF' => [],
+        'WKHTML2PDF' => [
+            'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
+            'no-outline', // Make Chrome not complain
             'print-media-type',
-            'margin-top'    => 0,
-            'margin-right'  => 0,
-            'margin-bottom' => 0,
-            'margin-left'   => 0,
-        
+            'dpi' => 96,
+            'margin-top' => 30,
+            'margin-right' => 0,
+            'margin-bottom' => 20,
+            'margin-left' => 0,
+    
             // Default page options
             'disable-smart-shrinking',
             'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
-    	],
+        ],
 		
 		'legacyDateFields' => false,
 		'dateFormat'          => 'YMD',
