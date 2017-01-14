@@ -6,7 +6,7 @@ use Cake\Core\Configure;
 
 trait LilAuthTrait
 {
-    private $_Auth = [];
+    private $_Auth = false;
 
     protected function setAuth($Auth)
     {
@@ -21,6 +21,8 @@ trait LilAuthTrait
      */
     public function userLevel($role)
     {
+        if (!$this->_Auth) return false;
+        
         if (is_string($role)) {
             switch ($role) {
                 case 'root':
