@@ -123,7 +123,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function setFooterHtml($html)
     {
-        $this->setOptions(['header-html' => '<!doctype html><head>' .
+        $this->setOptions(['footer-html' => '<!doctype html><head>' .
                             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' .
                             '<html><body><div id="footer">' .
                             $html .
