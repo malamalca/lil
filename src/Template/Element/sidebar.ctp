@@ -28,10 +28,10 @@ class Sidebar {
 $AdminSidebar = new Sidebar();
 $AdminSidebar->sidebar = $admin_sidebar;
 
-$event = new Event('Lil.Sidebar.beforeRender', $this, $AdminSidebar);
+$event = new Event('Lil.Sidebar.beforeRender', $this, ['sidebar' => $AdminSidebar]);
 $this->eventManager()->dispatch($event);
-if (!empty($event->result)) {
-    $admin_sidebar = $event->result->sidebar;
+if (!empty($event->result['sidebar'])) {
+    $admin_sidebar = $event->result['sidebar']->sidebar;
 }
 
 if ($this->request->is('mobile')) {
