@@ -262,7 +262,7 @@ class UsersController extends AppController
                 ->first();
                 
             if ($user) {
-                $this->Users->sendResetEmail($user->first());
+                $this->Users->sendResetEmail($user);
                 $this->Flash->success(
                     __d(
                         'lil',

@@ -215,9 +215,29 @@ class UsersTable extends Table
     public function validationResetPassword($validator)
     {
         $user_fields = Configure::read('Lil.authFields');
-        
-        $validator = $this->validationProperties($validator);
-        $validator->notEmpty($user_fields['password']);
+        $validator = new Validator();
+        $validator
+            ->add(
+                $user_fields['password'], 'minLength', [
+                'rule' => ['minLength', 4]
+                ]
+            )
+            ->requirePresence(
+                'repeat_pass', function ($context) {
+                    $user_fields = Configure::read('Lil.authFields');
+                    return !empty($context['data'][$user_fields['password']]);
+                }
+            )
+            
+            // repeat password should match new password
+            ->add(
+                'repeat_pass', 'match', [
+                    'rule' => function ($value, $context) {
+                        $user_fields = Configure::read('Lil.authFields');
+                        return $value == $context['data'][$user_fields['password']];
+                    }
+                ]
+            );
         return $validator;
     }
     

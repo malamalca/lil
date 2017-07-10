@@ -34,13 +34,13 @@ $user_form = array(
             
 			'fs_passwords_start' => '<fieldset>',
 			'lg_passwords' => sprintf('<legend>%s</legend>', __d('lil', 'Change password')),
-			'old_pass' => [
+			/*'old_pass' => [
 				'method' => 'input',
 				'parameters' => ['old_pass', [
 					'label' => __d('lil', 'Old password') . ':',
 					'error' => __d('lil', 'Invalid old password.'),
 				]]
-			],
+			],*/
 			'passwd' => [
 				'method' => 'input',
 				'parameters' => [$user_fields['password'], [
@@ -73,4 +73,4 @@ $user_form = array(
 	)
 );
 
-echo $this->Lil->form($user_form, 'users-change_password');
+echo $this->Lil->form($user_form, 'Users.change_password');
