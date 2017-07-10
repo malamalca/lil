@@ -63,9 +63,10 @@ class UsersTable extends Table
      */
     public function findAuth(\Cake\ORM\Query $query, array $options)
     {
-        $event = new Event('Lil.authFinder', $this, [$query, $options]);
+        $event = new Event('Lil.authFinder', $this, ['query' => $query, 'options' => $options]);
         EventManager::instance()->dispatch($event);
-        if (!empty($event->result)) {
+        
+        if (!empty($event->result['query'])) {
             $query = $event->result; 
         }
         return $query;
