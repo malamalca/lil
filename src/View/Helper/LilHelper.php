@@ -930,8 +930,9 @@ class LilHelper extends Helper
                 if (isset($panel['lines']) && is_array($panel['lines'])) {
                     foreach ($panel['lines'] as $line) {
                         if (is_array($line)) {
-                            $ret .= '<div>';
+                            
                             if (isset($line['label'])) {
+                                $ret .= '<div class="label-text">';
                                 $ret .= sprintf(
                                     '<span class="label">%s</span>',
                                     $line['label']
@@ -948,7 +949,9 @@ class LilHelper extends Helper
                                 $ret .= '&nbsp;'; 
                             }
                             
-                            $ret .= '</div>';
+                            if (isset($line['label'])) {
+                                $ret .= '</div>';
+                            }
                         } else {
                             $ret .= $line;
                         }

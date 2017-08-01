@@ -14,6 +14,10 @@
 		'from' => ['email' => 'info@lil.si', 'name' => 'Lil'],
 		
         'pdfEngine' => 'TCPDF',
+        'pdfOptions' => [
+            'pagePre' => '',
+            'pagePost' => ''
+        ],
         'TCPDF' => [],
         'WKHTML2PDF' => [
             'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',

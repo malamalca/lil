@@ -77,7 +77,7 @@ class PdfView extends View
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
         
-        $this->viewOptions = $viewOptions;
+        $this->viewOptions = array_merge(Configure::read('Lil.pdfOptions'), (array)$viewOptions);
         
         $pdfEngine = Configure::read('Lil.pdfEngine');
         $pdfOptions = Configure::read('Lil.' . $pdfEngine);
@@ -120,13 +120,17 @@ class PdfView extends View
             $rendered = explode('<!-- NEW PAGE -->', $data);
             
             foreach ($rendered as $page) {
-                $this->pdf->newPage($page);
+                $this->pdf->newPage($this->viewOptions['pagePre'] . $page . $this->viewOptions['pagePost']);
             }
         }
         
         $tmpFilename = TMP . uniqid('xml2pdf') . '.pdf';
         if (!$this->pdf->saveAs($tmpFilename)) {
             $this->lastError = $this->pdf->getError();
+            return false;
+        }
+        if (!file_exists($tmpFilename)) {
+            $this->lastError = 'PDF file doesn\'t exist.';
             return false;
         }
         $result = file_get_contents($tmpFilename);

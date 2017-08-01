@@ -34,7 +34,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @var array
      */
     private $_localOptions = [];
-
+    
     private $_defaultOptions = [
             'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
             'no-outline', // Make Chrome not complain
@@ -48,6 +48,8 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
             'disable-smart-shrinking',
             //'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
     ];
+    
+    //private $_tmpFiles = [];
 
     /**
      * __construct
@@ -61,6 +63,17 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
         $this->options(array_merge($this->_defaultOptions, $options));
         $options = $this->options();
         parent::__construct($options);
+    }
+    
+    /**
+     * __destruct
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        foreach ($this->_tmpFiles as $fileName) unlink($fileName);
+        parent::__destruct();
     }
 
     /**
@@ -87,7 +100,14 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function newPage($html, $options = [])
     {
-        $this->addPage($html);
+        if (strlen($html) > 1024) {
+            $fileName = TMP . uniqid() . '.html';
+            file_put_contents($fileName, $html);
+            $this->addPage($fileName);
+            $this->_tmpFiles[] = $fileName;
+        } else {
+            $this->addPage($html);
+        }
     }
 
     /**

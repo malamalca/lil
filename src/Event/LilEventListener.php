@@ -30,7 +30,7 @@ class LilEventListener implements EventListenerInterface
     {
         $controller = $event->subject;
 
-        if (empty($controller->viewClass)) {
+        if (!$controller->viewBuilder()->className()) {
             $controller->viewBuilder()->layout('Lil.lil');
         }
 
