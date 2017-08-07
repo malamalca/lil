@@ -49,7 +49,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
             //'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
     ];
     
-    //private $_tmpFiles = [];
+    private $_tempFiles = [];
 
     /**
      * __construct
@@ -58,11 +58,14 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function __construct($options)
+    public function __construct($enigneOptions, $viewOptions)
     {
-        $this->options(array_merge($this->_defaultOptions, $options));
+        $this->options(array_merge($this->_defaultOptions, $enigneOptions));
         $options = $this->options();
-        parent::__construct($options);
+        parent::__construct($enigneOptions);
+        
+        if (!empty($viewOptions['headerHtml'])) $this->setHeaderHtml($viewOptions['headerHtml']);
+        if (!empty($viewOptions['footerHtml'])) $this->setFooterHtml($viewOptions['footerHtml']);
     }
     
     /**
@@ -72,7 +75,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function __destruct()
     {
-        foreach ($this->_tmpFiles as $fileName) unlink($fileName);
+        foreach ($this->_tempFiles as $fileName) unlink($fileName);
         parent::__destruct();
     }
 
@@ -85,9 +88,8 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function saveAs($fileName)
     {
-        parent::saveAs($fileName);
-
-        return true;
+        $result = parent::saveAs($fileName);
+        return $result;
     }
 
     /**
@@ -100,14 +102,12 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function newPage($html, $options = [])
     {
-        if (strlen($html) > 1024) {
-            $fileName = TMP . uniqid() . '.html';
-            file_put_contents($fileName, $html);
+        $fileName = TMP . uniqid() . '.html';
+        file_put_contents($fileName, $html);
+        if (file_exists($fileName)) {
             $this->addPage($fileName);
-            $this->_tmpFiles[] = $fileName;
-        } else {
-            $this->addPage($html);
-        }
+            $this->_tempFiles[] = $fileName;
+        } else die('No File');
     }
 
     /**
@@ -117,7 +117,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function getError()
     {
-        return null;
+        return parent::getError();
     }
 
     /**

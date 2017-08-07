@@ -16,7 +16,9 @@
         'pdfEngine' => 'TCPDF',
         'pdfOptions' => [
             'pagePre' => '',
-            'pagePost' => ''
+            'pagePost' => '',
+            'footerHtml' => '',
+            'headerHtml' => ''
         ],
         'TCPDF' => [],
         'WKHTML2PDF' => [

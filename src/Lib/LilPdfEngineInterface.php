@@ -34,7 +34,7 @@ interface LilPdfEngineInterface
      *
      * @return void
      */
-    public function __construct($options);
+    public function __construct($enigneOptions, $viewOptions);
     
     /**
      * Sets or returns object's options

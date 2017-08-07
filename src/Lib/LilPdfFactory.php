@@ -17,14 +17,14 @@ use Lil\Lib\LilWKHTML2PDFEngine;
  
 class LilPdfFactory
 {
-    public static function create($engine, $options)
+    public static function create($engine, $enigneOptions, $viewOptions)
     {
         switch ($engine) {
             case 'TCPDF':
-                return new LilTCPDFEngine($options);
+                return new LilTCPDFEngine($enigneOptions, $viewOptions);
                 break;
             case 'WKHTML2PDF':
-                return new LilWKHTML2PDFEngine($options);
+                return new LilWKHTML2PDFEngine($enigneOptions, $viewOptions);
                 break;
         }
     }
