@@ -102,7 +102,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function newPage($html, $options = [])
     {
-        $fileName = TMP . uniqid() . '.html';
+        $fileName = TMP . uniqid('', true) . '.html';
         file_put_contents($fileName, $html);
         if (file_exists($fileName)) {
             $this->addPage($fileName);
