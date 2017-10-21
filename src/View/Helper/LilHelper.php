@@ -180,8 +180,8 @@ class LilHelper extends Helper
                 $link = $this->Html->link(
                     $matches[3][$k],
                     isset($params[1][$index][0]) ? $params[1][$index][0] : null,
-                    isset($params[1][$index][1]) ? $params[1][$index][1] : null,
-                    isset($params[1][$index][2]) ? $params[1][$index][2] : null
+                    isset($params[1][$index][1]) ? $params[1][$index][1] : [],
+                    isset($params[1][$index][2]) ? $params[1][$index][2] : []
                 );
                 $ret = str_replace($match, $link, $ret);
             }
@@ -589,7 +589,7 @@ class LilHelper extends Helper
                     $this->Html->link(
                         $menu_item['title'] . (empty($menu_item['submenu']) 
                             ? '' 
-                            : ' ▼'
+                            : ' Ă„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›Ä‚â€žĂ‹ĹĄ'
                         ),
                         empty($menu_item['url']) ? '#' : $menu_item['url'],
                         isset($menu_item['params']) 
@@ -753,6 +753,9 @@ class LilHelper extends Helper
                 $parameters = array();
                 if (!empty($line['parameters'])) {
                     $parameters = (array)$line['parameters'];
+                }
+                if (!empty($line['params'])) {
+                    $parameters = (array)$line['params'];
                 }
                 
                 if (isset($form->form['defaultHelper'])) {
@@ -930,9 +933,14 @@ class LilHelper extends Helper
                 if (isset($panel['lines']) && is_array($panel['lines'])) {
                     foreach ($panel['lines'] as $line) {
                         if (is_array($line)) {
+                            $class = ['label-text'];
+                            if (!empty($line['params'])) {
+                                if (!empty($line['params']['class']))
+                                $class = array_merge($class, (array)$line['params']['class']);
+                            }
                             
                             if (isset($line['label'])) {
-                                $ret .= '<div class="label-text">';
+                                $ret .= sprintf('<div class="%s">', implode(' ', $class));
                                 $ret .= sprintf(
                                     '<span class="label">%s</span>',
                                     $line['label']
