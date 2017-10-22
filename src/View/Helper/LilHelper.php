@@ -589,7 +589,7 @@ class LilHelper extends Helper
                     $this->Html->link(
                         $menu_item['title'] . (empty($menu_item['submenu']) 
                             ? '' 
-                            : ' Ă„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬Ă˘â‚¬Ĺ›Ä‚â€žĂ‹ĹĄ'
+                            : ' Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă˘â‚¬ĹźÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬Ä…Ă„Ä…Ă„â€ž'
                         ),
                         empty($menu_item['url']) ? '#' : $menu_item['url'],
                         isset($menu_item['params']) 
@@ -1037,10 +1037,12 @@ class LilHelper extends Helper
             $ret .= $data['pre']; 
         }
         $ret .= '<table';
-        if (!empty($data['parameters'])) {
-            foreach ($data['parameters'] as $key => $param) {
-                $ret .= ' ' . $key . '="' . $param . '"';
-            }
+        
+        $parameters = [];
+        if (isset($data['parameters'])) $parameters = $data['parameters'];
+        if (isset($data['params'])) $parameters = $data['params'];
+        foreach ($parameters as $key => $param) {
+            $ret .= ' ' . $key . '="' . $param . '"';
         }
         $ret .= '>' . PHP_EOL;
         
@@ -1062,9 +1064,14 @@ class LilHelper extends Helper
                     $row['column'] = 'th'; 
                 }
                 $ret .= '<tr';
+                
+                $parameters = [];
+                if (isset($row['parameters'])) $parameters = $row['parameters'];
+                if (isset($row['params'])) $parameters = $row['params'];
+                
                 $params = array_merge(
                     $default_parameters,
-                    isset($row['parameters']) ? $row['parameters'] : array()
+                    $parameters
                 );
                 foreach ($params as $key => $param) {
                     $ret .= ' ' . $key . '="' . $param . '"';
@@ -1074,12 +1081,11 @@ class LilHelper extends Helper
                 foreach ($row['columns'] as $col) {
                     if (!is_null($col)) {
                         $ret .= '<' . $row['column'];
-                        if (!empty($col['parameters'])  
-                            && is_array($col['parameters'])
-                        ) {
-                            foreach ($col['parameters'] as $key => $param) {
-                                $ret .= ' ' . $key . '="' . $param . '"';
-                            }
+                        $parameters = [];
+                        if (isset($col['parameters'])) $parameters = $col['parameters'];
+                        if (isset($col['params'])) $parameters = $col['params'];
+                        foreach ($parameters as $key => $param) {
+                            $ret .= ' ' . $key . '="' . $param . '"';
                         }
                         $ret .= '>';
                     
@@ -1099,23 +1105,27 @@ class LilHelper extends Helper
             foreach ($data['body']['rows'] as $row) {
                 if ($row) {
                     $ret .= '<tr';
-                    if (!empty($row['parameters'])) {
-                        foreach ($row['parameters'] as $key => $param) {
-                            $ret .= ' ' . $key . '="' . $param . '"';
-                        }
+                    
+                    $parameters = [];
+                    if (isset($row['parameters'])) $parameters = $row['parameters'];
+                    if (isset($row['params'])) $parameters = $row['params'];
+                    
+                    foreach ($parameters as $key => $param) {
+                        $ret .= ' ' . $key . '="' . $param . '"';
                     }
                     $ret .= '>' . PHP_EOL;
                 
                     foreach ($row['columns'] as $col) {
                         if (!is_null($col)) {
                             $ret .= '<td';
-                            if (!empty($col['parameters'])
-                                && is_array($col['parameters'])
-                            ) {
-                                foreach ($col['parameters'] as $key => $param) {
-                                    $ret .= ' ' . $key . '="' . $param . '"';
-                                }
+                            
+                            $parameters = [];
+                            if (isset($col['parameters'])) $parameters = $col['parameters'];
+                            if (isset($col['params'])) $parameters = $col['params'];
+                            foreach ($parameters as $key => $param) {
+                                $ret .= ' ' . $key . '="' . $param . '"';
                             }
+                            
                             $ret .= '>';
                         
                             $col = is_string($col) ? $col : $col['html'];
@@ -1148,11 +1158,14 @@ class LilHelper extends Helper
                 }
                 if ($row) {
                     $ret .= '<tr';
+                    
+                    $parameters = [];
+                    if (isset($row['parameters'])) $parameters = $row['parameters'];
+                    if (isset($row['params'])) $parameters = $row['params'];
+                    
                     $params = array_merge(
                         $default_parameters,
-                        isset($row['parameters']) 
-                        ? (array)$row['parameters'] 
-                        : array()
+                        $parameters
                     );
                     if (!empty($params)) {
                         foreach ($params as $key => $param) {
@@ -1167,12 +1180,13 @@ class LilHelper extends Helper
                                 $col . '</th>' . PHP_EOL;
                         } else {
                             $ret .= '<'.$row['column'];
-                            if (!empty($col['parameters'])
-                                && is_array($col['parameters'])
-                            ) {
-                                foreach ($col['parameters'] as $key => $param) {
-                                    $ret .= ' ' . $key . '="' . $param . '"';
-                                }
+                            
+                            $parameters = [];
+                            if (isset($col['parameters'])) $parameters = $col['parameters'];
+                            if (isset($col['params'])) $parameters = $col['params'];
+                    
+                            foreach ($parameters as $key => $param) {
+                                $ret .= ' ' . $key . '="' . $param . '"';
                             }
                             $ret .= '>';
                             $ret .= $col['html'];
