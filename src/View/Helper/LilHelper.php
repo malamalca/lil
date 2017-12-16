@@ -16,6 +16,9 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\View\Helper;
+use Cake\View\StringTemplateTrait;
+use Cake\View\View;
+
 use Lil\Auth\LilAuthTrait;
 
 /**
@@ -63,6 +66,31 @@ class LilPanels
 class LilHelper extends Helper
 {
     use LilAuthTrait;
+    use StringTemplateTrait;
+    /**
+     * Default config for this class
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'templates' => [
+            'panelstart' => '<div class="view-panel {{class}}"{{attrs}}>',
+            'panellinestart' => '<div class="view-panel-line{{class}}"{{attrs}}>',
+            'panellinelabel' => '<span class="label {{class}}">{{content}}</span>',
+            'panellineend' => '</div>',
+            'panelend' => '</div>',
+            
+            'tablestart' => '<table class="lil-table {{class}}"{{attrs}}>',
+            'tableend' => '</table>',
+            
+            'tableheadrow' => '<tr class="ui-toolbar ui-widget-header ui-corner-top{{class}}"{{attrs}}>',
+            'tablebodyrow' => '<tr class="ui-row{{class}}"{{attrs}}>',
+            'tablefootrow' => '<tr class="ui-toolbar ui-widget-footer ui-corner-bottom{{class}}"{{attrs}}>',
+            
+            'td' => '<td{{attrs}}>{{content}}</td>',
+            'th' => '<th{{attrs}}>{{content}}</th>'
+        ]
+    ];
     /**
      * Helpers property
      *
@@ -98,6 +126,26 @@ class LilHelper extends Helper
             }
         }
         return false;
+    }
+    /**
+     * Constructor
+     *
+     * ### Settings
+     *
+     * - `templates` Either a filename to a config containing templates.
+     *   Or an array of templates to load. See Cake\View\StringTemplate for
+     *   template formatting.
+     *
+     * ### Customizing tag sets
+     *
+     * Using the `templates` option you can redefine the tag HtmlHelper will use.
+     *
+     * @param \Cake\View\View $View The View this helper is being attached to.
+     * @param array $config Configuration settings for the helper.
+     */
+    public function __construct(View $View, array $config = [])
+    {
+        parent::__construct($View, $config);
     }
     
      /**
@@ -216,13 +264,10 @@ class LilHelper extends Helper
             $this->Html->image('/lil/img/delete.gif', $image_options),
             array_merge($url_defaults, (array)$url_options),
             array_merge(
-                array(
+                [
                     'escape' => false,
-                    'confirm' => __d(
-                        'lil',
-                        'Are you sure you want to delete this record?'
-                    )
-                ),
+                    'confirm' => __d('lil', 'Are you sure you want to delete this record?')
+                ],
                 $link_options
             )
         );
@@ -247,12 +292,7 @@ class LilHelper extends Helper
         return $this->Html->link(
             $this->Html->image('/lil/img/edit.gif', $image_options),
             array_merge($url_defaults, (array)$url_options),
-            array_merge(
-                array(
-                    'escape' => false,
-                ),
-                $link_options
-            )
+            array_merge(['escape' => false], $link_options)
         );
     }
     /**
@@ -275,12 +315,7 @@ class LilHelper extends Helper
         return $this->Html->link(
             $this->Html->image('/lil/img/view.gif', $image_options),
             array_merge($url_defaults, (array)$url_options),
-            array_merge(
-                array(
-                    'escape' => false,
-                ),
-                $link_options
-            )
+            array_merge(['escape' => false], $link_options)
         );
     }
     /**
@@ -589,7 +624,7 @@ class LilHelper extends Helper
                     $this->Html->link(
                         $menu_item['title'] . (empty($menu_item['submenu']) 
                             ? '' 
-                            : ' Ă„â€šĂ˘â‚¬ĹľÄ‚ËĂ˘â€šÂ¬ÄąË‡Ă„â€šĂ˘â‚¬Ä…Ä‚â€šĂ‚ÂÄ‚â€žĂ˘â‚¬ĹˇÄ‚â€ąĂ‚ÂĂ„â€šĂ‹ÂÄ‚ËĂ˘â€šÂ¬ÄąË‡Ä‚â€šĂ‚Â¬Ă„â€šĂ‹ÂÄ‚ËĂ˘â‚¬ĹˇĂ‚Â¬Ă„Ä…Ă˘â‚¬ĹźÄ‚â€žĂ˘â‚¬ĹˇÄ‚ËĂ˘â€šÂ¬ÄąÄľĂ„â€šĂ˘â‚¬Ä…Ă„Ä…Ă„â€ž'
+                            : ' &#x25BE;'
                         ),
                         empty($menu_item['url']) ? '#' : $menu_item['url'],
                         isset($menu_item['params']) 
@@ -901,50 +936,51 @@ class LilHelper extends Helper
             $ret .= $panels->pre; 
         }
         
+        $templater = $this->templater();
         foreach ($panels->panels as $panel) {
             if (is_array($panel)) {
                 if (!empty($panel['pre'])) {
                     $ret .= $panel['pre']; 
                 }
                 
-                $params = array('class' => 'view-panel');
-                if (isset($panel['id'])) {
-                    $params['id'] = $panel['id']; 
-                }
+                $params = [];
+                if (isset($panel['id'])) $params['id'] = $panel['id']; 
+                if (!empty($panel['params'])) $params = array_merge($params, (array)$panel['params']);
                 
-                if (isset($panel['params']['class'])  
-                    && is_string($panel['params']['class'])
-                ) {
-                    $params['class'] .= ' ' . $panel['params']['class'];
+                $class = [];
+                if (isset($panel['params']['class'])) {  
+                    $class = array_merge($class, (array)$panel['params']['class']);
                     unset($panel['params']['class']);
                 }
                 
-                if (!empty($panel['params']) && is_array($panel['params'])) {
-                    $params = array_merge($params, (array)$panel['params']);
-                }
-                
-                $params_str = "";
-                foreach ($params as $p_k => $p_v) {
-                    $params_str .= ' ' . $p_k . '="' . $p_v . '"';
-                }
-                
-                $ret .= sprintf('<div%1$s>', $params_str);
+                $ret .= $templater->format('panelstart', [
+                    'attrs' => $templater->formatAttributes($params),
+                    'class' => $class
+                ]);
                 
                 if (isset($panel['lines']) && is_array($panel['lines'])) {
                     foreach ($panel['lines'] as $line) {
                         if (is_array($line)) {
-                            $class = ['label-text'];
-                            if (!empty($line['params'])) {
-                                if (!empty($line['params']['class']))
-                                $class = array_merge($class, (array)$line['params']['class']);
+                            
+                            
+                            $lineClass = [];
+                            if (isset($line['params']['class'])) {  
+                                $lineClass = array_merge($lineClass, (array)$line['params']['class']);
+                                unset($line['params']['class']);
                             }
                             
+                            $lineParams = [];
+                            if (isset($line['params'])) $lineParams = (array)$line['params'];
+                            
                             if (isset($line['label'])) {
-                                $ret .= sprintf('<div class="%s">', implode(' ', $class));
-                                $ret .= sprintf(
-                                    '<span class="label">%s</span>',
-                                    $line['label']
-                                ); 
+                                $ret .= $templater->format('panellinestart', [
+                                    'attrs' => $templater->formatAttributes($lineParams),
+                                    'class' => $lineClass
+                                ]);
+                                
+                                $ret .= $templater->format('panellinelabel', [
+                                    'content' => $line['label']
+                                ]);
                             }
                             
                             if (!empty($line['text'])) {
@@ -958,7 +994,7 @@ class LilHelper extends Helper
                             }
                             
                             if (isset($line['label'])) {
-                                $ret .= '</div>';
+                                $ret .= $templater->format('panellineend', []) . PHP_EOL;
                             }
                         } else {
                             $ret .= $line;
@@ -970,7 +1006,7 @@ class LilHelper extends Helper
                     $ret .= $panel['html'];
                 }
                 
-                $ret .= '</div>' . PHP_EOL;
+                $ret .= $templater->format('panelend', []) . PHP_EOL;
                 if (!empty($panel['post'])) {
                     $ret .= $panel['post']; 
                 }
@@ -1002,14 +1038,11 @@ class LilHelper extends Helper
         if (!empty($actions['lines'])) {
             foreach ((array)$actions['lines'] as $name => $line) {
                 if (is_array($line) && !empty($line['class'])) {
-                    $parameters = array();
+                    $parameters = [];
                     if (!empty($line['parameters'])) {
                         $parameters = (array)$line['parameters'];
                     }
-                    $ret .= call_user_func_array(
-                        array($line['class'], $line['method']),
-                        $parameters
-                    );
+                    $ret .= call_user_func_array([$line['class'], $line['method']], $parameters);
                 } else {
                     $ret .= $line;
                 }
@@ -1032,65 +1065,30 @@ class LilHelper extends Helper
     public function table($data) 
     {
         $ret = '';
+        $templater = $this->templater();
         
         if (isset($data['pre'])) {
             $ret .= $data['pre']; 
         }
-        $ret .= '<table';
         
-        $parameters = [];
-        if (isset($data['parameters'])) $parameters = $data['parameters'];
-        if (isset($data['params'])) $parameters = $data['params'];
-        foreach ($parameters as $key => $param) {
-            $ret .= ' ' . $key . '="' . $param . '"';
-        }
-        $ret .= '>' . PHP_EOL;
+        $ret .= $this->_formatParams('tablestart', $data, $templater);
         
         // display thead
-        $ret .= '<thead';
-        if (!empty($data['head']['parameters'])) {
-            foreach ($data['head']['parameters'] as $key => $param) {
-                $ret .= ' ' . $key . '="' . $param . '"';
-            }
-        }
-        $ret .= '>' . PHP_EOL;
-        
-        
-        $default_parameters = array('class' => 'ui-toolbar ui-widget-header ' .
-            'ui-corner-top');
+        $ret .= '<thead>' . PHP_EOL;
+
         if (!empty($data['head']['rows'])) {
             foreach ($data['head']['rows'] as $row) {
+                $ret .= $this->_formatParams('tableheadrow', $row, $templater);
                 if (!isset($row['column'])) {
                     $row['column'] = 'th'; 
                 }
-                $ret .= '<tr';
-                
-                $parameters = [];
-                if (isset($row['parameters'])) $parameters = $row['parameters'];
-                if (isset($row['params'])) $parameters = $row['params'];
-                
-                $params = array_merge(
-                    $default_parameters,
-                    $parameters
-                );
-                foreach ($params as $key => $param) {
-                    $ret .= ' ' . $key . '="' . $param . '"';
-                }
-                $ret .= '>' . PHP_EOL;
-            
                 foreach ($row['columns'] as $col) {
                     if (!is_null($col)) {
-                        $ret .= '<' . $row['column'];
-                        $parameters = [];
-                        if (isset($col['parameters'])) $parameters = $col['parameters'];
-                        if (isset($col['params'])) $parameters = $col['params'];
-                        foreach ($parameters as $key => $param) {
-                            $ret .= ' ' . $key . '="' . $param . '"';
-                        }
-                        $ret .= '>';
-                    
-                        $ret .= is_string($col) ? $col : $col['html'];
-                        $ret .= '</' . $row['column'] . '>' . PHP_EOL;
+                        if (is_string($col)) $col = ['html' => $col];
+                        $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                        $ret .= $this->_formatParams($row['column'], 
+                            array_merge((array)$col, ['content' => $content]), 
+                            $templater, false);
                     }
                 }
             
@@ -1101,36 +1099,19 @@ class LilHelper extends Helper
         
         // display body
         $ret .= '<tbody>' . PHP_EOL;
+        
         if (!empty($data['body']['rows'])) {
             foreach ($data['body']['rows'] as $row) {
                 if ($row) {
-                    $ret .= '<tr';
-                    
-                    $parameters = [];
-                    if (isset($row['parameters'])) $parameters = $row['parameters'];
-                    if (isset($row['params'])) $parameters = $row['params'];
-                    
-                    foreach ($parameters as $key => $param) {
-                        $ret .= ' ' . $key . '="' . $param . '"';
-                    }
-                    $ret .= '>' . PHP_EOL;
+                    $ret .= $this->_formatParams('tablebodyrow', $row, $templater);
                 
                     foreach ($row['columns'] as $col) {
                         if (!is_null($col)) {
-                            $ret .= '<td';
-                            
-                            $parameters = [];
-                            if (isset($col['parameters'])) $parameters = $col['parameters'];
-                            if (isset($col['params'])) $parameters = $col['params'];
-                            foreach ($parameters as $key => $param) {
-                                $ret .= ' ' . $key . '="' . $param . '"';
-                            }
-                            
-                            $ret .= '>';
-                        
-                            $col = is_string($col) ? $col : $col['html'];
-                            $ret .= empty($col) ? '&nbsp;' : $col;
-                            $ret .= '</td>' . PHP_EOL;
+                            if (is_string($col)) $col = ['html' => $col];
+                            $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                            $ret .= $this->_formatParams('td', 
+                                array_merge((array)$col, ['content' => $content]), 
+                                $templater, false);
                         }
                     }
                 
@@ -1142,56 +1123,20 @@ class LilHelper extends Helper
         
         // display tfoot
         if (!empty($data['foot'])) {
-            $ret .= '<tfoot';
-            if (!empty($data['foot']['parameters'])) {
-                foreach ($data['foot']['parameters'] as $key => $param) {
-                    $ret .= ' ' . $key . '="' . $param . '"';
-                }
-            }
-            $ret .= '>' . PHP_EOL;
+            $ret .= '<tfoot>' . PHP_EOL;
             
-            $default_parameters = array('class' => 'ui-toolbar ui-widget-header ' .
-                'ui-corner-bl ui-corner-br');
             foreach ($data['foot']['rows'] as $row) {
-                if (!isset($row['column'])) {
-                    $row['column'] = 'th'; 
-                }
                 if ($row) {
-                    $ret .= '<tr';
-                    
-                    $parameters = [];
-                    if (isset($row['parameters'])) $parameters = $row['parameters'];
-                    if (isset($row['params'])) $parameters = $row['params'];
-                    
-                    $params = array_merge(
-                        $default_parameters,
-                        $parameters
-                    );
-                    if (!empty($params)) {
-                        foreach ($params as $key => $param) {
-                            $ret .= ' ' . $key . '="' . $param . '"';
-                        }
+                    $ret .= $this->_formatParams('tablefootrow', $row, $templater);
+                    if (!isset($row['column'])) {
+                        $row['column'] = 'th'; 
                     }
-                    $ret .= '>' . PHP_EOL;
-                    
                     foreach ($row['columns'] as $col) {
-                        if (is_string($col)) {
-                            $ret .= '<'.$row['column'].'>' . 
-                                $col . '</th>' . PHP_EOL;
-                        } else {
-                            $ret .= '<'.$row['column'];
-                            
-                            $parameters = [];
-                            if (isset($col['parameters'])) $parameters = $col['parameters'];
-                            if (isset($col['params'])) $parameters = $col['params'];
-                    
-                            foreach ($parameters as $key => $param) {
-                                $ret .= ' ' . $key . '="' . $param . '"';
-                            }
-                            $ret .= '>';
-                            $ret .= $col['html'];
-                            $ret .= '</'.$row['column'].'>' . PHP_EOL;
-                        }
+                        if (is_string($col)) $col = ['html' => $col];
+                        $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                        $ret .= $this->_formatParams($row['column'], 
+                            array_merge((array)$col, ['content' => $content]), 
+                            $templater, false);
                     }
                     
                     $ret .= '</tr>' . PHP_EOL;
@@ -1200,7 +1145,7 @@ class LilHelper extends Helper
             $ret .= '</tfoot>' . PHP_EOL;
         }
         
-        $ret .= '</table>' . PHP_EOL;
+        $ret .= $templater->format('tableend', []) . PHP_EOL;
         if (isset($data['post'])) {
             $ret .= $data['post'] . PHP_EOL; 
         }
@@ -1265,7 +1210,51 @@ class LilHelper extends Helper
         
         return $ret;
     }
+
+    /**
+     * _formatParams
+     *
+     * Format tags in form <tag class="{{class}}"{{attrs}}/> replacing {{class}}
+     * with data['parameters'] or data['params'] and {{attrs}} with all other attributes.
+     *
+     * @param string $templateName Template name.
+     * @param array $data Array with data
+     * @param object $templater Templater object.
+     * 
+     * @return string
+     */
+    private function _formatParams($templateName, $data, $templater, $hasClassInTemplate = true)
+    {
+        $attrs = [];
+        
+        $parameters = [];
+        if (isset($data['parameters'])) $parameters = $data['parameters'];
+        if (isset($data['params'])) $parameters = $data['params'];
+        
+        $content = null;
+        if (isset($data['content'])) {
+            $attrs['content'] = $data['content'];
+            unset($data['content']);
+        }
+        
+        if ($hasClassInTemplate) {
+            $class = false;
+            if (isset($parameters['class'])) {  
+                $class = (array)$parameters['class'];
+                unset($parameters['class']);
+            }
+            
+            $attrs['attrs'] = $templater->formatAttributes($parameters);
+            $attrs['class'] = $class;
+        } else {
+            $attrs['attrs'] = $templater->formatAttributes($parameters);
+        }
+        
+        $ret = $templater->format($templateName, $attrs);
+        return $ret;
+    }
 }
+
 /**
  * CleanPre function
  *
