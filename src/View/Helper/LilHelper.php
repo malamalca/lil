@@ -698,95 +698,93 @@ class LilHelper extends Helper
      *
      * @param mixed  $data      Form compliant with LilForm specifications
      * @param string $eventName Name of the event to be fired
-     * 
+     *
      * @return void
      */
-    public function form($data, $eventName = null) 
+    public function form($data, $eventName = null)
     {
         if (is_array($data)) {
             $form = new LilForm();
-            
+
             $form->pre = isset($data['pre']) ? $data['pre'] : null;
             $form->post = isset($data['post']) ? $data['post'] : null;
-            
+
             $form->form = isset($data['form']) ? $data['form'] : null;
             $form->menu = isset($data['menu']) ? $data['menu'] : null;
-            $form->title = isset($data['title_for_layout']) 
-                ? $data['title_for_layout'] 
+            $form->title = isset($data['title_for_layout'])
+                ? $data['title_for_layout']
                 : null;
         } else {
-            $form = $data; 
+            $form = $data;
         }
-        
+
         $event = new Event('Lil.Form.' . $eventName, $this->_View, [$form]);
         EventManager::instance()->dispatch($event);
         if (!empty($event->result)) {
-            $form = $event->result; 
+            $form = $event->result;
         }
-        
+
         // display title
         if (isset($form->title)) {
             $this->_View->assign('title', $form->title);
         }
-        
+
         // display menu
         if (!empty($form->menu)) {
             $this->_View->set('main_menu', $form->menu);
         }
-        
-        
+
         $ret = '';
-        
+
         // form display begins
         if (is_string($form->form['pre'])) {
-            $ret .= $form->form['pre']; 
+            $ret .= $form->form['pre'];
         } else {
             foreach ($form->form['pre'] as $line) {
                 $ret .= $line;
             }
-            
         }
         foreach ($form->form['lines'] as $name => $line) {
             if (is_string($line)) {
                 $ret .= $line;
             } else {
-                $parameters = array();
+                $parameters = [];
                 if (!empty($line['parameters'])) {
                     $parameters = (array)$line['parameters'];
                 }
                 if (!empty($line['params'])) {
                     $parameters = (array)$line['params'];
                 }
-                
+
                 if (isset($form->form['defaultHelper'])) {
-                    $line['class'] = $form->form['defaultHelper']; 
+                    $line['class'] = $form->form['defaultHelper'];
                 }
-                
+
                 if (isset($line['class']) && isset($line['method'])) {
                     if (is_object($line['class'])) {
                         $use_object =& $line['class'];
                     } else {
                         $use_object =& $this->_View->{$line['class']};
                     }
-                
+
                     $ret .= call_user_func_array(
-                        array(
-                        $use_object,
-                        $line['method']
-                        ), $parameters
+                        [
+                            $use_object,
+                            $line['method']
+                        ],
+                        $parameters
                     );
                 }
             }
         }
         if (is_string($form->form['post'])) {
-            $ret .= $form->form['post']; 
+            $ret .= $form->form['post'];
         } else {
             foreach ($form->form['post'] as $line) {
                 $ret .= $line;
             }
-            
         }
-        
+
         return $ret;
     }
     /**
@@ -796,13 +794,13 @@ class LilHelper extends Helper
      *
      * @param mixed $data    Table compliant with LilIndex specifications
      * @param mixed $options Options: showEmpty - display empty table
-     * 
+     *
      * @return void
      */
-    public function index($data, $options = array()) 
+    public function index($data, $options = [])
     {
         $ret = '';
-        
+
         // display title
         if (isset($data['title_for_layout'])) {
             $this->_View->assign('title', $data['title_for_layout']);
@@ -810,27 +808,35 @@ class LilHelper extends Helper
         if (isset($data['head_for_layout'])) {
             $this->_View->set('head_for_layout', $data['head_for_layout']);
         }
-        
+
         // display menu
         if (!empty($data['menu'])) {
-            $this->_View->set('main_menu', $data['menu']); 
+            $this->_View->set('main_menu', $data['menu']);
         }
-        
+
         // display actions
         if (!empty($data['actions'])) {
-            $ret .= $this->_actions($data['actions']); 
+            $ret .= $this->_actions($data['actions']);
         }
-        
+
+        if (isset($data['pre'])) {
+            $ret .= $data['pre'];
+        }
+
         if (!empty($data['table'])) {
             $ret .= $this->table($data['table']);
-        } else if (!empty($data['list'])) {
+        } elseif (!empty($data['list'])) {
             if (empty($data['list']['items'])) {
                 $ret .= sprintf('<p>%s</p>', __d('lil', 'No records found.'));
             } else {
                 $ret .= $this->_list($data['list']);
             }
         }
-        
+
+        if (isset($data['post'])) {
+            $ret .= $data['post'];
+        }
+
         return $ret;
     }
     /**
@@ -840,7 +846,7 @@ class LilHelper extends Helper
      *
      * @param mixed  $data      View compliant with LilIndex specifications
      * @param string $eventName Event name to be fired
-     * 
+     *
      * @return void
      */
     public function panels($data, $eventName = null) 
@@ -1218,8 +1224,9 @@ class LilHelper extends Helper
      */
     private function _list($data) 
     {
+        $ret = '';
         if (isset($data['pre'])) {
-            echo $data['pre']; 
+            $ret .= $data['pre']; 
         }
         
         $tag = 'ul';
@@ -1227,7 +1234,6 @@ class LilHelper extends Helper
             $tag = 'ol'; 
         }
         
-        $ret = '';
         $ret .= '<' . $tag;
         if (!empty($data['parameters'])) {
             foreach ($data['parameters'] as $key => $param) {
