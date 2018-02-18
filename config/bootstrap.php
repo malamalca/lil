@@ -20,7 +20,6 @@
         'path' => CACHE . 'lil_',
     ]);
 
-
     Request::addDetector('lilPopup', function ($request) {
         return $request->query('lil_submit') == 'dialog';
     });

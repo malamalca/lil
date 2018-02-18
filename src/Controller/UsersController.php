@@ -1,7 +1,7 @@
 <?php
 /**
  * Users Controller
- * 
+ *
  * PHP version 5.3
  *
  * @category Controller
@@ -41,13 +41,13 @@ class UsersController extends AppController
      * @var string
      */
     private $_cookieKey = 'lil_login';
-    
+
     /**
      * Initialize method.
      *
      * @return void
      */
-    public function initialize() 
+    public function initialize()
     {
         parent::initialize();
         $this->loadComponent('Cookie');
@@ -56,10 +56,9 @@ class UsersController extends AppController
      * BeforeFilter method.
      *
      * @param Cake\Event\Event $event Cake Event object.
-     * 
-     * @return bool
+     * @return void
      */
-    public function beforeFilter(Event $event) 
+    public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         $this->Auth->allow(['logout', 'register', 'reset', 'changePassword']);
@@ -68,7 +67,6 @@ class UsersController extends AppController
      * IsAuthorized method.
      *
      * @param array $user Authenticated user.
-     * 
      * @return bool
      */
     public function isAuthorized($user)
@@ -76,9 +74,10 @@ class UsersController extends AppController
         if (in_array($this->request->action, ['properties', 'index', 'edit', 'add', 'delete'])) {
             return $this->Auth->user('id');
         }
+
         return parent::isAuthorized($user);
     }
-    
+
     /**
      * Index method
      *
@@ -92,7 +91,7 @@ class UsersController extends AppController
         $this->set(compact('users'));
         $this->set('_serialize', ['users']);
     }
-    
+
     /**
      * Add method
      *
@@ -102,7 +101,7 @@ class UsersController extends AppController
     {
         $this->setAction('edit');
     }
-    
+
     /**
      * Edit method
      *
@@ -113,19 +112,20 @@ class UsersController extends AppController
     public function edit($id = null)
     {
         $user_fields = Configure::read('Lil.authFields');
-        
+
         if ($id) {
             $user = $this->Users->get($id);
         } else {
             $user = $this->Users->newEntity();
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData(), ['validate' => ($id ? 'properties' : 'registration')]);
+
             // remove user password when empty
-            if (empty($this->request->data[$user_fields['password']])) {
-                unset($this->request->data[$user_fields['password']]);
+            if (empty($this->request->getData($user_fields['password']))) {
+                unset($user->{$user_fields['password']});
             }
-            
-            $user = $this->Users->patchEntity($user, $this->request->data, ['validate' => ($id ? 'properties' : 'registration')]);
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'The user has been saved.'));
 
@@ -137,7 +137,7 @@ class UsersController extends AppController
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
     }
-    
+
     /**
      * Delete method
      *
@@ -157,26 +157,24 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
-    
+
     /**
      * Login method.
      *
      * This method will display login form
-     *
-     * @return void
+     * @return mixed
      */
-    public function login() 
+    public function login()
     {
         if ($this->Auth->user()) {
-            if (!$redirect = $this->Auth->loginRedirect) $redirect = '/';
-            $this->redirect($redirect); 
+            $this->redirect($this->Auth->redirectUrl());
         }
-        
+
         if ($user = $this->Auth->identify()) {
             $this->Auth->setUser($user);
-            
+
             // set cookie
-            if (!empty($this->request->data['remember_me'])) {
+            if (!empty($this->request->getData('remember_me'))) {
                 if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
                     $CookieAuth->createCookie($this->request->data);
                 }
@@ -191,37 +189,39 @@ class UsersController extends AppController
                 );
             }
         }
-        
+
         if ($this->Auth->user()) {
             $redirect = $this->Auth->redirectUrl();
             $event = new Event('Lil.Auth.afterLogin', $this->Auth, [$redirect]);
             $this->eventManager()->dispatch($event);
+
             return $this->redirect($redirect);
         }
     }
-    
+
     /**
      * Logout method
      *
-     * @return void
+     * @return mixed
      */
-    public function logout() 
+    public function logout()
     {
         if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
             $CookieAuth->deleteCookie();
         }
+
         return $this->redirect($this->Auth->logout());
     }
-    
+
     /**
      * Register method
      *
-     * @return void
+     * @return mixed
      */
-    public function register() 
+    public function register()
     {
         $user = $this->Users->newEntity(
-            $this->request->data(),
+            $this->request->getData(),
             ['validate' => 'registration']
         );
         if ($this->request->is('post')) {
@@ -229,38 +229,39 @@ class UsersController extends AppController
                 $event = new Event(
                     'Lil.Model.Users.afterRegister',
                     $this->Users,
-                    [$user, $this->request->data()]
+                    [$user, $this->request->getData()]
                 );
                 $this->eventManager()->dispatch($event);
 
                 $this->Flash->success(
                     __d('lil', 'The user has been registered.')
                 );
+
                 return $this->redirect('/');
             }
             $this->Flash->error(__d('lil', 'Unable to add the user.'));
-        } 
+        }
         $this->set('user', $user);
     }
-    
+
     /**
      * Reset method
      *
      * @return void
      */
-    public function reset() 
+    public function reset()
     {
         if ($this->Auth->user()) {
-            $this->redirect($this->Auth->loginRedirect); 
+            $this->redirect($this->Auth->loginRedirect);
         }
-        
+
         if ($this->request->is('post')) {
             $emailField = Configure::read('Lil.userEmailField');
             $user = $this->Users->find()
                 ->select()
                 ->where([$emailField => $this->request->data('email')])
                 ->first();
-                
+
             if ($user) {
                 $this->Users->sendResetEmail($user);
                 $this->Flash->success(
@@ -281,29 +282,29 @@ class UsersController extends AppController
     }
     /**
      * Change users password
-     * 
-     * @param string $resetKey Auto generated reset key.
      *
+     * @param string $resetKey Auto generated reset key.
      * @return void
      */
-    public function changePassword($resetKey = null) 
+    public function changePassword($resetKey = null)
     {
         if (!$resetKey) {
-            throw new NotFoundException(__d('lil', 'Reset key does not exist.')); 
+            throw new NotFoundException(__d('lil', 'Reset key does not exist.'));
         }
+
         $user = $this->Users->{'findBy' . Inflector::camelize(
             Configure::read('Lil.passwordResetField')
         )}($resetKey)->first();
         if (!$user) {
-            throw new NotFoundException(__d('lil', 'User does not exist.')); 
-        } 
-        
+            throw new NotFoundException(__d('lil', 'User does not exist.'));
+        }
+
         $user_fields = Configure::read('Lil.authFields');
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $this->Users->patchEntity(
                 $user,
-                $this->request->data,
+                $this->request->getData(),
                 ['validate' => 'resetPassword']
             );
             if (!$user->errors() && $this->Users->save($user)) {
@@ -318,9 +319,9 @@ class UsersController extends AppController
                 );
             }
         } else {
-            $user->{$user_fields['password']} = null; 
+            $user->{$user_fields['password']} = null;
         }
-        
+
         $this->set(compact('user'));
     }
     /**
@@ -328,26 +329,27 @@ class UsersController extends AppController
      *
      * @return void
      */
-    public function properties() 
+    public function properties()
     {
         $user = $this->Users->get($this->Auth->user('id'));
         if (!$user) {
-            throw new NotFoundException(__d('lil', 'User does not exist.')); 
+            throw new NotFoundException(__d('lil', 'User does not exist.'));
         }
-        
+
         $user_fields = Configure::read('Lil.authFields');
-        
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            // remove user password when empty
-            if (empty($this->request->data[$user_fields['password']])) {
-                unset($this->request->data[$user_fields['password']]);
-            }
-            
             $this->Users->patchEntity(
                 $user,
-                $this->request->data,
+                $this->request->getData(),
                 ['validate' => 'properties']
             );
+
+            // remove user password when empty
+            if (empty($this->request->getData($user_fields['password']))) {
+                unset($user->{$user_fields['password']});
+            }
+
             if (!$user->errors() && $this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
                 $this->redirect('/');
@@ -360,9 +362,9 @@ class UsersController extends AppController
                 );
             }
         } else {
-            $user->{$user_fields['password']} = null; 
+            $user->{$user_fields['password']} = null;
         }
-            
+
         $this->set(compact('user'));
     }
 }

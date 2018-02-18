@@ -68,15 +68,4 @@ class LilEventListener implements EventListenerInterface
             return $event->result;
         }
     }
-
-    /**
-     * Convert fields to their actual representation
-     *
-     * @param object $event Event object.
-     * @return void
-     */
-    public function convertLilFields($event)
-    {
-        //return $evc
-    }
 }
