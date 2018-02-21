@@ -93,7 +93,7 @@ class LilHelper extends Helper
             'td' => '<td{{attrs}}>{{content}}</td>',
             'th' => '<th{{attrs}}>{{content}}</th>',
 
-            'navbar-manu' => '<ul class="menu{{class}}">{{items}}</ul>',
+            'navbar-menu' => '<ul class="menu{{class}}">{{items}}</ul>',
             'navbar-item' => '<li class="menu-item{{class}}"><a href="{{url}}">{{content}}</a></li>',
 
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
@@ -278,10 +278,11 @@ class LilHelper extends Helper
             'linkdelete',
             [
                 'url' => Router::url(array_merge($url_defaults, (array)$url)),
+                'class' => isset($params['class']) ? $params['class'] : [],
                 'confirmation' => isset($params['confirm']) ? $params['confirm'] : $defaultConfirmation,
                 'attrs' => $templater->formatAttributes(
                     $params,
-                    ['confirm']
+                    ['confirm', 'class']
                 ),
             ]
         );
@@ -309,9 +310,10 @@ class LilHelper extends Helper
             'linkedit',
             [
                 'url' => Router::url(array_merge($url_defaults, (array)$url)),
+                'class' => isset($params['class']) ? $params['class'] : [],
                 'attrs' => $templater->formatAttributes(
                     $params,
-                    []
+                    ['class']
                 )
             ]
         );

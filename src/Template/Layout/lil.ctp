@@ -125,7 +125,8 @@
             <h1>&nbsp;</h1>
     <?php
     if (!empty($main_menu)) {
-        $this->Lil->menu($main_menu);
+        $main_menu = ['items' => $main_menu];
+        echo $this->Lil->menu($main_menu);
     }
     ?>
         </div>

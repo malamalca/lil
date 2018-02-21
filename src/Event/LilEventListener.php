@@ -31,7 +31,7 @@ class LilEventListener implements EventListenerInterface
         $controller = $event->subject;
 
         if (!$controller->viewBuilder()->className()) {
-        //    $controller->viewBuilder()->layout('Lil.lil');
+            $controller->viewBuilder()->layout('Lil.lil');
         }
 
         if (isset($controller->Auth)) {
