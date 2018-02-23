@@ -76,7 +76,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
     public function __destruct()
     {
         foreach ($this->_tempFiles as $fileName) unlink($fileName);
-        parent::__destruct();
+        //parent::__destruct();
     }
 
     /**

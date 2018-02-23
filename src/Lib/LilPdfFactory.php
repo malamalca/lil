@@ -17,7 +17,7 @@ use Lil\Lib\LilWKHTML2PDFEngine;
  
 class LilPdfFactory
 {
-    public static function create($engine, $enigneOptions, $viewOptions)
+    public static function create($engine, $enigneOptions, $viewOptions = [])
     {
         switch ($engine) {
             case 'TCPDF':

@@ -88,7 +88,7 @@ class LilHelper extends Helper
             'tableheadstart' => '<thead{{attrs}}>',
             'tableheadrow' => '<tr class="ui-toolbar ui-widget-header ui-corner-top{{class}}"{{attrs}}>',
             'tablebodyrow' => '<tr class="ui-row{{class}}"{{attrs}}>',
-            'tablefootrow' => '<tr class="ui-toolbar ui-widget-footer ui-corner-bottom{{class}}"{{attrs}}>',
+            'tablefootrow' => '<tr class="ui-toolbar ui-widget-header ui-corner-bottom{{class}}"{{attrs}}>',
 
             'td' => '<td{{attrs}}>{{content}}</td>',
             'th' => '<th{{attrs}}>{{content}}</th>',
