@@ -76,9 +76,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function __construct($enigneOptions, $viewOptions)
+    public function __construct($enigneOptions)
     {
-        $this->options(Hash::merge($this->_defaultOptions, $enigneOptions, $viewOptions));
+        $this->options(Hash::merge($this->_defaultOptions, $enigneOptions));
         $options = $this->options();
         parent::__construct(
             $options['orientation'],

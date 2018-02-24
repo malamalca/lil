@@ -17,6 +17,7 @@ use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\View\View;
+use Cake\Utility\Hash;
 
 use Lil\Lib\LilPdfFactory;
 
@@ -81,7 +82,8 @@ class PdfView extends View
 
         $pdfEngine = Configure::read('Lil.pdfEngine');
         $pdfOptions = Configure::read('Lil.' . $pdfEngine);
-        $this->pdf = LilPdfFactory::create($pdfEngine, (array)$pdfOptions, $this->viewOptions);
+
+        $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfOptions, $this->viewOptions));
 
         if ($response && $response instanceof Response) {
             $response->type('pdf');
