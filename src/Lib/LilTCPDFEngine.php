@@ -11,6 +11,7 @@
 namespace Lil\Lib;
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use Lil\Lib\LilPdfEngineInterface;
 
 /**
@@ -75,9 +76,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function __construct($enigneOptions, $viewOptions)
+    public function __construct($enigneOptions)
     {
-        $this->options(array_merge($this->_defaultOptions, $enigneOptions));
+        $this->options(Hash::merge($this->_defaultOptions, $enigneOptions));
         $options = $this->options();
         parent::__construct(
             $options['orientation'],
@@ -87,7 +88,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
             $options['encoding'],
             $options['diskcache']
         );
-        
+
         mb_internal_encoding('UTF-8');
 
         $this->SetCreator($options['creator']);

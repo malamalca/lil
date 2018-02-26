@@ -1,7 +1,7 @@
 <?php
 /**
  * PdfView Pdf view class
- * 
+ *
  * PHP version 5.3
  *
  * @category Class
@@ -17,6 +17,7 @@ use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\View\View;
+use Cake\Utility\Hash;
 
 use Lil\Lib\LilPdfFactory;
 
@@ -54,7 +55,7 @@ class PdfView extends View
      *
      * @var object
      */
-    protected $pdf = null;    
+    protected $pdf = null;
     /**
      * viewOptions Class
      *
@@ -76,49 +77,50 @@ class PdfView extends View
         array $viewOptions = []
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
-        
+
         $this->viewOptions = array_merge(Configure::read('Lil.pdfOptions'), (array)$viewOptions);
-        
+
         $pdfEngine = Configure::read('Lil.pdfEngine');
         $pdfOptions = Configure::read('Lil.' . $pdfEngine);
-        $this->pdf = LilPdfFactory::create($pdfEngine, (array)$pdfOptions, $this->viewOptions);
-        
+
+        $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfOptions, $this->viewOptions));
+
         if ($response && $response instanceof Response) {
             $response->type('pdf');
         }
     }
-    
+
     /**
      * Magic accessor for pdf.
      *
      * @param string $method Name of the method to execute.
      * @param array  $args   Arguments for called method.
-     * 
+     *
      * @return mixed
      */
-    public function __call($method, $args) 
+    public function __call($method, $args)
     {
         if (is_callable([$this->pdf, $method])) {
             return call_user_func_array([$this->pdf, $method], $args);
         }
     }
-    
+
     /**
      * Render a PDF view.
      *
      * @param string|null $view   The view being rendered.
      * @param string|null $layout The layout being rendered.
-     * 
+     *
      * @return string|null The rendered view.
      */
     public function render($view = null, $layout = null)
     {
         $data = parent::render($view, $layout);
-        
+
         if (!empty($data)) {
             // output body
             $rendered = explode('<!-- NEW PAGE -->', $data);
-            
+
             foreach ($rendered as $page) {
                 $pageHtml = $this->viewOptions['pagePre'] . $page . $this->viewOptions['pagePost'];
                 $this->pdf->newPage($pageHtml);
@@ -126,25 +128,25 @@ class PdfView extends View
         }
         $tmpFilename = TMP . uniqid('xml2pdf') . '.pdf';
         if (!$this->pdf->saveAs($tmpFilename)) {
-            
             $this->lastError = $this->pdf->getError();
             var_dump($this->lastError);
             die('test');
+
             return false;
         }
         if (!file_exists($tmpFilename)) {
             die('File does not exist ' . $tmpFilename);
             $this->lastError = 'PDF file doesn\'t exist.';
+
             return false;
         }
         $result = file_get_contents($tmpFilename);
         unlink($tmpFilename);
-        
+
         //if (isset($this->viewOptions['dest']) && in_array($this->viewOptions['dest'], ['S', 'E'])) {
-        //    return $result; 
+        //    return $result;
         //}
         //return $data;
         return $result;
     }
-
 }

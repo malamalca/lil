@@ -11,6 +11,7 @@
 namespace Lil\Lib;
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 use Lil\Lib\LilPdfEngineInterface;
 use mikehaertl\wkhtmlto\Pdf;
 
@@ -58,14 +59,14 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function __construct($enigneOptions, $viewOptions)
+    public function __construct($enigneOptions)
     {
-        $this->options(array_merge($this->_defaultOptions, $enigneOptions));
+        $this->options(Hash::merge($this->_defaultOptions, $enigneOptions));
         $options = $this->options();
         parent::__construct($enigneOptions);
         
-        if (!empty($viewOptions['headerHtml'])) $this->setHeaderHtml($viewOptions['headerHtml']);
-        if (!empty($viewOptions['footerHtml'])) $this->setFooterHtml($viewOptions['footerHtml']);
+        if (!empty($enigneOptions['headerHtml'])) $this->setHeaderHtml($viewOptions['headerHtml']);
+        if (!empty($enigneOptions['footerHtml'])) $this->setFooterHtml($viewOptions['footerHtml']);
     }
     
     /**
