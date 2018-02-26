@@ -61,7 +61,10 @@ class UsersController extends AppController
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['logout', 'register', 'reset', 'changePassword']);
+        $this->Auth->allow(['logout', 'reset', 'changePassword']);
+        if (Configure::read('Lil.enableRegistration')) {
+            $this->Auth->allow(['register']);        
+        }
     }
     /**
      * IsAuthorized method.
@@ -220,6 +223,9 @@ class UsersController extends AppController
      */
     public function register()
     {
+        if (!Configure::read('Lil.enableRegistration')) {
+            throw new NotFoundException(__d('lil', 'Cannot register new users.'));
+        }
         $user = $this->Users->newEntity(
             $this->request->getData(),
             ['validate' => 'registration']
@@ -250,7 +256,7 @@ class UsersController extends AppController
      * @return void
      */
     public function reset()
-    {
+    {       
         if ($this->Auth->user()) {
             $this->redirect($this->Auth->loginRedirect);
         }
