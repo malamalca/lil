@@ -688,7 +688,7 @@ class LilHelper extends Helper
                             'subid' => $submenuId,
                             'attrs' => $templater->formatAttributes(
                                 isset($menu_item['params']) ? $menu_item['params'] : [],
-                                ['class']
+                                ['class', 'confirm']
                             ),
                         ]
                     ) . PHP_EOL;

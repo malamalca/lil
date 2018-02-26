@@ -687,3 +687,14 @@ tr.even td.sorting_1 {
 	clear: both;
 	margin-top: 100px;
 }
+
+ul.paginator-numbers>li {
+	display: inline;
+	padding: 3px;
+}
+ul.paginator-numbers>li>a {
+	text-decoration: none;
+}
+ul.paginator-numbers>li.active>a {
+	text-decoration: underline;
+}
