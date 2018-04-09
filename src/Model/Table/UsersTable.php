@@ -1,7 +1,7 @@
 <?php
 /**
  * Users Table
- * 
+ *
  * PHP version 5.3
  *
  * @category Table
@@ -40,24 +40,24 @@ class UsersTable extends Table
 {
     /**
      * Initialize method.
-     * 
+     *
      * @param array $config Table Configuration.
      *
      * @return void
      */
-    public function initialize(array $config) 
+    public function initialize(array $config)
     {
         $this->addBehavior('Timestamp');
-        
+
         $this->hasMany('Settings', [
             'foreignKey' => 'owner_id',
         ]);
     }
-    
+
     /**
      * Costum Auth finder method
-     * 
-     * @param array $config Table Configuration.
+     *
+     * @param array $query Table Configuration.
      *
      * @return void
      */
@@ -65,24 +65,25 @@ class UsersTable extends Table
     {
         $event = new Event('Lil.authFinder', $this, ['query' => $query, 'options' => $options]);
         EventManager::instance()->dispatch($event);
-        
+
         if (!empty($event->result['query'])) {
-            $query = $event->result; 
+            $query = $event->result;
         }
+
         return $query;
     }
-    
+
     /**
      * Default validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * 
+     *
      * @return \Cake\Validation\Validator
      */
     public function validationDefault(Validator $validator)
     {
         $user_fields = Configure::read('Lil.authFields');
-        
+
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
             ->allowEmpty('id', 'create')
@@ -91,18 +92,18 @@ class UsersTable extends Table
 
         return $validator;
     }
-    
+
     /**
      * Registration validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * 
+     *
      * @return \Cake\Validation\Validator
      */
     public function validationRegistration($validator)
     {
         $user_fields = Configure::read('Lil.authFields');
-        
+
         $validator = new Validator();
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
@@ -113,9 +114,12 @@ class UsersTable extends Table
             ->requirePresence('repeat_pass')
             ->notEmpty('repeat_pass')
             ->add(
-                'repeat_pass', 'match', [
+                'repeat_pass',
+                'match',
+                [
                     'rule' => function ($value, $context) {
                         $user_fields = Configure::read('Lil.authFields');
+
                         return $value == $context['data'][$user_fields['password']];
                     }
                 ]
@@ -123,41 +127,47 @@ class UsersTable extends Table
 
         return $validator;
     }
-    
+
     /**
      * Properties validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * 
+     *
      * @return \Cake\Validation\Validator
      */
     public function validationProperties($validator)
     {
         $user_fields = Configure::read('Lil.authFields');
-        
+
         $validator = new Validator();
         $validator
             ->requirePresence('id')
             ->notEmpty('id')
             ->add('id', 'valid', ['rule' => 'uuid'])
-            
+
             ->notEmpty(Configure::read('Lil.userDisplayField'))
-            
+
             ->allowEmpty(
-                'old_pass', function ($context) {
+                'old_pass',
+                function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
+
                     return empty($context['data'][$user_fields['password']]);
                 }
             )
             // require old_pass only when user wants to change password
             ->requirePresence(
-                'old_pass', function ($context) {
+                'old_pass',
+                function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
+
                     return !empty($context['data'][$user_fields['password']]);
                 }
             )
             ->add(
-                'old_pass', 'match', [
+                'old_pass',
+                'match',
+                [
                 'rule' => function ($value, $context) {
                     $user_fields = Configure::read('Lil.authFields');
                     $Users = TableRegistry::get('Lil.Users');
@@ -165,6 +175,7 @@ class UsersTable extends Table
                         ->select()
                         ->where(['id' => $context['data']['id']])
                         ->first();
+
                     return (new DefaultPasswordHasher)->check(
                         $value,
                         $user->{$user_fields['password']}
@@ -172,32 +183,42 @@ class UsersTable extends Table
                 }
                 ]
             )
-            
+
+            ->allowEmpty($user_fields['password'])
             ->add(
-                $user_fields['password'], 'minLength', [
+                $user_fields['password'],
+                'minLength',
+                [
                 'rule' => ['minLength', 6]
                 ]
             )
-            
+
             ->allowEmpty(
-                'repeat_pass', function ($context) {
+                'repeat_pass',
+                function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
+
                     return empty($context['data'][$user_fields['password']]);
                 }
             )
             // require repeat_pass only when user wants to change password
             ->requirePresence(
-                'repeat_pass', function ($context) {
+                'repeat_pass',
+                function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
+
                     return !empty($context['data'][$user_fields['password']]);
                 }
             )
-            
+
             // repeat password should match new password
             ->add(
-                'repeat_pass', 'match', [
+                'repeat_pass',
+                'match',
+                [
                     'rule' => function ($value, $context) {
                         $user_fields = Configure::read('Lil.authFields');
+
                         return $value == $context['data'][$user_fields['password']];
                     }
                 ]
@@ -205,12 +226,12 @@ class UsersTable extends Table
 
         return $validator;
     }
-    
+
     /**
      * validationResetPassword validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * 
+     *
      * @return \Cake\Validation\Validator
      */
     public function validationResetPassword($validator)
@@ -219,35 +240,43 @@ class UsersTable extends Table
         $validator = new Validator();
         $validator
             ->add(
-                $user_fields['password'], 'minLength', [
+                $user_fields['password'],
+                'minLength',
+                [
                 'rule' => ['minLength', 4]
                 ]
             )
             ->requirePresence(
-                'repeat_pass', function ($context) {
+                'repeat_pass',
+                function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
+
                     return !empty($context['data'][$user_fields['password']]);
                 }
             )
-            
+
             // repeat password should match new password
             ->add(
-                'repeat_pass', 'match', [
+                'repeat_pass',
+                'match',
+                [
                     'rule' => function ($value, $context) {
                         $user_fields = Configure::read('Lil.authFields');
+
                         return $value == $context['data'][$user_fields['password']];
                     }
                 ]
             );
+
         return $validator;
     }
-    
+
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * 
+     *
      * @return \Cake\ORM\RulesChecker
      */
     public function buildRules(RulesChecker $rules)
@@ -255,19 +284,21 @@ class UsersTable extends Table
         $user_fields = Configure::read('Lil.authFields');
         $rules->add(
             new IsUnique([$user_fields['username']]),
-            'unique', ['errorField' => $user_fields['username']]
+            'unique',
+            ['errorField' => $user_fields['username']]
         );
+
         return $rules;
     }
-    
+
     /**
      * Sends reset email
      *
      * @param entity $user User entity.
-     * 
+     *
      * @return void
      */
-    public function sendResetEmail($user) 
+    public function sendResetEmail($user)
     {
         $reset_key = uniqid();
         $user->{Configure::read('Lil.passwordResetField')} = $reset_key;
@@ -280,16 +311,15 @@ class UsersTable extends Table
             );
             $email->to($user->{Configure::read('Lil.userEmailField')});
             $email->subject(__d('lil', 'Password Reset'));
-            
+
             $email->template('Lil.reset');
             $email->emailFormat('text');
             $email->viewVars(['reset_key' => $reset_key]);
             $email->helpers(['Html']);
-            
-            
+
             return $email->send();
         }
-        
+
         return false;
     }
 }

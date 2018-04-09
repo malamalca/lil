@@ -20,7 +20,6 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Network\Request;
 use Cake\Network\Response;
 
-
 /**
  * An authentication adapter for AuthComponent. Provides the ability to authenticate using cookies
  *
@@ -47,13 +46,15 @@ class CookieAuthenticate extends BaseAuthenticate
     {
         parent::__construct($registry, $config);
         $this->_controller = $registry->getController();
-        if (!isset($this->_controller->Cookie)) $this->_controller->loadComponent('Cookie');
+        if (!isset($this->_controller->Cookie)) {
+            $this->_controller->loadComponent('Cookie');
+        }
     }
-    
+
     /**
      * Checks the fields to ensure they are supplied.
      *
-     * @param \Cake\Network\Request $request The request that contains login information.
+     * @param \Cake\Network\Request $data The request that contains login information.
      * @param array $fields The fields to be checked.
      * @return bool False if the fields have not been supplied. True if they exist.
      */
@@ -64,6 +65,7 @@ class CookieAuthenticate extends BaseAuthenticate
                 return false;
             }
         }
+
         return true;
     }
 
@@ -79,14 +81,14 @@ class CookieAuthenticate extends BaseAuthenticate
     public function authenticate(Request $request, Response $response)
     {
         $fields = $this->_config['fields'];
-        
+
         if (!$cookie = $this->_controller->Cookie->read($this->_cookieKey)) {
             return false;
-        } 
+        }
         if (!$this->_checkFields($cookie, $fields)) {
             return false;
         }
-        
+
         return $this->_findUser(
             $cookie[$fields['username']],
             $cookie[$fields['password']]
@@ -96,16 +98,17 @@ class CookieAuthenticate extends BaseAuthenticate
      * Creates login cookie
      *
      * @param array $data Data containing username and password.
-     
+
      * @return mixed False on failure.  An array of cookie data on success.
      */
-    public function createCookie($data) {
+    public function createCookie($data)
+    {
         $fields = $this->_config['fields'];
-        
+
         if (!$this->_checkFields($data, $fields)) {
             return false;
         }
-        
+
         $cookie = [
             $fields['username'] => $data[$fields['username']],
             $fields['password'] => $data[$fields['password']]
@@ -114,15 +117,16 @@ class CookieAuthenticate extends BaseAuthenticate
             $this->_cookieKey,
             ['expires' => '+30 days']
         );
-        
+
         return $this->_controller->Cookie->write($this->_cookieKey, $cookie);
     }
     /**
      * Deletes login cookie
      *
-     * @return boolean Result.
+     * @return bool Result.
      */
-    public function deleteCookie() {
+    public function deleteCookie()
+    {
         return $this->_controller->Cookie->delete($this->_cookieKey);
     }
 }

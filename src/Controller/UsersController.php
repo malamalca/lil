@@ -63,7 +63,7 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         $this->Auth->allow(['logout', 'reset', 'changePassword']);
         if (Configure::read('Lil.enableRegistration')) {
-            $this->Auth->allow(['register']);        
+            $this->Auth->allow(['register']);
         }
     }
     /**
@@ -256,7 +256,7 @@ class UsersController extends AppController
      * @return void
      */
     public function reset()
-    {       
+    {
         if ($this->Auth->user()) {
             $this->redirect($this->Auth->loginRedirect);
         }

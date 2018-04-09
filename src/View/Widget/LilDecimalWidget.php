@@ -1,7 +1,7 @@
 <?php
 /**
  * LilDateWidget Form widget for decimal input
- * 
+ *
  * PHP version 5.3
  *
  * @category Class
@@ -34,14 +34,14 @@ class LilDecimalWidget implements WidgetInterface
      * @var \Cake\View\StringTemplate
      */
     protected $templates;
-    
+
     /**
      * View instance.
      *
      * @var \Cake\View\View
      */
     protected $view;
-    
+
     /**
      * Constructor.
      *
@@ -53,7 +53,7 @@ class LilDecimalWidget implements WidgetInterface
         $this->templates = $templates;
         $this->view = $view;
     }
-    
+
     /**
      * Render a LilDate field.
      *
@@ -68,7 +68,7 @@ class LilDecimalWidget implements WidgetInterface
      *
      * @param array            $data    The data to build a button with.
      * @param ContextInterface $context The current form context.
-     * 
+     *
      * @return string
      */
     public function render(array $data, ContextInterface $context)
@@ -80,26 +80,29 @@ class LilDecimalWidget implements WidgetInterface
             'empty' => true,
             'class' => 'right',
         ];
-        
+
         if (is_numeric($data['val'])) {
             $data['value'] = $this->view->Number->precision($data['val'], $data['precision']);
         } else {
             $data['value'] = $data['val'];
         }
-        
+
         $this->view->Lil->jsReady(
             sprintf(
                 '$("#%1$s").LilFloat({places:%2$s});',
-                $data['id'], $data['precision']
+                $data['id'],
+                $data['precision']
             )
         );
-        
+
         return $this->templates->format(
-            'input', [
+            'input',
+            [
                 'type' => 'text',
                 'name' => $data['name'],
                 'attrs' => $this->templates->formatAttributes(
-                    $data, [
+                    $data,
+                    [
                     'name', 'val', 'precision', 'empty'
                     ]
                 )
@@ -111,7 +114,7 @@ class LilDecimalWidget implements WidgetInterface
      * {@inheritDoc}
      *
      * @param array $data Fields data.
-     * 
+     *
      * @return array
      */
     public function secureFields(array $data)

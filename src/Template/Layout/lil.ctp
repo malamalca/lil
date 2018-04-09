@@ -20,13 +20,13 @@
         );
     ?>
     <?= $this->fetch('meta') ?>
-	
+
     <?php
     printf($this->Html->css('/lil/css/layout') . PHP_EOL);
     if ($colorScheme = Configure::read('Lil.colorScheme')) {
         printf($this->Html->css('/lil/css/lil_'. $colorScheme) . PHP_EOL);
     }
-    
+
     printf($this->Html->css('/lil/js/jquery-ui/jquery-ui.min') . PHP_EOL);
     printf($this->Html->css('/lil/js/datatables/css/dataTables.jqueryui.min') . PHP_EOL);
     printf($this->Html->css('/lil/js/responsive/css/responsive.jqueryui.min') . PHP_EOL);
@@ -34,9 +34,9 @@
     printf($this->Html->css('/lil/css/spinningwheel') . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_print',  ['media' => 'print']) . PHP_EOL);
     printf($this->Html->css('/lil/css/lil_mobile', ['media' => 'only screen and (max-device-width: 600px)']) . PHP_EOL);
-    
+
     print ($this->fetch('css') . PHP_EOL);
-    
+
     printf($this->Html->script('/lil/js/jquery.min') . PHP_EOL);
     printf($this->Html->script('/lil/js/jquery-ui/jquery-ui.min') . PHP_EOL);
     printf($this->Html->script('/lil/js/datatables/js/jquery.dataTables.min') . PHP_EOL);
@@ -49,9 +49,9 @@
     printf($this->Html->script('/lil/js/lil_float') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
     printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
-    
+
     print ($this->fetch('script') . PHP_EOL);
-    
+
     if ($this->request->is('mobile')) {
         printf($this->Html->script('/lil/js/lil_mobile') . PHP_EOL);
     }
@@ -67,27 +67,27 @@
     <?php
     if (empty($admin_logo)) {
         $admin_logo = $this->Html->link($this->Html->image('/lil/img/logo.gif'), '/', ['escape' => false]);
-    }      
+    }
     printf('<div id="header-logo">%s</div>' . PHP_EOL, $admin_logo);
-    
+
     if ($this->request->is('mobile')) {
         echo '<div class="popup_link" id="popup_header-menu">';
         echo $this->Html->image('/lil/img/menu.png');
         echo '</div>';
     }
-          
+
     if (empty($admin_title)) {
         $admin_title = __d('lil', 'Welcome');
     }
     printf('<h1>%s</h1>' . PHP_EOL, $admin_title);
-    
-            
+
+
     if (!empty($currentUser)) {
         $userTitle = $currentUser[Configure::read('Lil.userDisplayField')];
         if (!$userTitle) {
-            $userTitle = __d('lil', 'Unknown'); 
+            $userTitle = __d('lil', 'Unknown');
         }
-                
+
         printf(
             '<div id="header-user">%1$s</div>',
             $this->Html->link(
@@ -97,7 +97,7 @@
                 ]
             )
         );
-                
+
         $popup_link_user = ['items' => [
             'settings' => [
                 'title' => __d('lil', 'Settings'),
@@ -162,19 +162,19 @@
                 "url": "<?php echo Router::url(['plugin' => 'Lil', 'controller' => 'Pages', 'action' => 'datatables']); ?>"
             }
         };
-        
+
         $(document).ready(function() {
             initDatatables();
-            
+
             $.ajaxSetup ({ cache: false });
-            
+
             <?php $formatter = $this->Number->formatter(); ?>
-            
+
             lilFloatSetup.decimalSeparator = "<?= $formatter->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL); ?>";
             lilFloatSetup.thousandsSeparator = "<?= $formatter->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL); ?>";
-            
+
             <?= $this->Lil->jsReadyOut(); ?>
-            
+
         });
 
         // Prevent jQuery UI dialog from blocking focus

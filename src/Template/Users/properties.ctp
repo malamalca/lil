@@ -23,7 +23,7 @@ $user_properties = [
 				'method' => 'hidden',
 				'parameters' => ['referer']
 			],
-			
+
 			'fs_basics_start' => '<fieldset>',
 			'lg_basics' => sprintf('<legend>%s</legend>', __d('lil', 'Basics')),
 			'name' => [
@@ -35,7 +35,7 @@ $user_properties = [
 				]]
 			],
 			'fs_basics_end' => '</fieldset>',
-			
+
 			'fs_passwords_start' => '<fieldset>',
 			'lg_passwords' => sprintf('<legend>%s</legend>', __d('lil', 'Change password')),
 			'old_pass' => [
@@ -62,13 +62,13 @@ $user_properties = [
 				]]
 			],
 			'fs_passwords_end' => '</fieldset>',
-			
+
 			'submit' => [
 				'method'     => 'submit',
 				'parameters' => [
 					'label' => __d('lil', 'Save')
 				]
-			],			
+			],
 			'form_end' => [
 				'method'     => 'end',
 				'parameters' => []

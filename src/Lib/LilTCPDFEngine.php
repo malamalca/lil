@@ -72,7 +72,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
     /**
      * __construct
      *
-     * @param array $options Array of options.
+     * @param array $enigneOptions Array of options.
      *
      * @return void
      */
