@@ -86,7 +86,7 @@ class PdfView extends View
         $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfOptions, $this->viewOptions));
 
         if ($response && $response instanceof Response) {
-            $response->type('pdf');
+            $response = $response->withType('pdf');
         }
     }
 
@@ -129,8 +129,6 @@ class PdfView extends View
         $tmpFilename = TMP . uniqid('xml2pdf') . '.pdf';
         if (!$this->pdf->saveAs($tmpFilename)) {
             $this->lastError = $this->pdf->getError();
-            var_dump($this->lastError);
-            die('test');
 
             return false;
         }

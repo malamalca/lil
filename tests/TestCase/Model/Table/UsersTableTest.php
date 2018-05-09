@@ -64,7 +64,7 @@ class UsersTableTest extends TestCase
     public function testValidateProperties()
     {
         $users = TableRegistry::get('Lil.Users');
-        
+
         // incorrect old password
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -74,11 +74,11 @@ class UsersTableTest extends TestCase
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
-        $this->assertEquals(1, sizeof($errors));
+        $this->assertEquals(1, count($errors));
         $this->assertTrue(!empty($errors['old_pass']));
-        
+
         // passwords do not match
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -88,21 +88,21 @@ class UsersTableTest extends TestCase
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
-        $this->assertEquals(1, sizeof($errors));
+        $this->assertEquals(1, count($errors));
         $this->assertTrue(!empty($errors['repeat_pass']));
-        
+
         // on empty password minLength
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => '',
-            'passwd' => '',
-            'repeat_pass' => ''
+            'passwd' => 'a',
+            'repeat_pass' => 'a'
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
         //$this->assertTrue((new DefaultPasswordHasher)->check('test', $user->passwd));
 
@@ -113,10 +113,10 @@ class UsersTableTest extends TestCase
             'passwd' => 'testtest2',
             'repeat_pass' => 'testtest2'
         ];
-        
+
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(empty($errors));
         $this->assertTrue((new DefaultPasswordHasher)->check('testtest2', $user->passwd));
     }
@@ -130,7 +130,7 @@ class UsersTableTest extends TestCase
     public function testValidateResetPassword()
     {
         $users = TableRegistry::get('Lil.Users');
-        
+
         // incorrect old password
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -140,11 +140,11 @@ class UsersTableTest extends TestCase
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
         $this->assertEquals(1, sizeof($errors));
         $this->assertTrue(!empty($errors['old_pass']));
-        
+
         // passwords do not match
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -154,11 +154,11 @@ class UsersTableTest extends TestCase
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
-        $this->assertEquals(1, sizeof($errors));
+        $this->assertEquals(1, count($errors));
         $this->assertTrue(!empty($errors['repeat_pass']));
-        
+
         // empty password
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -168,11 +168,11 @@ class UsersTableTest extends TestCase
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
-        $errors = $user->errors();
+        $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
-        $this->assertEquals(1, sizeof($errors));
+        $this->assertEquals(1, count($errors));
         $this->assertTrue(!empty($errors['passwd']));
-        
+
         // ok
         $data = [
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
@@ -180,9 +180,9 @@ class UsersTableTest extends TestCase
             'passwd' => 'testtest2',
             'repeat_pass' => 'testtest2'
         ];
-        
+
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
-        $this->assertTrue(empty($user->errors()));
+        $this->assertTrue(empty($user->getErrors()));
     }
 }

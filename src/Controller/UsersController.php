@@ -74,7 +74,7 @@ class UsersController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($this->request->action, ['properties', 'index', 'edit', 'add', 'delete'])) {
+        if (in_array($this->request->getParam('action'), ['properties', 'index', 'edit', 'add', 'delete'])) {
             return $this->Auth->user('id');
         }
 
@@ -196,7 +196,7 @@ class UsersController extends AppController
         if ($this->Auth->user()) {
             $redirect = $this->Auth->redirectUrl();
             $event = new Event('Lil.Auth.afterLogin', $this->Auth, [$redirect]);
-            $this->eventManager()->dispatch($event);
+            $this->getEventManager()->dispatch($event);
 
             return $this->redirect($redirect);
         }
@@ -231,7 +231,7 @@ class UsersController extends AppController
             ['validate' => 'registration']
         );
         if ($this->request->is('post')) {
-            if (!$user->errors() && $this->Users->save($user)) {
+            if (!$user->getErrors() && $this->Users->save($user)) {
                 $event = new Event(
                     'Lil.Model.Users.afterRegister',
                     $this->Users,
@@ -313,7 +313,7 @@ class UsersController extends AppController
                 $this->request->getData(),
                 ['validate' => 'resetPassword']
             );
-            if (!$user->errors() && $this->Users->save($user)) {
+            if (!$user->getErrors() && $this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
                 $this->redirect('/');
             } else {
@@ -356,7 +356,7 @@ class UsersController extends AppController
                 unset($user->{$user_fields['password']});
             }
 
-            if (!$user->errors() && $this->Users->save($user)) {
+            if (!$user->getErrors() && $this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
                 $this->redirect('/');
             } else {

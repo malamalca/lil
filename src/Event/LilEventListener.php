@@ -28,10 +28,10 @@ class LilEventListener implements EventListenerInterface
      */
     public function beforeRender(Event $event)
     {
-        $controller = $event->subject;
+        $controller = $event->getSubject();
 
-        if (!$controller->viewBuilder()->className()) {
-            $controller->viewBuilder()->layout('Lil.lil');
+        if (!$controller->viewBuilder()->getClassName()) {
+            $controller->viewBuilder()->setLayout('Lil.lil');
         }
 
         if (isset($controller->Auth)) {
@@ -39,11 +39,11 @@ class LilEventListener implements EventListenerInterface
         }
 
         if ($controller->request->is('ajax')) {
-            $controller->viewBuilder()->layout('Lil.popup');
+            $controller->viewBuilder()->setLayout('Lil.popup');
         }
 
-        if ($controller->request->query('lil_submit')) {
-            $controller->viewBuilder()->layout('Lil.popup_iframe');
+        if ($controller->request->getQuery('lil_submit')) {
+            $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
     }
 
@@ -57,12 +57,11 @@ class LilEventListener implements EventListenerInterface
      */
     public function checkAjaxRedirect($event, $url, $response)
     {
-        $controller = $event->subject;
-        if ($submitKind = $controller->request->query('lil_submit')) {
-            $controller->autoRender = false;
+        $controller = $event->getSubject();
+        if ($submitKind = $controller->request->getQuery('lil_submit')) {
+            $controller->disableAutoRender();
             $controller->set('popupRedirect', true);
-            $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe');
-            $event->result->statusCode(200);
+            $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);
             $event->stopPropagation();
 
             return $event->result;
