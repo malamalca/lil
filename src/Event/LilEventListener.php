@@ -1,6 +1,7 @@
 <?php
 namespace Lil\Event;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 
@@ -31,7 +32,7 @@ class LilEventListener implements EventListenerInterface
         $controller = $event->getSubject();
 
         if (!$controller->viewBuilder()->getClassName()) {
-            $controller->viewBuilder()->setLayout('Lil.lil');
+            $controller->viewBuilder()->setLayout(Configure::read('Lil.layout'));
         }
 
         if (isset($controller->Auth)) {

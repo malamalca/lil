@@ -106,6 +106,7 @@ class LilHelper extends Helper
 
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
             'linkedit' => '<a href="{{url}}" {{attrs}}>edit</a>',
+            'linkpopup' => '<a href="{{url}}" id="popup_{{name}}" class="popup_link"{{attrs}}>{{content}}</a>'
         ]
     ];
     /**
@@ -349,6 +350,41 @@ class LilHelper extends Helper
             array_merge($url_defaults, (array)$url_options),
             array_merge(['escape' => false], $link_options)
         );
+    }
+    /**
+     * popupLink method
+     *
+     * Returns default popup link
+     *
+     * @param string $name  Popup name.
+     * @param string $title Link Caption.
+     * @param mixed $url   Either an array with url or model's id
+     * @param mixed $options  Array with options applied to link element
+     * @return mixed
+     */
+    public function popupLink($name, $title, $url = [], $options = [])
+    {
+        $templater = $this->templater();
+
+        $defaultAttributes = [
+            'id' => 'popup_' . $name,
+            'class' => 'popup_link'
+        ];
+
+        $ret = $templater->format(
+            'linkpopup',
+            [
+                'url' => Router::url((array)$url),
+                'content' => h($title),
+                'name' => $name,
+                'attrs' => $templater->formatAttributes(
+                    array_merge($defaultAttributes, $options),
+                    ['id', 'class']
+                )
+            ]
+        );
+
+        return $ret;
     }
     /**
      * Replaces double line-breaks with paragraph elements.
