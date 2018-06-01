@@ -66,7 +66,7 @@ class UsersTable extends Table
         $event = new Event('Lil.authFinder', $this, ['query' => $query, 'options' => $options]);
         EventManager::instance()->dispatch($event);
 
-        if (!empty($event->result['query'])) {
+        if (!empty($event->result)) {
             $query = $event->result;
         }
 
@@ -254,6 +254,7 @@ class UsersTable extends Table
                     return !empty($context['data'][$user_fields['password']]);
                 }
             )
+            ->allowEmpty('repeat_pass')
 
             // repeat password should match new password
             ->add(
@@ -265,6 +266,26 @@ class UsersTable extends Table
 
                         return $value == $context['data'][$user_fields['password']];
                     }
+                ]
+            )
+
+            ->add(
+                'old_pass',
+                'match',
+                [
+                'rule' => function ($value, $context) {
+                    $user_fields = Configure::read('Lil.authFields');
+                    $Users = TableRegistry::get('Lil.Users');
+                    $user = $Users->find()
+                        ->select()
+                        ->where(['id' => $context['data']['id']])
+                        ->first();
+
+                    return (new DefaultPasswordHasher)->check(
+                        $value,
+                        $user->{$user_fields['password']}
+                    );
+                }
                 ]
             );
 

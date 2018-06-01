@@ -1,8 +1,8 @@
 <?php
 	use Cake\Core\Configure;
-	
+
 	$user_fields = Configure::read('Lil.authFields');
-	
+
 	$user_login = [
 		'title_for_layout' => __d('lil', 'Login'),
 		'form' => [
@@ -25,7 +25,7 @@
 				],
 				'username' => [
 					'class' => $this->Form,
-					'method' => 'input',
+					'method' => 'control',
 					'parameters' => [
 						$user_fields['username'],
 						[
@@ -36,7 +36,7 @@
 				],
 				'password' => [
 					'class' => $this->Form,
-					'method' => 'input',
+					'method' => 'control',
 					'parameters' => [
 						$user_fields['password'],
 						[
@@ -47,7 +47,7 @@
 				],
 				'remember_me' => [
 					'class'      => $this->Form,
-					'method'     => 'input',
+					'method'     => 'control',
 					'parameters' => [
 						'remember_me',
 						[
@@ -74,7 +74,7 @@
 						])
 					),
 				'registration' => !Configure::read('Lil.enableRegistration') ? null :
-					sprintf('<div id="UserLoginRegister">%s</div>', 
+					sprintf('<div id="UserLoginRegister">%s</div>',
 						$this->Html->link(__d('lil', 'Register as new user'), [
 							'plugin'     => 'Lil',
 							'controller' => 'Users',
@@ -84,5 +84,5 @@
 			]
 		]
 	];
-	
+
 	echo $this->Lil->form($user_login, 'users-login');

@@ -100,8 +100,12 @@ class LilHelper extends Helper
                 '<ul class="nav nav-sub">{{subitems}}</ul></div>' .
                 '</li>',
 
+            'popup' => '<div class="popup_{{name}} popup ui-widget ui-widget-content ui-helper-clearfix ui-corner-all {{class}}"><ul>{{content}}</ul></div>',
+            'popup-item' => '<li><a href="{{url}}" {{attrs}}>{{content}}</a></li>',
+            'popup-item-plain' => '<li>{{content}}</li>',
+
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
-            'linkedit' => '<a href="{{url}}" {{attrs}}>edit</a>'
+            'linkedit' => '<a href="{{url}}" {{attrs}}>edit</a>',
         ]
     ];
     /**
@@ -680,6 +684,11 @@ class LilHelper extends Helper
                         $itemTemplate = $options['prefix'] . '-active';
                     }
 
+                    $attrs = isset($menu_item['params']) ? $menu_item['params'] : [];
+                    if (!empty($attrs['confirm'])) {
+                        $attrs['data-confirm'] = h($attrs['confirm']);
+                    }
+
                     $itemsString .= $templater->format(
                         $itemTemplate,
                         [
@@ -690,7 +699,7 @@ class LilHelper extends Helper
                             'subitems' => $subitemsString,
                             'subid' => $submenuId,
                             'attrs' => $templater->formatAttributes(
-                                isset($menu_item['params']) ? $menu_item['params'] : [],
+                                $attrs,
                                 ['class', 'confirm']
                             ),
                         ]
@@ -731,54 +740,38 @@ class LilHelper extends Helper
             unset($data['items']);
         }
 
-        $class = 'popup_%1$s popup ui-widget ui-widget-content ' .
-            'ui-helper-clearfix ui-corner-all';
+        $templater = $this->templater();
 
-        $params = '';
-        foreach ($data as $key => $param) {
-            $params = ' ' . $key . '="' . $param . '"';
-        }
-
-        $ret = sprintf('<div class="' . $class . '"' . $params . '><ul>', $name);
-
+        $itemsString = '';
         foreach ($items as $item) {
             if ($item) {
                 if (is_string($item)) {
-                    $ret .= sprintf('<li>%1$s</li>', $item);
+                    $itemsString .= $templater->format('popup-item-plain', ['content' => $item]) . PHP_EOL;
                 } else {
-                    // li params
-                    $params = '';
-                    if (!empty($item['active'])) {
-                        $params .= ' class="ui-state-active"';
-                    }
-
+                    $params = [];
                     if (!empty($item['params'])) {
-                        /*if (is_array($item['params'])) {
-                        foreach ($item['params'] as $key => $param) {
-                        $params = ' ' . $key . '="' . $param . '"';
-                        }
-                        } else $params = $item['params'];*/
+                        $params = (array)$item['params'];
                     }
-                    $ret .= sprintf(
-                        '<li%2$s>%1$s</li>',
-                        $this->Html->link(
-                            $item['title'],
-                            empty($item['url']) ? '#' : $item['url'],
-                            isset($item['params']) ? $item['params'] : []
-                        ),
-                        $params
-                    );
+                    $itemsString .= $templater->format('popup-item', [
+                        'content' => $item['title'],
+                        'url' => isset($item['url']) ? Router::url($item['url']) : null,
+                        'attrs' => $templater->formatAttributes($params),
+                    ]) . PHP_EOL;
                 }
             }
         }
-        $ret .= '</ul></div>';
+
+        $ret = $templater->format('popup', [
+            'name' => $name,
+            'content' => $itemsString
+        ]);
 
         if (!$inline) {
             $this->_View->append('popups');
-        }
-        echo $ret;
-        if (!$inline) {
+            echo $ret;
             $this->_View->end();
+        } else {
+            return $ret;
         }
     }
     /**

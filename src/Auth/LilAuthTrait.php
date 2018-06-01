@@ -17,12 +17,14 @@ trait LilAuthTrait
      * Checks if user has specified role
      *
      * @param string|int $role User role.
-     * @return boolean
+     * @return bool
      */
     public function userLevel($role)
     {
-        if (!$this->_Auth) return false;
-        
+        if (!$this->_Auth) {
+            return false;
+        }
+
         if (is_string($role)) {
             switch ($role) {
                 case 'root':
@@ -35,5 +37,5 @@ trait LilAuthTrait
         } else {
             return $this->_Auth->user('privileges') <= $role;
         }
-    }   
+    }
 }

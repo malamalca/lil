@@ -27,7 +27,7 @@ $user_properties = [
 			'fs_basics_start' => '<fieldset>',
 			'lg_basics' => sprintf('<legend>%s</legend>', __d('lil', 'Basics')),
 			'name' => [
-				'method' => 'input',
+				'method' => 'control',
 				'parameters' => [Configure::read('Lil.userDisplayField'), [
 					'label' => __d('lil', 'Name') . ':',
 					'error' => __d('lil', 'User\'s name is required.'),
@@ -39,14 +39,14 @@ $user_properties = [
 			'fs_passwords_start' => '<fieldset>',
 			'lg_passwords' => sprintf('<legend>%s</legend>', __d('lil', 'Change password')),
 			'old_pass' => [
-				'method' => 'input',
+				'method' => 'control',
 				'parameters' => ['old_pass', [
 					'label' => __d('lil', 'Old password') . ':',
 					'error' => __d('lil', 'Invalid old password.'),
 				]]
 			],
 			'passwd' => [
-				'method' => 'input',
+				'method' => 'control',
 				'parameters' => [$user_fields['password'], [
 					'label' => __d('lil', 'New password') . ':',
 					'error' => __d('lil', 'Password is required, format must be valid.'),
@@ -54,7 +54,7 @@ $user_properties = [
                 ]]
 			],
 			'repeat_pass' => [
-				'method' => 'input',
+				'method' => 'control',
 				'parameters' => ['repeat_pass', [
                     'label' => __d('lil', 'Repeat password') . ':',
 					'error' => __d('lil', 'Passwords do not match.'),

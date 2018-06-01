@@ -29,7 +29,7 @@ $AdminSidebar = new Sidebar();
 $AdminSidebar->sidebar = $admin_sidebar;
 
 $event = new Event('Lil.Sidebar.beforeRender', $this, ['sidebar' => $AdminSidebar]);
-$this->eventManager()->dispatch($event);
+$this->getEventManager()->dispatch($event);
 if (!empty($event->result['sidebar'])) {
     $admin_sidebar = $event->result['sidebar']->sidebar;
 }

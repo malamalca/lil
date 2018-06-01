@@ -1,5 +1,5 @@
 /**
- * This is admin CSS without field styling. 
+ * This is admin CSS without field styling.
  *
  * @copyright     Copyright 2008-2011, MalaMalca
  * @package       lil
@@ -22,7 +22,7 @@ div#container {
     margin-bottom: -100px;
     position: relative;
 }
- 
+
 div#header {
 	width: 100%;
     height: 60px;
@@ -39,20 +39,20 @@ div#header-logo {
 div#header h1 {
 	display: block;
 	height: 60px;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 26px;
 	font-weight: bold;
 	text-decoration: none;
 	text-shadow: 1px 1px 0px #eee;
-	
+
 	color: #888;
 	border-left: solid 1px #eee;
-	
+
 	margin-left: 220px;
 	padding-left: 20px;
 	padding-top: 15px;
-	
+
 }
 div#header h1 a {
 	color: #888;
@@ -60,7 +60,7 @@ div#header h1 a {
 	font-size: 26px;
 	font-weight: bold;
 	text-decoration: none;
-	
+
 	text-shadow: 1px 1px 0px #eee;
 }
 div#header h1 a.no-area {
@@ -70,7 +70,7 @@ div#header-user {
 	float: right;
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 13px;
-	
+
 	text-shadow: 1px 1px 0px #eee;
 	margin-top: -70px;
 	margin-right: 20px;
@@ -89,34 +89,34 @@ div#main-menu {
 
 div#main-menu h1 {
 	position: absolute;
-	
+
 	top: 60px;
-	
+
     width: 215px;
     height: 25px;
-    
+
     padding: 0px;
     padding-top: 5px;
     padding-right: 5px;
-    
+
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-align: center;
-    
+
     color: #eee;
     text-shadow: 1px 1px 0px #000;
-	
+
 	background: #5fabd1 url(../img/css/menu_title_shadow.png) no-repeat right top;
 }
 
 div#main-menu>ul {
 	position: absolute;
-	
+
 	top: 60px;
 	left: 220px;
 	right: 0px;
-	
+
 	height: 30px;
 	padding-left: 10px;
 }
@@ -130,7 +130,7 @@ div#main-menu>ul>li>a {
 	font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
     line-height: 30px;
-    
+
     text-decoration: none;
     text-shadow: 1px 1px 0px #000;
     padding-left: 10px;
@@ -150,26 +150,26 @@ div#content {
 div#main {
 	position: absolute;
 	overflow: scroll;
-	
+
 	top: 90px;
 	bottom: 0px;
 	left: 220px;
 	right: 0px;
-	
+
     padding: 20px;
 }
 #main h1 {
     height: auto !important;
 	font-family: Cambria, Georgia, serif;
 	font-size: 1.8em;
-	
+
 	margin-bottom: .6em;
 }
 
 #main h2 {
 	font-family: Cambria, Georgia, serif;
 	font-size: 1.4em;
-	
+
 	margin-bottom: .3em;
 	margin-top: 1em;
 }
@@ -177,15 +177,15 @@ div#main {
 	font-family: Cambria, Georgia, serif;
 }
 
-.message, #flashError {
+.message, #flashError, .alert {
 	font-family: Cambria, Georgia, serif;
-	
+
 	background-color: #FFFFCC;
 	border: solid 1px #e0e0e0;
 	padding: 5px;
 	margin-bottom: 10px;
 }
-#flashError {
+#flashError, .alert-danger {
 	background-color: #FFCCCC;
 }
 
@@ -204,7 +204,7 @@ div#main {
 }
 
 .light  {
-	font-size: 80%; 
+	font-size: 80%;
 	color: #a0a0a0;
 }
 
@@ -216,7 +216,7 @@ div#main {
 	display: block;
 	margin-left: 150px;
 	margin-bottom: 15px;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
@@ -233,11 +233,11 @@ div#main {
 	float: left;
 	width: 150px;
 	margin-left: -150px;
-	
+
 	font-family: Cambria, Georgia, serif;
 	font-size: 1em;
 	font-weight: normal;
-	
+
 	overflow: hidden;
 }
 .view-panel a {
@@ -247,11 +247,11 @@ div#main {
 
 label {
 	display: block;
-	
+
 	color: #404040;
 	font-family: Cambria, Georgia, serif;
 	font-size: 0.8em;
-	
+
 	margin-bottom: .1em;
 }
 
@@ -267,14 +267,14 @@ fieldset {
 }
 fieldset legend, fieldset legend label {
 	color: #222;
-	
+
     line-height: 1em;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
     text-shadow: 1px 1px 0px #fff;
-    
+
     padding-bottom: .8em;
 }
 fieldset legend label {
@@ -294,7 +294,7 @@ div.error-message {
 }
 div.hint {
 	color: #a0a0a0;
-	
+
 	font-family: Cambria, Georgia, serif;
 	margin-bottom: 0.8em;
 }
@@ -322,7 +322,7 @@ form div.hint {
 	float: left;
 	margin-left: 10px;
 	line-height: 26px;
-	
+
 }
 .ui-radio input[type=radio] {
 	display: block;
@@ -338,9 +338,9 @@ div#sidebar {
 	left: 0px;
 	top: 90px;
 	bottom: 1px;
-	
+
 	width: 220px;
-    
+
     background: #e0ecfa url(../img/css/sidebar_shadow.png) repeat-y right top;
 }
 
@@ -359,21 +359,21 @@ ul.sidebar-menu li ul.expanded {
 ul.sidebar-menu li {
 	margin-left: 5px;
 	margin-right: 8px;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
     font-size: 14px;
     font-weight: bold;
     text-decoration: none;
 	text-align: left;
 	text-shadow: 1px 1px 0px #fff;
-	
+
 	color: #000;
-	
+
 	margin-top: 10px;
 	padding-left: 30px;
-	
+
 	padding-top: 5px;
-	
+
 	background: transparent url(../img/css/arrow_1.png) no-repeat 10px 5px;
 }
 ul.sidebar-menu li.expanded {
@@ -408,16 +408,16 @@ ul.sidebar-menu>li>ul>li.active>a>span.counter {
 }
 ul.sidebar-menu li ul li {
 	width: 173px;
-	
+
 	font-size: 14px;
 	font-weight: normal;
-	
+
 	margin-top: 0px;
 	margin-left: 0px;
 	margin-left: -30px;
 	padding: 4px;
 	padding-left: 30px;
-	
+
 	background: none;
 	background-color: #e0ecfa !important;
 }
@@ -461,20 +461,20 @@ ul#sidebar-panels li {
 ul#sidebar-panels li a {
 	display: block;
 	height: 30px;
-	
+
 	padding-top: 8px;
-	
+
 	font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
 	text-align: center;
-	
+
 	color: #7d7d7d;
 	background: transparent url(../img/css/sidebar_btn_shadow.png) repeat-y right top;
 	border-bottom: solid 1px #888;
 	text-shadow: 1px 1px 0px #fff;
-	
+
 	overflow: hidden;
 }
 
@@ -490,7 +490,7 @@ ul#sidebar-panels li.active a {
 }
 
 /* TABLE DEFINITION FOR NON dataTables ELEMENTS */
-table.index-static tbody {	
+table.index-static tbody {
 	border-left: solid 1px #a8a8a8;
 	border-right: solid 1px #a8a8a8;
 }
@@ -502,7 +502,7 @@ table.index-static tbody tr:nth-child(odd) {
 table.index-static tr th {
 	font-family: Cambria, Georgia, serif;
 	font-size: 0.8em;
-	
+
 	padding: 5px;
 	border-right: solid 1px #b6b6b6;
 }
@@ -541,7 +541,7 @@ table.index-static tr td  {
 /*
  * jQuery UI specific styling
  */
- 
+
 table.index thead th {
 	font-family: Cambria, Georgia, serif;
 	font-size: 0.8em;
@@ -577,7 +577,7 @@ table.index tfoot th {
 table.index td {
 	font-family: Cambria, Georgia, serif;
     font-size: 13px;
-    
+
 	padding: 3px 20px 3px 10px;
 }
 
@@ -612,11 +612,11 @@ tr.even td.sorting_1 {
 	background-color:#fff;
 	margin-top: 2px;
 	z-index: 9999;
-	
+
 	border: solid 1px #646464;
 	padding: 10px;
 	min-width: 110px;
-	
+
 	-moz-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 0 4px 8px rgba(0,0,0,0.5);
 	box-shadow: 0 4px 8px rgba(0,0,0,0.5);
@@ -633,12 +633,12 @@ tr.even td.sorting_1 {
 }
 .popup ul li a {
 	display: block;
-	
+
 	font-family: Cambria, Georgia, serif;
 	font-size: 0.8em;
 	font-weight: normal;
 	text-decoration: none;
-	
+
 	color: #000;
 	padding: 4px;
 	padding-left: 10px;
@@ -676,14 +676,14 @@ tr.even td.sorting_1 {
 	border-bottom: solid 1px #808080;
 }
 
-.ui-autocomplete { 
+.ui-autocomplete {
 	max-height: 300px !important;
 	overflow-y: auto !important;
 	overflow-x: hidden !important;
 }
 
 .cake-sql-log {
-	display: block; 
+	display: block;
 	clear: both;
 	margin-top: 100px;
 }
