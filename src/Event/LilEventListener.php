@@ -30,8 +30,8 @@ class LilEventListener implements EventListenerInterface
     {
         $controller = $event->getSubject();
 
-        if (!$controller->viewBuilder()->className()) {
-            //$controller->viewBuilder()->layout('Lil.lil');
+        if (!$controller->viewBuilder()->getClassName()) {
+            $controller->viewBuilder()->setLayout('Lil.lil');
         }
 
         if (isset($controller->Auth)) {
@@ -39,11 +39,11 @@ class LilEventListener implements EventListenerInterface
         }
 
         if ($controller->request->is('ajax')) {
-            $controller->viewBuilder()->layout('Lil.popup');
+            $controller->viewBuilder()->setLayout('Lil.popup');
         }
 
         if ($controller->request->is('lilPopup')) {
-            $controller->viewBuilder()->layout('Lil.popup_iframe');
+            $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
     }
 
