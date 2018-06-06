@@ -766,9 +766,10 @@ class LilHelper extends Helper
      * @param string  $name   Popup name
      * @param array   $data   Popup compliant with LilPopup specifications
      * @param bool    $inline Display popup inline or store in cache
-     * @return void
+     * @param array   $options Additional options
+     * @return string
      */
-    public function popup($name, $data, $inline = false)
+    public function popup($name, $data, $inline = false, $options = [])
     {
         $items = [];
         if (isset($data['items'])) {
@@ -799,7 +800,9 @@ class LilHelper extends Helper
 
         $ret = $templater->format('popup', [
             'name' => $name,
-            'content' => $itemsString
+            'content' => $itemsString,
+            'class' => isset($options['class']) ? $options['class'] : null,
+            'attrs' => $templater->formatAttributes($options, ['class']),
         ]);
 
         if (!$inline) {

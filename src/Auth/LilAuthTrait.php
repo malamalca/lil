@@ -17,25 +17,35 @@ trait LilAuthTrait
      * Checks if user has specified role
      *
      * @param string|int $role User role.
+     * @param array|object|null $user User data.
      * @return bool
      */
-    public function userLevel($role)
+    public function userLevel($role, $user = null)
     {
-        if (!$this->_Auth) {
-            return false;
+        if (!empty($user)) {
+            if (is_array($user)) {
+                $userPrivilege = $user[Configure::read('Lil.userLevelField')];
+            } elseif (is_object($user)) {
+                $userPrivilege = $user->{Configure::read('Lil.userLevelField')};
+            }
+        } else {
+            if (!$this->_Auth) {
+                return false;
+            }
+            $userPrivilege = $this->_Auth->user(Configure::read('Lil.userLevelField'));
         }
 
         if (is_string($role)) {
             switch ($role) {
                 case 'root':
-                    return $this->_Auth->user(Configure::read('Lil.userLevelField')) <= Configure::read('Lil.userLevelRoot');
+                    return $userPrivilege <= Configure::read('Lil.userLevelRoot');
                 case 'admin':
-                    return $this->_Auth->user(Configure::read('Lil.userLevelField')) <= Configure::read('Lil.userLevelAdmin');
+                    return $userPrivilege <= Configure::read('Lil.userLevelAdmin');
                 default:
                     return true;
             }
         } else {
-            return $this->_Auth->user('privileges') <= $role;
+            return $userPrivilege <= $role;
         }
     }
 }

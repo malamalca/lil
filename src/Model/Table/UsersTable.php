@@ -317,7 +317,7 @@ class UsersTable extends Table
      *
      * @param entity $user User entity.
      *
-     * @return void
+     * @return bool
      */
     public function sendResetEmail($user)
     {
