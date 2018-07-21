@@ -3,7 +3,7 @@
  * Copyright (c) 2006/2007 Sam Collett (http://www.texotela.co.uk)
  * Licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- * 
+ *
  * Version 1.0
  * Demo: http://www.texotela.co.uk/code/jquery/numeric/
  *
@@ -34,25 +34,25 @@ function LilFloatFormat(val, pPlaces, pDecimal)
 {
 	var decimal = pDecimal || lilFloatSetup.decimalSeparator;
 	var places = 2; if (typeof pPlaces == 'number') places = pPlaces;
-	
+
 	if (typeof val == "string") {
 		var x = LilFloatStringToFloat(val, decimal);
 	} else {
 		var x = val;
 	}
-	
+
 	x = parseFloat(x).toFixed(places).split('.');
 
 	wholesPart = x[0];
 	decimalPart = x.length > 1 ? decimal + x[1] : '';
-	
+
 	if (ts = lilFloatSetup.thousandsSeparator) {
 		var rgx = /(\d+)(\d{3})/;
 		while (rgx.test(wholesPart)) {
 			wholesPart = wholesPart.replace(rgx, "$1" + ts + "$2");
 		}
 	}
-	
+
 	return wholesPart + decimalPart;
 }
 
@@ -69,19 +69,19 @@ function LilFloatStringToFloat(val, pDecimal) {
 function LilFloatIsValidFloat(val, pDecimal) {
 	if ((typeof val == 'number') && isFinite(val)) return true;
 	var rx_string = '^[-+]?(0|([1-9]([0-9]*';
-	
+
 	if (ts = lilFloatSetup.thousandsSeparator) {
 		rx_string = rx_string + '|([0-9]{0,2}(\'' + ts + '[0-9]{3})*)';
 	}
 	rx_string = rx_string + ')))';
-		
+
 	if (pDecimal !== false) {
 		var decimals = '1,';
 		if (typeof pDecimal == "number") decimals = decimals + pDecimal;
 		rx_string = rx_string + "(\\" + lilFloatSetup.decimalSeparator + "{1}[0-9]{" + decimals + "})?";
 	}
 	rx_string = rx_string + '$';
-	
+
 	var re1 = new RegExp(rx_string, "i");
 	return re1.test(val);
 }
@@ -90,7 +90,7 @@ jQuery.fn.LilFloatVal = function()
 {
 	var decimal = jQuery(this).data('LilFloatDecimalSeparator') || lilFloatSetup.decimalSeparator;
 	var places = jQuery(this).data('LilFloatPlaces') || 2;
-	
+
 	var val = LilFloatStringToFloat(jQuery(this).val(), decimal) + "";
 
 	return Math.round(val * Math.pow(10, places)) /  Math.pow(10, places);
@@ -101,7 +101,7 @@ jQuery.fn.LilFloatFormat = function()
 	var places = jQuery(this).data('LilFloatPlaces') || 2;
 	return LilFloatFormat(jQuery(this).val(), places, decimal);
 }
-	
+
 jQuery.fn.LilFloat = function(options)
 {
 	var default_options = {
@@ -110,17 +110,17 @@ jQuery.fn.LilFloat = function(options)
 		empty    : false,
 		callback : function() {}
 	};
-	options = jQuery().extend(default_options, options);
-	
+    options = jQuery().extend(default_options, options);
+
 	jQuery(this).data('LilFloatDecimalSeparator', options.decimal);
 	jQuery(this).data('LilFloatPlaces', options.places);
-	
+
 	this.focus(
 		function(e) {
 			// clear thousands and monetary signs
 			jQuery(this).addClass('input-left');
 			jQuery(this).removeClass('input-right');
-			
+
 			// replace all characters but - sign, numbers and decimal separator
 			if ((jQuery(this).val() === '')) return true;
 			var val = LilFloatStringToFloat(jQuery(this).val(), options.decimal) + '';
@@ -147,11 +147,11 @@ jQuery.fn.LilFloat = function(options)
 					// valid
 					jQuery(this).parent('div').removeClass('error');
 					jQuery(this).val(LilFloatFormat(val, options.places, options.decimal));
-				}								
+				}
 			} else {
 				if (!options.empty) jQuery(this).val(LilFloatFormat(0, options.places, options.decimal));
 			}
-			
+
 			jQuery(this).addClass('input-right');
 			jQuery(this).removeClass('input-left');
 		}
@@ -160,7 +160,7 @@ jQuery.fn.LilFloat = function(options)
 		function(e)
 		{
 			var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
-			
+
 			// allow enter/return key (only when in an input box)
 			if(key == 13 && this.nodeName.toLowerCase() == "input")
 			{
@@ -182,7 +182,7 @@ jQuery.fn.LilFloat = function(options)
 			// allow or deny Ctrl+V (paste), Shift+Ins
 			if((e.ctrlKey && key == 118 /* firefox */) || (e.ctrlKey && key == 86) /* opera */
 			|| (e.shiftKey && key == 45)) return true;
-			
+
 			// if a number was not pressed
 			if(key < 48 || key > 57)
 			{
