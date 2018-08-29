@@ -35,7 +35,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @var array
      */
     private $_localOptions = [];
-    
+
     private $_defaultOptions = [
             'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
             'no-outline', // Make Chrome not complain
@@ -49,13 +49,13 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
             'disable-smart-shrinking',
             //'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
     ];
-    
+
     private $_tempFiles = [];
 
     /**
      * __construct
      *
-     * @param array $options Array of options.
+     * @param array $enigneOptions Array of options.
      *
      * @return void
      */
@@ -64,11 +64,15 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
         $this->options(Hash::merge($this->_defaultOptions, $enigneOptions));
         $options = $this->options();
         parent::__construct($enigneOptions);
-        
-        if (!empty($enigneOptions['headerHtml'])) $this->setHeaderHtml($viewOptions['headerHtml']);
-        if (!empty($enigneOptions['footerHtml'])) $this->setFooterHtml($viewOptions['footerHtml']);
+
+        if (!empty($enigneOptions['headerHtml'])) {
+            $this->setHeaderHtml($viewOptions['headerHtml']);
+        }
+        if (!empty($enigneOptions['footerHtml'])) {
+            $this->setFooterHtml($viewOptions['footerHtml']);
+        }
     }
-    
+
     /**
      * __destruct
      *
@@ -76,7 +80,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function __destruct()
     {
-        foreach ($this->_tempFiles as $fileName) unlink($fileName);
+        foreach ($this->_tempFiles as $fileName) {
+            unlink($fileName);
+        }
         //parent::__destruct();
     }
 
@@ -90,6 +96,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
     public function saveAs($fileName)
     {
         $result = parent::saveAs($fileName);
+
         return $result;
     }
 
@@ -108,7 +115,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
         if (file_exists($fileName)) {
             $this->addPage($fileName);
             $this->_tempFiles[] = $fileName;
-        } else die('No File');
+        } else {
+            die('No File');
+        }
     }
 
     /**

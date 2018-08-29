@@ -274,6 +274,10 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                 }
             }
         }
+
+        if (!empty($this->_options['headerHtml'])) {
+            $this->writeHTML($this->_options['headerHtml']);
+        }
     }
 
     /**
@@ -345,6 +349,10 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                     call_user_func_array([$this, 'Line'], $l['line']);
                 }
             }
+        }
+
+        if (!empty($this->_options['footerHtml'])) {
+            $this->writeHTML($this->_options['footerHtml']);
         }
     }
 }

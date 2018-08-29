@@ -834,7 +834,7 @@ class LilHelper extends Helper
             $form->menu = isset($data['menu']) ? $data['menu'] : null;
             $form->title = isset($data['title_for_layout'])
                 ? $data['title_for_layout']
-                : null;
+                : (isset($data['title']) ? $data['title'] : null);
         } else {
             $form = $data;
         }
@@ -932,6 +932,9 @@ class LilHelper extends Helper
         if (isset($data['title_for_layout'])) {
             $this->_View->assign('title', $data['title_for_layout']);
         }
+        if (isset($data['title'])) {
+            $this->_View->assign('title', $data['title']);
+        }
         if (isset($data['head_for_layout'])) {
             $this->_View->set('head_for_layout', $data['head_for_layout']);
         }
@@ -990,7 +993,7 @@ class LilHelper extends Helper
             $panels->menu = isset($data['menu']) ? $data['menu'] : null;
             $panels->title = isset($data['title_for_layout'])
                 ? $data['title_for_layout']
-                : null;
+                : (isset($data['title']) ? $data['title'] : null);
 
             if (isset($data['head_for_layout'])) {
                 $this->_View->set('head_for_layout', $data['head_for_layout']);

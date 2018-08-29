@@ -12,12 +12,14 @@
  */
 namespace Lil\View;
 
+use App\View\AppView;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Request;
 use Cake\Network\Response;
-use Cake\View\View;
 use Cake\Utility\Hash;
+use Cake\View\View;
 
 use Lil\Lib\LilPdfFactory;
 
@@ -30,7 +32,7 @@ use Lil\Lib\LilPdfFactory;
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     http://www.arhint.si
  */
-class PdfView extends View
+class PdfView extends AppView
 {
     /**
      * The name of the layout file
@@ -78,16 +80,20 @@ class PdfView extends View
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
-        $this->viewOptions = array_merge(Configure::read('Lil.pdfOptions'), (array)$viewOptions);
-
         $pdfEngine = Configure::read('Lil.pdfEngine');
-        $pdfOptions = Configure::read('Lil.' . $pdfEngine);
+        $pdfEngineSettings = Configure::read('Lil.' . $pdfEngine);
+        $pdfOptions = Configure::read('Lil.pdfOptions');
 
-        $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfOptions, $this->viewOptions));
+        $event = new Event('Lil.Pdf.init', $this, ['engine' => $pdfEngine, 'settings' => $pdfEngineSettings, 'options' => $pdfOptions]);
+        EventManager::instance()->dispatch($event);
 
-        if ($response && $response instanceof Response) {
-            $response = $response->withType('pdf');
-        }
+        $pdfEngine = $event->getData('engine');
+        $pdfEngineSettings = $event->getData('settings');
+        $pdfOptions = $event->getData('options');
+
+        $this->viewOptions = array_merge($pdfOptions, (array)$viewOptions);
+
+        $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfEngineSettings, $this->viewOptions));
     }
 
     /**
@@ -141,10 +147,6 @@ class PdfView extends View
         $result = file_get_contents($tmpFilename);
         unlink($tmpFilename);
 
-        //if (isset($this->viewOptions['dest']) && in_array($this->viewOptions['dest'], ['S', 'E'])) {
-        //    return $result;
-        //}
-        //return $data;
         return $result;
     }
 }

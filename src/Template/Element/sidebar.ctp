@@ -2,7 +2,7 @@
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 /**
- * This is elements/admin_sidebar template file. 
+ * This is elements/admin_sidebar template file.
  *
  * @copyright     Copyright 2008-2010, LilCake.net
  * @link          http://lilcake.net LilCake.net
@@ -42,13 +42,13 @@ if ($this->request->is('mobile')) {
     	       if (!empty($li['visible'])) {
     	            $expanded = (((!isset($li['expand']) || is_null($li['expand'])) && !empty($li['submenu'])) ||
     					(!empty($li['expand'])));
-    					
+
             	    $popup_headerMenu['items'][] = [
             	       'title' => $li['title'],
             	       'url' => (!empty($li['url'])) ? $li['url'] : '#',
             	       'active' => !empty($li['active'])
             	    ];
-            	    
+
             	    if (!empty($li['submenu'])) {
             	        foreach ($li['submenu'] as $lis) {
     						if (!empty($lis['visible'])) {
@@ -72,16 +72,16 @@ if ($this->request->is('mobile')) {
     		foreach ($panel['items'] as $li_name => $li) {
     			if (!empty($li['visible'])) {
     				$classes = array();
-    				if (isset($li['class'])) $classes = (array)$li['class']; 
+    				if (isset($li['class'])) $classes = (array)$li['class'];
     				if ($li['active']) $classes[] = 'active';
-    				
+
     				if (((!isset($li['expand']) || is_null($li['expand'])) && !empty($li['submenu'])) ||
     					(!empty($li['expand']))) $classes[] = 'expanded';
-    				
-    				printf('<li%s>' . PHP_EOL, 
+
+    				printf('<li%s>' . PHP_EOL,
     					!empty($classes) ? ' class="' . implode(' ', $classes) . '"' : ''
     				);
-    				
+
     				// caption
     				if (!empty($li['url'])) {
     					echo $this->Html->link(
@@ -96,7 +96,7 @@ if ($this->request->is('mobile')) {
     						printf('<span class="expand-toggle">%s</span>', h($li['title']));
     					}
     				}
-    				
+
     				// submenu
     				if ( !empty($li['submenu'])) {
     					printf('<ul%s>' . PHP_EOL, (!isset($li['expand']) || is_null($li['expand'])) ? '' : (empty($li['expand']) ? ' class="folded"' : ' class="expanded"'));
@@ -122,7 +122,7 @@ if ($this->request->is('mobile')) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// MAIN PANELS 
+// MAIN PANELS
 if ($this->request->is('mobile')) {
     $popup_headerPanels = [];
     foreach ($admin_sidebar as $panel_name => $panel) {
@@ -139,15 +139,15 @@ if ($this->request->is('mobile')) {
     echo '<ul id="sidebar-panels">';
     foreach ($admin_sidebar as $panel_name => $panel) {
     	if (!empty($panel['visible'])) {
-    		printf('<li%2$s>%1$s</li>', 
+    		printf('<li%2$s>%1$s</li>',
     			$this->Html->link($panel['title'], (!empty($panel['url'])) ? $panel['url'] : '#'),
     			!empty($panel['active']) ? ' class="active"' : ''
     		) . PHP_EOL;
     	}
     }
     echo '</ul>';
-    
-    
+
+
     $this->Lil->jsReady('function adjustSidebar() { $("ul.sidebar-menu").height($("#sidebar").height() - $("ul#sidebar-panels").height() - 15); }');
     $this->Lil->jsReady('$(window).resize(function() { adjustSidebar(); });');
     $this->Lil->jsReady('adjustSidebar();');

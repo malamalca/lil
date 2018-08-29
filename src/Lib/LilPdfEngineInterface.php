@@ -1,7 +1,7 @@
 <?php
 /**
  * Pdf Lib
- * 
+ *
  * PHP version 5.3
  *
  * @category Lib
@@ -11,7 +11,6 @@
  * @link     http://www.arhint.si
  */
 namespace Lil\Lib;
-
 
 /**
  * LilPdf Lib
@@ -26,50 +25,37 @@ namespace Lil\Lib;
  */
 interface LilPdfEngineInterface
 {
-
     /**
      * Constructor
-     * 
-     * @param array $options Array of options.
      *
+     * @param array $enigneOptions Array of options.
      * @return void
      */
     public function __construct($enigneOptions);
-    
+
     /**
      * Sets or returns object's options
      *
      * @param array $values Options values.
-     * 
      * @return mixed
      */
     public function options($values = null);
-    /*{
-        if ($values === null) {
-            return $this->_options;
-        }
-        $this->_options = array_merge($this->_options, $values);
-        return $this;
-    }*/
-    
+
     /**
      * Add a new HTML page to PDF
      *
      * @param string $html Options values.
      * @param string $options Options array.
-     * 
      * @return mixed
      */
     public function newPage($html, $options = []);
-    
+
     /**
      * Saves PDF to a file
      *
-     * @param string $html Options values.
-     * @param string $options Options array.
-     * 
+     * @param string $fileName Options values.
      * @return mixed
      */
     public function saveAs($fileName);
-    
+
 }

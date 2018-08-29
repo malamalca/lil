@@ -1,9 +1,11 @@
 <?php
 namespace Lil\Event;
 
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 
 class LilEventListener implements EventListenerInterface
 {
@@ -46,6 +48,20 @@ class LilEventListener implements EventListenerInterface
         if ($controller->request->is('lilPopup')) {
             $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
+
+        $adminSidebar = new ArrayObject;
+        $adminSidebar['welcome'] = [
+            'title' => __d('lil', 'Dashboard'),
+            'visible' => true,
+            'active' => false,
+            'url' => '/',
+            'items' => [],
+        ];
+
+        $event = new Event('Lil.Sidebar.beforeRender', $controller, ['sidebar' => $adminSidebar]);
+        EventManager::instance()->dispatch($event);
+
+        $controller->set('sidebar', $adminSidebar);
     }
 
     /**
