@@ -2,8 +2,6 @@
 /**
  * Users Table
  *
- * PHP version 5.3
- *
  * @category Table
  * @package  Lil
  * @author   Arhim d.o.o. <info@arhim.si>
@@ -57,9 +55,10 @@ class UsersTable extends Table
     /**
      * Costum Auth finder method
      *
-     * @param array $query Table Configuration.
+     * @param \Cake\ORM\Query $query Query object.
+     * @param array $options Query options
      *
-     * @return void
+     * @return \Cake\ORM\Query
      */
     public function findAuth(\Cake\ORM\Query $query, array $options)
     {
