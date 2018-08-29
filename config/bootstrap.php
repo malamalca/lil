@@ -21,7 +21,7 @@
     ]);
 
     Request::addDetector('lilPopup', function ($request) {
-        return $request->getQuery('lil_submit') == 'dialog';
+        return $request->getQuery('lil_submit') == 'dialog' || $request->hasHeader('X-Lil-Submit');
     });
 
     $LilEventListener = new LilEventListener();

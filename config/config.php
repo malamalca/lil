@@ -16,6 +16,8 @@
 
             'from' => ['email' => 'info@lil.si', 'name' => 'Lil'],
 
+            'layout' => 'Lil.lil',
+
             'pdfEngine' => 'TCPDF',
             'pdfOptions' => [
                 'pagePre' => '',

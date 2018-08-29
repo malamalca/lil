@@ -163,18 +163,19 @@
             }
         };
 
+        // lilFloatSetup should be executed before $(document).ready();
+        <?php $formatter = $this->Number->formatter(); ?>
+
+        lilFloatSetup.decimalSeparator = "<?= $formatter->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL); ?>";
+        lilFloatSetup.thousandsSeparator = "<?= $formatter->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL); ?>";
+
+
         $(document).ready(function() {
             initDatatables();
 
             $.ajaxSetup ({ cache: false });
 
-            <?php $formatter = $this->Number->formatter(); ?>
-
-            lilFloatSetup.decimalSeparator = "<?= $formatter->getSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL); ?>";
-            lilFloatSetup.thousandsSeparator = "<?= $formatter->getSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL); ?>";
-
             <?= $this->Lil->jsReadyOut(); ?>
-
         });
 
         // Prevent jQuery UI dialog from blocking focus

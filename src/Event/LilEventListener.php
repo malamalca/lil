@@ -1,6 +1,7 @@
 <?php
 namespace Lil\Event;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 
@@ -31,7 +32,7 @@ class LilEventListener implements EventListenerInterface
         $controller = $event->getSubject();
 
         if (!$controller->viewBuilder()->getClassName()) {
-            $controller->viewBuilder()->setLayout('Lil.lil');
+            $controller->viewBuilder()->setLayout(Configure::read('Lil.layout'));
         }
 
         if (isset($controller->Auth)) {
@@ -42,7 +43,7 @@ class LilEventListener implements EventListenerInterface
             $controller->viewBuilder()->setLayout('Lil.popup');
         }
 
-        if ($controller->request->getQuery('lil_submit')) {
+        if ($controller->request->is('lilPopup')) {
             $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
     }
@@ -58,7 +59,7 @@ class LilEventListener implements EventListenerInterface
     public function checkAjaxRedirect($event, $url, $response)
     {
         $controller = $event->getSubject();
-        if ($submitKind = $controller->request->getQuery('lil_submit')) {
+        if ($controller->request->is('lilPopup')) {
             $controller->disableAutoRender();
             $controller->set('popupRedirect', true);
             $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);

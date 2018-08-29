@@ -21,6 +21,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
 use Cake\Validation\Validator;
+use Lil\Auth\LilAuthTrait;
 
 /**
  * Users Controller
@@ -35,6 +36,8 @@ use Cake\Validation\Validator;
  */
 class UsersController extends AppController
 {
+    use LilAuthTrait;
+
     /**
      * Cookie key name
      *
@@ -74,8 +77,12 @@ class UsersController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($this->request->getParam('action'), ['properties', 'index', 'edit', 'add', 'delete'])) {
+        if (in_array($this->request->getParam('action'), ['properties'])) {
             return $this->Auth->user('id');
+        }
+
+        if (in_array($this->request->getParam('action'), ['index', 'edit', 'add', 'delete'])) {
+            return $this->Auth->user('id') && $this->userLevel('admin', $user);
         }
 
         return parent::isAuthorized($user);
@@ -132,6 +139,10 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'The user has been saved.'));
 
+                if ($referer = $this->request->getData('referer')) {
+                    return $this->redirect($referer);
+                }
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__d('lil', 'The user could not be saved. Please, try again.'));
@@ -169,7 +180,7 @@ class UsersController extends AppController
      */
     public function login()
     {
-        if ($this->Auth->user()) {
+        if ($this->Auth->user('id')) {
             $this->redirect($this->Auth->redirectUrl());
         }
 
@@ -184,16 +195,11 @@ class UsersController extends AppController
             }
         } else {
             if ($this->request->is('post') || env('PHP_AUTH_USER')) {
-                $this->Flash->error(
-                    __d(
-                        'lil',
-                        'Invalid username or password, try again'
-                    )
-                );
+                $this->Flash->error(__d('lil', 'Invalid username or password, try again'));
             }
         }
 
-        if ($this->Auth->user()) {
+        if ($this->Auth->user('id')) {
             $redirect = $this->Auth->redirectUrl();
             $event = new Event('Lil.Auth.afterLogin', $this->Auth, [$redirect]);
             $this->getEventManager()->dispatch($event);
@@ -226,22 +232,15 @@ class UsersController extends AppController
         if (!Configure::read('Lil.enableRegistration')) {
             throw new NotFoundException(__d('lil', 'Cannot register new users.'));
         }
-        $user = $this->Users->newEntity(
-            $this->request->getData(),
-            ['validate' => 'registration']
-        );
+
+        $user = $this->Users->newEntity($this->request->getData(), ['validate' => 'registration']);
+
         if ($this->request->is('post')) {
             if (!$user->getErrors() && $this->Users->save($user)) {
-                $event = new Event(
-                    'Lil.Model.Users.afterRegister',
-                    $this->Users,
-                    [$user, $this->request->getData()]
-                );
+                $event = new Event('Lil.Model.Users.afterRegister', $this->Users, [$user, $this->request->getData()]);
                 $this->eventManager()->dispatch($event);
 
-                $this->Flash->success(
-                    __d('lil', 'The user has been registered.')
-                );
+                $this->Flash->success(__d('lil', 'The user has been registered.'));
 
                 return $this->redirect('/');
             }
@@ -270,19 +269,9 @@ class UsersController extends AppController
 
             if ($user) {
                 $this->Users->sendResetEmail($user);
-                $this->Flash->success(
-                    __d(
-                        'lil',
-                        'An email with password reset instructions has been sent.'
-                    )
-                );
+                $this->Flash->success(__d('lil', 'An email with password reset instructions has been sent.'));
             } else {
-                $this->Flash->error(
-                    __d(
-                        'lil',
-                        'No user with specified email has been found.'
-                    )
-                );
+                $this->Flash->error(__d('lil', 'No user with specified email has been found.'));
             }
         }
     }
@@ -298,9 +287,7 @@ class UsersController extends AppController
             throw new NotFoundException(__d('lil', 'Reset key does not exist.'));
         }
 
-        $user = $this->Users->{'findBy' . Inflector::camelize(
-            Configure::read('Lil.passwordResetField')
-        )}($resetKey)->first();
+        $user = $this->Users->{'findBy' . Inflector::camelize(Configure::read('Lil.passwordResetField'))}($resetKey)->first();
         if (!$user) {
             throw new NotFoundException(__d('lil', 'User does not exist.'));
         }
@@ -308,21 +295,13 @@ class UsersController extends AppController
         $user_fields = Configure::read('Lil.authFields');
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $this->Users->patchEntity(
-                $user,
-                $this->request->getData(),
-                ['validate' => 'resetPassword']
-            );
+            $this->Users->patchEntity($user, $this->request->getData(), ['validate' => 'resetPassword']);
+
             if (!$user->getErrors() && $this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
                 $this->redirect('/');
             } else {
-                $this->Flash->error(
-                    __d(
-                        'lil',
-                        'Please verify that the information is correct.'
-                    )
-                );
+                $this->Flash->error(__d('lil', 'Please verify that the information is correct.'));
             }
         } else {
             $user->{$user_fields['password']} = null;
@@ -345,11 +324,7 @@ class UsersController extends AppController
         $user_fields = Configure::read('Lil.authFields');
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $this->Users->patchEntity(
-                $user,
-                $this->request->getData(),
-                ['validate' => 'properties']
-            );
+            $this->Users->patchEntity($user, $this->request->getData(), ['validate' => 'properties']);
 
             // remove user password when empty
             if (empty($this->request->getData($user_fields['password']))) {
@@ -360,12 +335,7 @@ class UsersController extends AppController
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
                 $this->redirect('/');
             } else {
-                $this->Flash->error(
-                    __d(
-                        'lil',
-                        'Please verify that the information is correct.'
-                    )
-                );
+                $this->Flash->error(__d('lil', 'Please verify that the information is correct.'));
             }
         } else {
             $user->{$user_fields['password']} = null;
