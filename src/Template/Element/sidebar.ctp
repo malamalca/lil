@@ -10,7 +10,7 @@ use Cake\Event\EventManager;
  * @subpackage    lil.views.elements
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-if (empty($admin_sidebar)) {
+if (empty($sidebar)) {
 	$admin_sidebar = [
 		'welcome' => [
 			'title'   => __d('lil', 'Dashboard'),
@@ -20,18 +20,8 @@ if (empty($admin_sidebar)) {
 			'items'   => [],
 		],
 	];
-}
-
-class Sidebar {
-	public $sidebar = [];
-}
-$AdminSidebar = new Sidebar();
-$AdminSidebar->sidebar = $admin_sidebar;
-
-$event = new Event('Lil.Sidebar.beforeRender', $this, ['sidebar' => $AdminSidebar]);
-$this->getEventManager()->dispatch($event);
-if (!empty($event->result['sidebar'])) {
-    $admin_sidebar = $event->result['sidebar']->sidebar;
+} else {
+    $admin_sidebar = $sidebar;
 }
 
 if ($this->request->is('mobile')) {

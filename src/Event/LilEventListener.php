@@ -19,7 +19,6 @@ class LilEventListener implements EventListenerInterface
         return [
             'Controller.beforeRender' => 'beforeRender',
             'Controller.beforeRedirect' => 'checkAjaxRedirect',
-            //'Model.beforeMarshal', 'convertLilFields',
         ];
     }
 
@@ -61,7 +60,7 @@ class LilEventListener implements EventListenerInterface
         $event = new Event('Lil.Sidebar.beforeRender', $controller, ['sidebar' => $adminSidebar]);
         EventManager::instance()->dispatch($event);
 
-        $controller->set('sidebar', $adminSidebar);
+        $controller->set('sidebar', (array)$adminSidebar);
     }
 
     /**
