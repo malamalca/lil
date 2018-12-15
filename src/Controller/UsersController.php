@@ -264,7 +264,7 @@ class UsersController extends AppController
             $emailField = Configure::read('Lil.userEmailField');
             $user = $this->Users->find()
                 ->select()
-                ->where([$emailField => $this->request->data('email')])
+                ->where([$emailField => $this->request->data($emailField)])
                 ->first();
 
             if ($user) {

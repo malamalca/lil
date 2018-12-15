@@ -10,6 +10,7 @@
             'enablePasswordReset' => true,
             'enableRegistration' => true,
 
+            'usersTable' => 'users',
             'userDisplayField' => 'name',
             'userEmailField' => 'email',
             'passwordResetField' => 'reset_key',

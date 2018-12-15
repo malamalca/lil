@@ -12,8 +12,10 @@
  */
 namespace Lil\Model\Table;
 
+use ArrayObject;
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Email\Email;
@@ -47,11 +49,9 @@ class UsersTable extends Table
      */
     public function initialize(array $config)
     {
-        $this->addBehavior('Timestamp');
+        $this->setTable(Configure::read('Lil.usersTable'));
 
-        $this->hasMany('Settings', [
-            'foreignKey' => 'owner_id',
-        ]);
+        $this->addBehavior('Timestamp');
     }
 
     /**
@@ -342,5 +342,23 @@ class UsersTable extends Table
         }
 
         return false;
+    }
+
+    /**
+     * Hashes password
+     *
+     * @param Event $event Event object
+     * @param EntityInterface $entity Entity object
+     * @param ArrayObject $options Options array
+     * @return bool
+     */
+    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    {
+        $passwordField = Configure::read('Lil.authFields.password');
+        if ($entity->isDirty($passwordField)) {
+            $entity->{$passwordField} = (new DefaultPasswordHasher)->hash($entity->{$passwordField});
+        }
+
+        return true;
     }
 }

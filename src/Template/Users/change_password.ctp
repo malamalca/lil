@@ -4,7 +4,7 @@ use Cake\Core\Configure;
 $user_fields = Configure::read('Lil.authFields');
 
 $user_form = array(
-	'title_for_layout' => __d('lil', 'Set New Password for "{0}"', [h($user->name)]),
+	'title_for_layout' => __d('lil', 'Set New Password for "{0}"', [h($user->{Configure::read('Lil.userDisplayField')})]),
 	'form' => array(
         'defaultHelper' => $this->Form,
 		'pre' => '<div class="form">',
@@ -31,7 +31,7 @@ $user_form = array(
 					]
 				)
 			),
-            
+
 			'fs_passwords_start' => '<fieldset>',
 			'lg_passwords' => sprintf('<legend>%s</legend>', __d('lil', 'Change password')),
 			/*'old_pass' => [
@@ -58,7 +58,7 @@ $user_form = array(
 				]]
 			],
 			'fs_passwords_end' => '</fieldset>',
-            
+
 			'submit' => array(
 				'method'     => 'submit',
 				'parameters' => array(
