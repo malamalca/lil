@@ -190,7 +190,7 @@ class UsersController extends AppController
             // set cookie
             if (!empty($this->request->getData('remember_me'))) {
                 if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
-                    $CookieAuth->createCookie($this->request->data);
+                    $CookieAuth->createCookie($this->request->getData());
                 }
             }
         } else {
