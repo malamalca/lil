@@ -10,7 +10,6 @@
  */
 namespace Lil\Model\Entity;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
 
 /**
@@ -32,17 +31,6 @@ class User extends Entity
     protected $_accessible = [
         '*' => true
     ];
-
-    /**
-     * Set password method.
-     *
-     * @param string $password Users password.
-     * @return bool
-     */
-    protected function _setPasswd($password)
-    {
-        return (new DefaultPasswordHasher)->hash($password);
-    }
 
     /**
      * Checks if user has specified role

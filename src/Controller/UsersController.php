@@ -190,7 +190,7 @@ class UsersController extends AppController
             // set cookie
             if (!empty($this->request->getData('remember_me'))) {
                 if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
-                    $CookieAuth->createCookie($this->request->data);
+                    $CookieAuth->createCookie($this->request->getData());
                 }
             }
         } else {
@@ -264,7 +264,7 @@ class UsersController extends AppController
             $emailField = Configure::read('Lil.userEmailField');
             $user = $this->Users->find()
                 ->select()
-                ->where([$emailField => $this->request->data('email')])
+                ->where([$emailField => $this->request->data($emailField)])
                 ->first();
 
             if ($user) {
