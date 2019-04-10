@@ -48,7 +48,6 @@
     printf($this->Html->script('/lil/js/lil_popups') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_float') . PHP_EOL);
     printf($this->Html->script('/lil/js/lil_date') . PHP_EOL);
-    printf($this->Html->script('/lil/js/spinningwheel-min') . PHP_EOL);
 
     print ($this->fetch('script') . PHP_EOL);
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Pages Controller
- * 
+ *
  * PHP version 5.3
  *
  * @category Controller
@@ -12,10 +12,10 @@
  */
 namespace Lil\Controller;
 
-use Lil\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
+use Lil\Controller\AppController;
 
 /**
  * Static content controller
@@ -34,10 +34,10 @@ class PagesController extends AppController
      * IsAuthorized method.
      *
      * @param array $user User data
-     * 
-     * @return boolean
+     *
+     * @return bool
      */
-    public function isAuthorized($user) 
+    public function isAuthorized($user)
     {
         return true;
     }
@@ -80,39 +80,43 @@ class PagesController extends AppController
      *
      * @return void
      */
-    public function datatables() 
+    public function datatables()
     {
         $this->autoRender = false;
-        $this->response->type('json');
-        $data =  $this->render(null, false);
+        $response = $this->response->withType('json');
+        $data = $this->render(null, false);
+        $response->withStringBody($data);
+
+        return $response;
     }
 
     /**
      * Dashboard Order method
-     * 
+     *
      * @param array $panelOrder Order of panels
      *
      * @return void
      */
-    public function dashboardOrder($panelOrder) 
+    public function dashboardOrder($panelOrder)
     {
         if (!empty($panelOrder)) {
-            $data = array(
+            $data = [
             'user_id' => $this->currentUser->get('id'),
             'name' => 'Lil.DashboardOrder'
-            );
-            
+            ];
+
             $Setting = ClassRegistry::init('Lil.Setting');
             if ($id = $Setting->field('id', $data)) {
                 $data['id'] = $id;
             }
-            
+
             $data['value'] = $panelOrder;
-            
+
             $Setting->save($data);
-            
+
             return new CakeResponse();
         }
+
         return $this->error404();
     }
 }
