@@ -13,12 +13,14 @@
 
     Configure::load('Lil.config', 'default', true);
 
-    Cache::setConfig('Lil', [
-        'className' => 'Cake\Cache\Engine\FileEngine',
-        'duration' => '+1 week',
-        'probability' => 100,
-        'path' => CACHE . 'lil_',
-    ]);
+    if (!Cache::getConfig('Lil')) {
+        Cache::setConfig('Lil', [
+            'className' => 'Cake\Cache\Engine\FileEngine',
+            'duration' => '+1 week',
+            'probability' => 100,
+            'path' => CACHE . 'lil_',
+        ]);
+    }
 
     Request::addDetector('lilPopup', function ($request) {
         return $request->getQuery('lil_submit') == 'dialog' || $request->hasHeader('X-Lil-Submit');
