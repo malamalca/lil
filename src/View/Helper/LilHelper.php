@@ -127,6 +127,7 @@ class LilHelper extends Helper
      * @var array
      */
     private $_popups = [];
+
     /**
      * __call method
      *
@@ -146,6 +147,7 @@ class LilHelper extends Helper
 
         return false;
     }
+
     /**
      * Constructor
      *
@@ -173,7 +175,7 @@ class LilHelper extends Helper
      * @param array $config Config Data.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['Auth'])) {
             $this->setAuth($config['Auth']);
@@ -190,6 +192,7 @@ class LilHelper extends Helper
     {
         $this->_jsReady[] = $block;
     }
+
     /**
      * JsReadyOut method
      *
@@ -199,6 +202,7 @@ class LilHelper extends Helper
     {
         return implode(PHP_EOL . CHR(9) . CHR(9) . CHR(9), $this->_jsReady);
     }
+
     /**
      * Referer method
      *
@@ -208,6 +212,7 @@ class LilHelper extends Helper
     {
         return base64_encode($this->request->referer());
     }
+
     /**
      * DateFormat method
      *
@@ -225,6 +230,7 @@ class LilHelper extends Helper
 
         return $dateFormat;
     }
+
     /**
      * Link method
      * Creates a HTML link. Behaves exactly like Html::link with ability to use
@@ -264,6 +270,7 @@ class LilHelper extends Helper
             );
         }
     }
+
     /**
      * DeleteLink method
      *
@@ -298,6 +305,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * EditLink method
      *
@@ -329,6 +337,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * ViewLink method
      *
@@ -351,6 +360,7 @@ class LilHelper extends Helper
             array_merge(['escape' => false], $link_options)
         );
     }
+
     /**
      * popupLink method
      *
@@ -386,6 +396,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Replaces double line-breaks with paragraph elements.
      *
@@ -471,6 +482,7 @@ class LilHelper extends Helper
 
         return $pee;
     }
+
     /**
      * Wraps long text
      *
@@ -758,6 +770,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Popup method
      *
@@ -813,6 +826,7 @@ class LilHelper extends Helper
             return $ret;
         }
     }
+
     /**
      * Form method
      *
@@ -914,6 +928,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Index method
      *
@@ -969,6 +984,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Panels method
      *
@@ -1101,6 +1117,10 @@ class LilHelper extends Helper
                                 $ret .= $templater->format('panellineend', []) . PHP_EOL;
                             }
                         } else {
+                            if (!is_string($line)) {
+                                debug($panel['lines']);
+                                die;
+                            }
                             $ret .= $line;
                         }
                     }
@@ -1124,6 +1144,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * _actions method
      *
@@ -1158,6 +1179,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Table method
      *
@@ -1276,6 +1298,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * _list method
      *

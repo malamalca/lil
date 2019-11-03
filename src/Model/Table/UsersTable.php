@@ -47,7 +47,7 @@ class UsersTable extends Table
      *
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config):void
     {
         $this->setTable(Configure::read('Lil.usersTable'));
 
@@ -58,10 +58,11 @@ class UsersTable extends Table
      * Costum Auth finder method
      *
      * @param array $query Table Configuration.
+     * @param array $options Options array.
      *
-     * @return void
+     * @return Query
      */
-    public function findAuth(\Cake\ORM\Query $query, array $options)
+    public function findAuth(Query $query, array $options)
     {
         $event = new Event('Lil.authFinder', $this, ['query' => $query, 'options' => $options]);
         EventManager::instance()->dispatch($event);
@@ -80,7 +81,7 @@ class UsersTable extends Table
      *
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator): Validator
     {
         $user_fields = Configure::read('Lil.authFields');
 
@@ -100,7 +101,7 @@ class UsersTable extends Table
      *
      * @return \Cake\Validation\Validator
      */
-    public function validationRegistration($validator)
+    public function validationRegistration($validator): Validator
     {
         $user_fields = Configure::read('Lil.authFields');
 
@@ -135,7 +136,7 @@ class UsersTable extends Table
      *
      * @return \Cake\Validation\Validator
      */
-    public function validationProperties($validator)
+    public function validationProperties($validator): Validator
     {
         $user_fields = Configure::read('Lil.authFields');
 
@@ -234,7 +235,7 @@ class UsersTable extends Table
      *
      * @return \Cake\Validation\Validator
      */
-    public function validationResetPassword($validator)
+    public function validationResetPassword($validator): Validator
     {
         $user_fields = Configure::read('Lil.authFields');
         $validator = new Validator();
@@ -300,7 +301,7 @@ class UsersTable extends Table
      *
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $user_fields = Configure::read('Lil.authFields');
         $rules->add(

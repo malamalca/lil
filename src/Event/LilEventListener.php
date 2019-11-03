@@ -14,7 +14,7 @@ class LilEventListener implements EventListenerInterface
      *
      * @return array
      */
-    public function implementedEvents()
+    public function implementedEvents(): array
     {
         return [
             'Controller.beforeRender' => 'beforeRender',
@@ -40,11 +40,11 @@ class LilEventListener implements EventListenerInterface
             $controller->set('currentUser', $controller->Auth->user());
         }
 
-        if ($controller->request->is('ajax')) {
+        if ($controller->getRequest()->is('ajax')) {
             $controller->viewBuilder()->setLayout('Lil.popup');
         }
 
-        if ($controller->request->is('lilPopup')) {
+        if ($controller->getRequest()->is('lilPopup')) {
             $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
 
@@ -74,7 +74,7 @@ class LilEventListener implements EventListenerInterface
     public function checkAjaxRedirect($event, $url, $response)
     {
         $controller = $event->getSubject();
-        if ($controller->request->is('lilPopup')) {
+        if ($controller->getRequest()->is('lilPopup')) {
             $controller->disableAutoRender();
             $controller->set('popupRedirect', true);
             $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);

@@ -71,7 +71,7 @@ class LilDecimalWidget implements WidgetInterface
      *
      * @return string
      */
-    public function render(array $data, ContextInterface $context)
+    public function render(array $data, ContextInterface $context): string
     {
         $data += [
             'val' => '',
@@ -117,7 +117,7 @@ class LilDecimalWidget implements WidgetInterface
      *
      * @return array
      */
-    public function secureFields(array $data)
+    public function secureFields(array $data): array
     {
         return [$data['name']];
     }

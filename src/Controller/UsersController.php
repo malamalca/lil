@@ -14,7 +14,7 @@ namespace Lil\Controller;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -50,25 +50,27 @@ class UsersController extends AppController
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('Cookie');
+        //$this->loadComponent('Cookie');
     }
+
     /**
      * BeforeFilter method.
      *
      * @param Cake\Event\Event $event Cake Event object.
      * @return void
      */
-    public function beforeFilter(Event $event)
+    public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-        $this->Auth->allow(['logout', 'reset', 'changePassword']);
+        $this->Authorization->authorizeModel('logout', 'reset', 'changePassword');
         if (Configure::read('Lil.enableRegistration')) {
-            $this->Auth->allow(['register']);
+            $this->Authorization->authorizeModel('register');
         }
     }
+
     /**
      * IsAuthorized method.
      *
@@ -126,7 +128,7 @@ class UsersController extends AppController
         if ($id) {
             $user = $this->Users->get($id);
         } else {
-            $user = $this->Users->newEntity();
+            $user = $this->Users->newEntity([]);
         }
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->getData(), ['validate' => ($id ? 'properties' : 'registration')]);
@@ -275,6 +277,7 @@ class UsersController extends AppController
             }
         }
     }
+
     /**
      * Change users password
      *
@@ -309,6 +312,7 @@ class UsersController extends AppController
 
         $this->set(compact('user'));
     }
+
     /**
      * Properties method
      *
