@@ -20,42 +20,10 @@ use Cake\Utility\Hash;
 use Cake\View\Helper;
 use Cake\View\StringTemplateTrait;
 use Cake\View\View;
-
 use Lil\Auth\LilAuthTrait;
+use Lil\Lib\LilForm;
+use Lil\Lib\LilPanels;
 
-/**
- * LilForm Helper class for passing forms by reference.
- *
- * @category Class
- * @package  Lil
- * @author   Arhim d.o.o. <info@arhim.si>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link     http://www.arhint.si
- */
-class LilForm
-{
-    public $menu = null;
-    public $title = null;
-    public $form = null;
-}
-
-/**
- * LilPanels Helper class for passing panels by reference.
- *
- * @category Class
- * @package  Lil
- * @author   Arhim d.o.o. <info@arhim.si>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link     http://www.arhint.si
- */
-class LilPanels
-{
-    public $menu = null;
-    public $title = null;
-    public $actions = null;
-    public $entity = null;
-    public $panels = [];
-}
 /**
  * LilHelper Lil Helper Class.
  *
@@ -905,13 +873,17 @@ class LilHelper extends Helper
                         $use_object =& $this->_View->{$line['class']};
                     }
 
-                    $ret .= call_user_func_array(
+                    $lineResult = call_user_func_array(
                         [
                             $use_object,
                             $line['method']
                         ],
                         $parameters
                     );
+
+                    if (is_string($lineResult)) {
+                        $ret .= $lineResult;
+                    }
                 }
             }
         }
@@ -1116,11 +1088,7 @@ class LilHelper extends Helper
                             if (isset($line['label'])) {
                                 $ret .= $templater->format('panellineend', []) . PHP_EOL;
                             }
-                        } else {
-                            if (!is_string($line)) {
-                                debug($panel['lines']);
-                                die;
-                            }
+                        } elseif (is_string($line)) {
                             $ret .= $line;
                         }
                     }
@@ -1273,16 +1241,18 @@ class LilHelper extends Helper
                         $row['column'] = 'th';
                     }
                     foreach ($row['columns'] as $col) {
-                        if (is_string($col)) {
-                            $col = ['html' => $col];
+                        if (!is_null($col)) {
+                            if (is_string($col)) {
+                                $col = ['html' => $col];
+                            }
+                            $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                            $ret .= $this->_formatParams(
+                                $row['column'],
+                                array_merge((array)$col, ['content' => $content]),
+                                $templater,
+                                false
+                            );
                         }
-                        $content = isset($col['html']) ? $col['html'] : '&nbsp;';
-                        $ret .= $this->_formatParams(
-                            $row['column'],
-                            array_merge((array)$col, ['content' => $content]),
-                            $templater,
-                            false
-                        );
                     }
 
                     $ret .= '</tr>' . PHP_EOL;
