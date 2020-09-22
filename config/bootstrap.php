@@ -3,7 +3,7 @@
     use Cake\Core\Configure;
     use Cake\Core\Configure\Engine\PhpConfig;
     use Cake\Event\EventManager;
-    use Cake\Network\Request;
+    use Cake\Http\ServerRequest;
     use Cake\Routing\Router;
     use Lil\Event\LilEventListener;
 
@@ -22,7 +22,7 @@
         ]);
     }
 
-    Request::addDetector('lilPopup', function ($request) {
+    ServerRequest::addDetector('lilPopup', function ($request) {
         return $request->getQuery('lil_submit') == 'dialog' || $request->hasHeader('X-Lil-Submit');
     });
 

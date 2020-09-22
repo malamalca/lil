@@ -20,42 +20,10 @@ use Cake\Utility\Hash;
 use Cake\View\Helper;
 use Cake\View\StringTemplateTrait;
 use Cake\View\View;
-
 use Lil\Auth\LilAuthTrait;
+use Lil\Lib\LilForm;
+use Lil\Lib\LilPanels;
 
-/**
- * LilForm Helper class for passing forms by reference.
- *
- * @category Class
- * @package  Lil
- * @author   Arhim d.o.o. <info@arhim.si>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link     http://www.arhint.si
- */
-class LilForm
-{
-    public $menu = null;
-    public $title = null;
-    public $form = null;
-}
-
-/**
- * LilPanels Helper class for passing panels by reference.
- *
- * @category Class
- * @package  Lil
- * @author   Arhim d.o.o. <info@arhim.si>
- * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
- * @link     http://www.arhint.si
- */
-class LilPanels
-{
-    public $menu = null;
-    public $title = null;
-    public $actions = null;
-    public $entity = null;
-    public $panels = [];
-}
 /**
  * LilHelper Lil Helper Class.
  *
@@ -127,6 +95,7 @@ class LilHelper extends Helper
      * @var array
      */
     private $_popups = [];
+
     /**
      * __call method
      *
@@ -146,6 +115,7 @@ class LilHelper extends Helper
 
         return false;
     }
+
     /**
      * Constructor
      *
@@ -173,7 +143,7 @@ class LilHelper extends Helper
      * @param array $config Config Data.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config): void
     {
         if (isset($config['Auth'])) {
             $this->setAuth($config['Auth']);
@@ -190,6 +160,7 @@ class LilHelper extends Helper
     {
         $this->_jsReady[] = $block;
     }
+
     /**
      * JsReadyOut method
      *
@@ -199,6 +170,7 @@ class LilHelper extends Helper
     {
         return implode(PHP_EOL . CHR(9) . CHR(9) . CHR(9), $this->_jsReady);
     }
+
     /**
      * Referer method
      *
@@ -208,6 +180,7 @@ class LilHelper extends Helper
     {
         return base64_encode($this->request->referer());
     }
+
     /**
      * DateFormat method
      *
@@ -225,6 +198,7 @@ class LilHelper extends Helper
 
         return $dateFormat;
     }
+
     /**
      * Link method
      * Creates a HTML link. Behaves exactly like Html::link with ability to use
@@ -264,6 +238,7 @@ class LilHelper extends Helper
             );
         }
     }
+
     /**
      * DeleteLink method
      *
@@ -298,6 +273,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * EditLink method
      *
@@ -329,6 +305,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * ViewLink method
      *
@@ -351,6 +328,7 @@ class LilHelper extends Helper
             array_merge(['escape' => false], $link_options)
         );
     }
+
     /**
      * popupLink method
      *
@@ -386,6 +364,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Replaces double line-breaks with paragraph elements.
      *
@@ -471,6 +450,7 @@ class LilHelper extends Helper
 
         return $pee;
     }
+
     /**
      * Wraps long text
      *
@@ -758,6 +738,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Popup method
      *
@@ -813,6 +794,7 @@ class LilHelper extends Helper
             return $ret;
         }
     }
+
     /**
      * Form method
      *
@@ -891,13 +873,17 @@ class LilHelper extends Helper
                         $use_object =& $this->_View->{$line['class']};
                     }
 
-                    $ret .= call_user_func_array(
+                    $lineResult = call_user_func_array(
                         [
                             $use_object,
                             $line['method']
                         ],
                         $parameters
                     );
+
+                    if (is_string($lineResult)) {
+                        $ret .= $lineResult;
+                    }
                 }
             }
         }
@@ -914,6 +900,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Index method
      *
@@ -969,6 +956,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Panels method
      *
@@ -1100,7 +1088,7 @@ class LilHelper extends Helper
                             if (isset($line['label'])) {
                                 $ret .= $templater->format('panellineend', []) . PHP_EOL;
                             }
-                        } else {
+                        } elseif (is_string($line)) {
                             $ret .= $line;
                         }
                     }
@@ -1124,6 +1112,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * _actions method
      *
@@ -1158,6 +1147,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * Table method
      *
@@ -1251,16 +1241,18 @@ class LilHelper extends Helper
                         $row['column'] = 'th';
                     }
                     foreach ($row['columns'] as $col) {
-                        if (is_string($col)) {
-                            $col = ['html' => $col];
+                        if (!is_null($col)) {
+                            if (is_string($col)) {
+                                $col = ['html' => $col];
+                            }
+                            $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                            $ret .= $this->_formatParams(
+                                $row['column'],
+                                array_merge((array)$col, ['content' => $content]),
+                                $templater,
+                                false
+                            );
                         }
-                        $content = isset($col['html']) ? $col['html'] : '&nbsp;';
-                        $ret .= $this->_formatParams(
-                            $row['column'],
-                            array_merge((array)$col, ['content' => $content]),
-                            $templater,
-                            false
-                        );
                     }
 
                     $ret .= '</tr>' . PHP_EOL;
@@ -1276,6 +1268,7 @@ class LilHelper extends Helper
 
         return $ret;
     }
+
     /**
      * _list method
      *

@@ -70,7 +70,7 @@ class LilDateWidget implements WidgetInterface
      * @param ContextInterface $context The form context.
      * @return string
      */
-    public function render(array $data, ContextInterface $context)
+    public function render(array $data, ContextInterface $context): string
     {
         $data += [
             'val' => '',
@@ -81,7 +81,7 @@ class LilDateWidget implements WidgetInterface
             || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate')
         ) {
             $data['value'] = $data['val']->toDateString();
-        } elseif ($theDate = Time::parseDate($data['val'], 'yyyy-MM-dd')) {
+        } elseif (!empty($data['val']) && ($theDate = Time::parseDate($data['val'], 'yyyy-MM-dd'))) {
             $data['value'] = $theDate->toDateString();
         }
 
@@ -132,7 +132,7 @@ class LilDateWidget implements WidgetInterface
      * @param array $data Fields data.
      * @return string
      */
-    public function secureFields(array $data)
+    public function secureFields(array $data): array
     {
         return [$data['name']];
     }
