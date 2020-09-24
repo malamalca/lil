@@ -35,7 +35,7 @@ $userForm = [
             'referer' => [
                 'method' => 'hidden',
                 'parameters' => ['referer', [
-                    'default' => $this->request->referer()
+                    'default' => $this->getRequest()->referer()
                 ]]
             ],
 
@@ -58,9 +58,9 @@ $userForm = [
 				]]
 			],
 			'fs_basics_end' => '</fieldset>',
-			
+
 			'fs_passwords_start' => '<fieldset>',
-			'lg_passwords' => sprintf('<legend>%s</legend>', 
+			'lg_passwords' => sprintf('<legend>%s</legend>',
                 $user->isNew() ? __d('lil', 'Password') : __d('lil', 'Change password')),
 			'old_pass' => $user->isNew() ? null : [
 				'method' => 'input',
@@ -86,13 +86,13 @@ $userForm = [
 				]]
 			],
 			'fs_passwords_end' => '</fieldset>',
-			
+
 			'submit' => [
 				'method'     => 'submit',
 				'parameters' => [
 					'label' => __d('lil', 'Save')
 				]
-			],			
+			],
 			'form_end' => [
 				'method'     => 'end',
 				'parameters' => []

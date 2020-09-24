@@ -16,8 +16,8 @@ use App\View\AppView;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\ServerRequest;
+use Cake\Http\Response;
 use Cake\Utility\Hash;
 use Cake\View\View;
 
@@ -73,7 +73,7 @@ class PdfView extends AppView
      * @param array                    $viewOptions  An array of view options
      */
     public function __construct(
-        Request $request = null,
+        ServerRequest $request = null,
         Response $response = null,
         EventManager $eventManager = null,
         array $viewOptions = []
@@ -119,9 +119,9 @@ class PdfView extends AppView
      *
      * @return string|null The rendered view.
      */
-    public function render($view = null, $layout = null)
+    public function render(?string $template = null, $layout = null): string
     {
-        $data = parent::render($view, $layout);
+        $data = parent::render($template, $layout);
 
         if (!empty($data)) {
             // output body

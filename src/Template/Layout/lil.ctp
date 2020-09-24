@@ -51,7 +51,7 @@
 
     print ($this->fetch('script') . PHP_EOL);
 
-    if ($this->request->is('mobile')) {
+    if ($this->getRequest()->is('mobile')) {
         printf($this->Html->script('/lil/js/lil_mobile') . PHP_EOL);
     }
 ?>
@@ -69,7 +69,7 @@
     }
     printf('<div id="header-logo">%s</div>' . PHP_EOL, $admin_logo);
 
-    if ($this->request->is('mobile')) {
+    if ($this->getRequest()->is('mobile')) {
         echo '<div class="popup_link" id="popup_header-menu">';
         echo $this->Html->image('/lil/img/menu.png');
         echo '</div>';
@@ -147,7 +147,7 @@
         var dataTablesGlobals = {
             <?php
                // turn off table scrolling on mobile access
-               if ($this->request->is('mobile')) {
+               if ($this->getRequest()->is('mobile')) {
             ?>
                 "scrollY": null,
             <?php

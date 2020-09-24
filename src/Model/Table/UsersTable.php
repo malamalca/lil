@@ -87,9 +87,9 @@ class UsersTable extends Table
 
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
-            ->allowEmpty('id', 'create')
-            ->notEmpty('title')
-            ->notEmpty($user_fields['username']);
+            ->allowEmptyString('id', 'create')
+            ->notEmptyString('title')
+            ->notEmptyString($user_fields['username']);
 
         return $validator;
     }
@@ -108,12 +108,12 @@ class UsersTable extends Table
         $validator = new Validator();
         $validator
             ->add('id', 'valid', ['rule' => 'uuid'])
-            ->allowEmpty('id', 'create')
-            //->notEmpty(Configure::read('Lil.userDisplayField'))
-            ->notEmpty($user_fields['username'])
-            ->notEmpty($user_fields['password'])
+            ->allowEmptyString('id', 'create')
+            //->notEmptyString(Configure::read('Lil.userDisplayField'))
+            ->notEmptyString($user_fields['username'])
+            ->notEmptyString($user_fields['password'])
             ->requirePresence('repeat_pass')
-            ->notEmpty('repeat_pass')
+            ->notEmptyString('repeat_pass')
             ->add(
                 'repeat_pass',
                 'match',
@@ -143,12 +143,12 @@ class UsersTable extends Table
         $validator = new Validator();
         $validator
             ->requirePresence('id')
-            ->notEmpty('id')
+            ->notEmptyString('id')
             ->add('id', 'valid', ['rule' => 'uuid'])
 
-            ->notEmpty(Configure::read('Lil.userDisplayField'))
+            ->notEmptyString(Configure::read('Lil.userDisplayField'))
 
-            ->allowEmpty(
+            ->allowEmptyString(
                 'old_pass',
                 function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
@@ -185,7 +185,7 @@ class UsersTable extends Table
                 ]
             )
 
-            ->allowEmpty($user_fields['password'])
+            ->allowEmptyString($user_fields['password'])
             ->add(
                 $user_fields['password'],
                 'minLength',
@@ -194,7 +194,7 @@ class UsersTable extends Table
                 ]
             )
 
-            ->allowEmpty(
+            ->allowEmptyString(
                 'repeat_pass',
                 function ($context) {
                     $user_fields = Configure::read('Lil.authFields');
@@ -255,7 +255,7 @@ class UsersTable extends Table
                     return !empty($context['data'][$user_fields['password']]);
                 }
             )
-            ->allowEmpty('repeat_pass')
+            ->allowEmptyString('repeat_pass')
 
             // repeat password should match new password
             ->add(

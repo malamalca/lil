@@ -14,7 +14,7 @@ if (empty($sidebar)) {
     $admin_sidebar = $sidebar;
 }
 
-if ($this->request->is('mobile')) {
+if ($this->getRequest()->is('mobile')) {
     $popup_headerMenu = [];
     foreach ($admin_sidebar as $panel_name => $panel) {
         if (!empty($panel['active']) && !empty($panel['items'])) {
@@ -112,7 +112,7 @@ if ($this->request->is('mobile')) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAIN PANELS
-if ($this->request->is('mobile')) {
+if ($this->getRequest()->is('mobile')) {
     $popup_headerPanels = [];
     foreach ($admin_sidebar as $panel_name => $panel) {
         if (!empty($panel['visible'])) {

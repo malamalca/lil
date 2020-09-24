@@ -79,12 +79,12 @@ class UsersController extends AppController
      */
     public function isAuthorized($user)
     {
-        if (in_array($this->request->getParam('action'), ['properties'])) {
-            return $this->Auth->user('id');
+        if (in_array($this->getRequest()->getParam('action'), ['properties'])) {
+            return $this->getCurrentUser()->get('id');
         }
 
-        if (in_array($this->request->getParam('action'), ['index', 'edit', 'add', 'delete'])) {
-            return $this->Auth->user('id') && $this->userLevel('admin', $user);
+        if (in_array($this->getRequest()->getParam('action'), ['index', 'edit', 'add', 'delete'])) {
+            return $this->getCurrentUser()->get('id') && $this->userLevel('admin', $user);
         }
 
         return parent::isAuthorized($user);
@@ -130,18 +130,18 @@ class UsersController extends AppController
         } else {
             $user = $this->Users->newEntity([]);
         }
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData(), ['validate' => ($id ? 'properties' : 'registration')]);
+        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->getRequest()->getData(), ['validate' => ($id ? 'properties' : 'registration')]);
 
             // remove user password when empty
-            if (empty($this->request->getData($user_fields['password']))) {
+            if (empty($this->getRequest()->getData($user_fields['password']))) {
                 unset($user->{$user_fields['password']});
             }
 
             if ($this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'The user has been saved.'));
 
-                if ($referer = $this->request->getData('referer')) {
+                if ($referer = $this->getRequest()->getData('referer')) {
                     return $this->redirect($referer);
                 }
 
@@ -163,7 +163,7 @@ class UsersController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete', 'get']);
+        $this->getRequest()->allowMethod(['post', 'delete', 'get']);
         $user = $this->Users->get($id);
         if ($this->Users->delete($user)) {
             $this->Flash->success(__d('lil', 'The user has been deleted.'));
@@ -182,7 +182,7 @@ class UsersController extends AppController
      */
     public function login()
     {
-        if ($this->Auth->user('id')) {
+        if ($this->getCurrentUser()->get('id')) {
             $this->redirect($this->Auth->redirectUrl());
         }
 
@@ -190,18 +190,18 @@ class UsersController extends AppController
             $this->Auth->setUser($user);
 
             // set cookie
-            if (!empty($this->request->getData('remember_me'))) {
+            if (!empty($this->getRequest()->getData('remember_me'))) {
                 if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
-                    $CookieAuth->createCookie($this->request->getData());
+                    $CookieAuth->createCookie($this->getRequest()->getData());
                 }
             }
         } else {
-            if ($this->request->is('post') || env('PHP_AUTH_USER')) {
+            if ($this->getRequest()->is('post') || env('PHP_AUTH_USER')) {
                 $this->Flash->error(__d('lil', 'Invalid username or password, try again'));
             }
         }
 
-        if ($this->Auth->user('id')) {
+        if ($this->getCurrentUser()->get('id')) {
             $redirect = $this->Auth->redirectUrl();
             $event = new Event('Lil.Auth.afterLogin', $this->Auth, [$redirect]);
             $this->getEventManager()->dispatch($event);
@@ -235,11 +235,11 @@ class UsersController extends AppController
             throw new NotFoundException(__d('lil', 'Cannot register new users.'));
         }
 
-        $user = $this->Users->newEntity($this->request->getData(), ['validate' => 'registration']);
+        $user = $this->Users->newEntity($this->getRequest()->getData(), ['validate' => 'registration']);
 
-        if ($this->request->is('post')) {
+        if ($this->getRequest()->is('post')) {
             if (!$user->getErrors() && $this->Users->save($user)) {
-                $event = new Event('Lil.Model.Users.afterRegister', $this->Users, [$user, $this->request->getData()]);
+                $event = new Event('Lil.Model.Users.afterRegister', $this->Users, [$user, $this->getRequest()->getData()]);
                 $this->eventManager()->dispatch($event);
 
                 $this->Flash->success(__d('lil', 'The user has been registered.'));
@@ -258,15 +258,15 @@ class UsersController extends AppController
      */
     public function reset()
     {
-        if ($this->Auth->user()) {
+        if ($this->getCurrentUser()->get()) {
             $this->redirect($this->Auth->loginRedirect);
         }
 
-        if ($this->request->is('post')) {
+        if ($this->getRequest()->is('post')) {
             $emailField = Configure::read('Lil.userEmailField');
             $user = $this->Users->find()
                 ->select()
-                ->where([$emailField => $this->request->data($emailField)])
+                ->where([$emailField => $this->getRequest()->data($emailField)])
                 ->first();
 
             if ($user) {
@@ -297,8 +297,8 @@ class UsersController extends AppController
 
         $user_fields = Configure::read('Lil.authFields');
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $this->Users->patchEntity($user, $this->request->getData(), ['validate' => 'resetPassword']);
+        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
+            $this->Users->patchEntity($user, $this->getRequest()->getData(), ['validate' => 'resetPassword']);
 
             if (!$user->getErrors() && $this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'Properties have been saved.'));
@@ -320,18 +320,18 @@ class UsersController extends AppController
      */
     public function properties()
     {
-        $user = $this->Users->get($this->Auth->user('id'));
+        $user = $this->Users->get($this->getCurrentUser()->get('id'));
         if (!$user) {
             throw new NotFoundException(__d('lil', 'User does not exist.'));
         }
 
         $user_fields = Configure::read('Lil.authFields');
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $this->Users->patchEntity($user, $this->request->getData(), ['validate' => 'properties']);
+        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
+            $this->Users->patchEntity($user, $this->getRequest()->getData(), ['validate' => 'properties']);
 
             // remove user password when empty
-            if (empty($this->request->getData($user_fields['password']))) {
+            if (empty($this->getRequest()->getData($user_fields['password']))) {
                 unset($user->{$user_fields['password']});
             }
 

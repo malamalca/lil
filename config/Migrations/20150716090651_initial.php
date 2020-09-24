@@ -97,10 +97,10 @@ class Initial extends AbstractMigration
                 'null' => true,
             ])
             ->create();
-            
+
         // create user
         $Users = TableRegistry::get('Lil.Users');
-        $user = $Users->newEntity();
+        $user = $Users->newEmptyEntity();
         $user->id = 'bb4dcb27-2be9-4673-8c2b-c1e823b3c300';
         $user->name = 'Will E. Coyote';
         $user->username = 'test';
@@ -108,7 +108,7 @@ class Initial extends AbstractMigration
         $user->email = 'info@arhim.si';
         $user->privileges = 5;
         $user->active = 1;
-        
+
         $Users->save($user);
     }
 
