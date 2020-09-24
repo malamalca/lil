@@ -74,6 +74,7 @@ class LilHelper extends Helper
 
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
             'linkedit' => '<a href="{{url}}" {{attrs}}>edit</a>',
+            'linkview' => '<a href="{{url}}" {{attrs}}>view</a>',
             'linkpopup' => '<a href="{{url}}" id="popup_{{name}}" class="popup_link"{{attrs}}>{{content}}</a>'
         ]
     ];
@@ -178,7 +179,7 @@ class LilHelper extends Helper
      */
     public function referer()
     {
-        return base64_encode($this->request->referer());
+        return base64_encode($this->getRequest()->referer());
     }
 
     /**
@@ -197,6 +198,55 @@ class LilHelper extends Helper
         );
 
         return $dateFormat;
+    }
+
+
+    /**
+     * Output date in format for css component
+     *
+     * @param \Cake\I18n\Date|\Cake\I18n\FrozenDate $day Specified day.
+     * @param bool $isHoliday Marks date as holiday. Defaults to false.
+     * @return string
+     */
+    public function calendarDay($day, bool $isHoliday = false)
+    {
+        $ret = sprintf(
+            '<span class="calendar-day">' .
+                '<span class="year-name%4$s">%3$s</span>' .
+                '<span class="day">%2$s</span><span class="month">%1$s</span>' .
+                '</span>',
+            $day->i18nFormat('MMMM'),
+            $day->i18nFormat('dd'),
+            $day->i18nFormat('y'),
+            ($day->isWeekend() ? ' weekend' : '')
+        );
+
+        return $ret;
+    }
+
+    /**
+     * Output hour
+     *
+     * @param \Cake\I18n\Time|\Cake\I18n\FrozenTime|string $time Specified time.
+     * @return string
+     */
+    public function timePanel($time)
+    {
+        if (!is_string($time)) {
+            $time = (string)$time->i18nFormat('HH:mm');
+        }
+
+        $ret = sprintf(
+            '<div class="timepanel"><span class="hour1">%1$s</span><span class="hour2">%2$s</span>' .
+            '<span class="separator">:</span>' .
+            '<span class="minutes1">%3$s</span><span class="minutes2">%4$s</span></div>',
+            substr($time, 0, 1),
+            substr($time, 1, 1),
+            substr($time, 3, 1),
+            substr($time, 4, 1)
+        );
+
+        return $ret;
     }
 
     /**
@@ -311,22 +361,31 @@ class LilHelper extends Helper
      *
      * Returns default view link
      *
-     * @param mixed $url_options   Either an array with url or model's id
-     * @param mixed $link_options  Array with options applied to link element
-     * @param mixed $image_options Array with options applied to image element
+     * @param mixed $url   Either an array with url or model's id
+     * @param mixed $params  Array with options applied to link element
      * @return mixed
      */
-    public function viewLink($url_options = [], $link_options = [], $image_options = [])
+    public function viewLink($url = [], $params = [])
     {
+        $templater = $this->templater();
+
         $url_defaults = [
             'action' => 'view'
         ];
 
-        return $this->Html->link(
-            $this->Html->image('/lil/img/view.gif', $image_options),
-            array_merge($url_defaults, (array)$url_options),
-            array_merge(['escape' => false], $link_options)
+        $ret = $templater->format(
+            'linkview',
+            [
+                'url' => Router::url(array_merge($url_defaults, (array)$url)),
+                'class' => isset($params['class']) ? $params['class'] : [],
+                'attrs' => $templater->formatAttributes(
+                    $params,
+                    ['class']
+                )
+            ]
         );
+
+        return $ret;
     }
 
     /**
