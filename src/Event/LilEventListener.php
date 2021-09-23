@@ -40,7 +40,7 @@ class LilEventListener implements EventListenerInterface
             $controller->set('currentUser', $controller->Auth->user());
         }
 
-        if ($controller->getRequest()->is('ajax')) {
+        if ($controller->getRequest()->is('ajax') && !$controller->getRequest()->is('aht')) {
             $controller->viewBuilder()->setLayout('Lil.popup');
         }
 
