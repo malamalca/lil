@@ -131,6 +131,30 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
     }
 
     /**
+     * Returns image typ
+     *
+     * @param string $binary Binary data
+     * @return string|bool
+     */
+    private function getImageType($binary) {
+        $types = [
+            'jpeg' => "\xFF\xD8\xFF",
+            'gif' => 'GIF',
+            'png' => "\x89\x50\x4e\x47\x0d\x0a",
+        ];
+
+        $found = false;
+        foreach ($types as $type => $header) {
+            if (strpos($binary, $header) === 0) {
+                $found = $type;
+                break;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
      * Set page header html.
      *
      * @param string $html Html page content.
@@ -138,6 +162,16 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function setHeaderHtml($html)
     {
+        if (substr($html, 0, 2) == '{"') {
+            if ($data = json_decode($html, true)) {
+                $binary = base64_decode($data['image']);
+                $type = $this->getImageType($binary);
+                if ($type) {
+                    $html = '<img src="data:image/' . $type . ';base64,' . $data['image'] . '" />';
+                }
+            }
+        }
+
         $this->setOptions(['header-html' => '<!doctype html><head>' .
                             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' .
                             '<html><body><div id="header">' .
@@ -153,6 +187,16 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      */
     public function setFooterHtml($html)
     {
+        if (substr($html, 0, 2) == '{"') {
+            if ($data = json_decode($html, true)) {
+                $binary = base64_decode($data['image']);
+                $type = $this->getImageType($binary);
+                if ($type) {
+                    $html = '<img src="data:image/' . $type . ';base64,' . $data['image'] . '" />';
+                }
+            }
+        }
+
         $this->setOptions(['footer-html' => '<!doctype html><head>' .
                             '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/></head>' .
                             '<html><body><div id="footer">' .
