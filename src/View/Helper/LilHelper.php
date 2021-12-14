@@ -110,7 +110,7 @@ class LilHelper extends Helper
             if (is_callable([$model, $method])) {
                 unset($params[0]);
 
-                return (call_user_func_array([$model, $method], $params));
+                return (call_user_func_array([$model, $method], array_values($params)));
             }
         }
 
@@ -935,9 +935,9 @@ class LilHelper extends Helper
                     $lineResult = call_user_func_array(
                         [
                             $use_object,
-                            $line['method']
+                           $line['method']
                         ],
-                        $parameters
+                        array_values($parameters)
                     );
 
                     if (is_string($lineResult)) {
@@ -1153,6 +1153,8 @@ class LilHelper extends Helper
                     }
                 } elseif (isset($panel['table']) && is_array($panel['table'])) {
                     $ret .= $this->table($panel['table']);
+                } elseif (isset($panel['form']) && is_array($panel['form'])) {
+                    $ret .= $this->form(['form' => $panel['form']]);
                 } elseif (isset($panel['html'])) {
                     $ret .= $panel['html'];
                 }
@@ -1194,7 +1196,7 @@ class LilHelper extends Helper
                     if (!empty($line['parameters'])) {
                         $parameters = (array)$line['parameters'];
                     }
-                    $ret .= call_user_func_array([$line['class'], $line['method']], $parameters);
+                    $ret .= call_user_func_array([$line['class'], $line['method']], array_values($parameters));
                 } else {
                     $ret .= $line;
                 }
