@@ -93,7 +93,7 @@ class PdfView extends AppView
 
         $this->viewOptions = array_merge($pdfOptions, (array)$viewOptions);
 
-        $this->pdf = LilPdfFactory::create($pdfEngine, Hash::merge((array)$pdfEngineSettings, $this->viewOptions));
+        $this->pdf = LilPdfFactory::create($pdfEngine, $pdfEngineSettings, $this->viewOptions);
     }
 
     /**
@@ -145,6 +145,7 @@ class PdfView extends AppView
             return false;
         }
         $result = file_get_contents($tmpFilename);
+
         unlink($tmpFilename);
 
         return $result;
