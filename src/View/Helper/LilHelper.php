@@ -42,7 +42,7 @@ class LilHelper extends Helper
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'templates' => [
             'panelstart' => '<div class="view-panel {{class}}"{{attrs}}>',
             'panellinestart' => '<div class="view-panel-line{{class}}"{{attrs}}>',
@@ -83,7 +83,7 @@ class LilHelper extends Helper
      *
      * @var array
      */
-    public $helpers = ['Html'];
+    public array $helpers = ['Html'];
     /**
      * Cache for jQuery ready script.
      *
@@ -1062,7 +1062,7 @@ class LilHelper extends Helper
         }
 
         // display title
-        if (isset($panels->title)) {
+        if (isset($panels->title) && !is_null($panels->title)) {
             $this->_View->assign('title', $panels->title);
         }
 

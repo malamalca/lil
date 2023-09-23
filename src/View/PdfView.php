@@ -39,19 +39,19 @@ class PdfView extends AppView
      *
      * @var string
      */
-    public $layout = 'Lil.pdf';
+    public string $layout = 'Lil.pdf';
     /**
      * Pdf layouts are located in the pdf sub directory of `Layouts/`
      *
      * @var string
      */
-    public $layoutPath = 'pdf';
+    public string $layoutPath = 'pdf';
     /**
      * Pdf views are located in the 'pdf' sub directory for controllers' views.
      *
      * @var string
      */
-    public $subDir = 'pdf';
+    public string $subDir = 'pdf';
     /**
      * pdf Class
      *
