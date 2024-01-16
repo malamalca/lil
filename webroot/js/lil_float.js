@@ -91,7 +91,12 @@ jQuery.fn.LilFloatVal = function()
 	var decimal = jQuery(this).data('LilFloatDecimalSeparator') || lilFloatSetup.decimalSeparator;
 	var places = jQuery(this).data('LilFloatPlaces') || 2;
 
-	var val = LilFloatStringToFloat(jQuery(this).val(), decimal) + "";
+	var val;
+	if (jQuery(this).prop("type") == "number") {
+		val = jQuery(this).val();
+	} else {
+		val = LilFloatStringToFloat(jQuery(this).val(), decimal) + "";
+	}
 
 	return Math.round(val * Math.pow(10, places)) /  Math.pow(10, places);
 }
