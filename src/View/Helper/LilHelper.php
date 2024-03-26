@@ -204,7 +204,7 @@ class LilHelper extends Helper
     /**
      * Output date in format for css component
      *
-     * @param \Cake\I18n\Date|\Cake\I18n\FrozenDate $day Specified day.
+     * @param \Cake\I18n\Date|\Cake\I18n\Date $day Specified day.
      * @param bool $isHoliday Marks date as holiday. Defaults to false.
      * @return string
      */
@@ -227,7 +227,7 @@ class LilHelper extends Helper
     /**
      * Output hour
      *
-     * @param \Cake\I18n\Time|\Cake\I18n\FrozenTime|string $time Specified time.
+     * @param \Cake\I18n\Time|\Cake\I18n\DateTime|string $time Specified time.
      * @return string
      */
     public function timePanel($time)
