@@ -17,7 +17,7 @@ class UsersTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'Users' => 'plugin.lil.users'
     ];
 

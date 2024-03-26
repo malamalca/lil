@@ -49,14 +49,6 @@ class LilEventListener implements EventListenerInterface
         }
 
         $adminSidebar = new ArrayObject;
-        $adminSidebar['welcome'] = [
-            'title' => __d('lil', 'Dashboard'),
-            'visible' => true,
-            'active' => false,
-            'url' => '/',
-            'items' => [],
-        ];
-
         $event = new Event('Lil.Sidebar.beforeRender', $controller, ['sidebar' => $adminSidebar]);
         EventManager::instance()->dispatch($event);
 

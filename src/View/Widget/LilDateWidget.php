@@ -81,7 +81,7 @@ class LilDateWidget implements WidgetInterface
             || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate')
         ) {
             $data['value'] = $data['val']->toDateString();
-        } elseif (!empty($data['val']) && ($theDate = FrozenTime::parseDate($data['val'], 'yyyy-MM-dd'))) {
+        } elseif (!empty($data['val']) && ($theDate = \Cake\I18n\DateTime::parseDate($data['val'], 'yyyy-MM-dd'))) {
             $data['value'] = $theDate->toDateString();
         }
 
@@ -91,7 +91,7 @@ class LilDateWidget implements WidgetInterface
         // localized date input with jquery date picker
         if (Configure::read('Lil.legacyDateFields')) {
             $fieldType = 'text';
-            if ($theDate = FrozenTime::parseDate($data['value'], 'yyyy-MM-dd')) {
+            if ($theDate = \Cake\I18n\DateTime::parseDate($data['value'], 'yyyy-MM-dd')) {
                 $parts = str_split(Configure::read('Lil.dateFormat'));
                 $partsCount = count($parts);
                 for ($i = 0; $i < $partsCount; $i++) {

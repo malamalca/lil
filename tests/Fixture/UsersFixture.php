@@ -42,7 +42,7 @@ class UsersFixture extends TestFixture
      *
      * @var array
      */
-    public $records = [
+    public array $records = [
         [
             'id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'company_id' => '7d5c7465-9487-4203-ae67-ddb191c42816',
