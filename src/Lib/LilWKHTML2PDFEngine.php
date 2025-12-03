@@ -111,7 +111,7 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @param array $options Page options.
      * @return void
      */
-    public function newPage($html, $options = []): void
+    public function newPage($html, array $options = []): void
     {
         $fileName = TMP . uniqid('', true) . '.html';
         file_put_contents($fileName, $html);

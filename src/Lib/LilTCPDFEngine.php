@@ -151,7 +151,7 @@ class LilTCPDFEngine extends TCPDF implements LilPdfEngineInterface
      * @param array $options Page options.
      * @return void
      */
-    public function newPage($html, $options = []): void
+    public function newPage($html, array $options = []): void
     {
         $this->addPage();
         $this->writeHTML($html);

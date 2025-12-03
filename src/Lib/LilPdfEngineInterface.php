@@ -47,10 +47,10 @@ interface LilPdfEngineInterface
      * Add a new HTML page to PDF
      *
      * @param string $html Options values.
-     * @param string $options Options array.
+     * @param array $options Options array.
      * @return mixed
      */
-    public function newPage($html, $options = []): mixed;
+    public function newPage($html, array $options = []): mixed;
 
     /**
      * Saves PDF to a file
@@ -59,4 +59,27 @@ interface LilPdfEngineInterface
      * @return mixed
      */
     public function saveAs($fileName): mixed;
+
+    /**
+     * Get last error.
+     *
+     * @return string|null
+     */
+    public function getError(): ?string;
+
+    /**
+     * Set page header html.
+     *
+     * @param string $html Html page content.
+     * @return void
+     */
+    public function setHeaderHtml($html): void;
+
+    /**
+     * Set page footer html.
+     *
+     * @param string $html Html page content.
+     * @return void
+     */
+    public function setFooterHtml($html): void;
 }
