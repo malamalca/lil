@@ -817,6 +817,7 @@ class LilHelper extends Helper
                         'content' => $item['title'],
                         'url' => isset($item['url']) ? Router::url($item['url']) : null,
                         'attrs' => $templater->formatAttributes($params),
+                        'active' => !empty($item['active']) ? ' class="active"' : '',
                     ]) . PHP_EOL;
                 }
             }
