@@ -8,6 +8,7 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
+use Cake\Http\Response;
 
 class LilEventListener implements EventListenerInterface
 {
@@ -60,22 +61,22 @@ class LilEventListener implements EventListenerInterface
     /**
      * checkAjaxRedirect hook method.
      *
-     * @param object $event Event object.
-     * @param string $url Redirect url.
-     * @param object $response Response object.
-     * @return object
+     * @param \Cake\Event\Event $event Event object.
+     * @param mixed $url Redirect url.
+     * @param \Cake\Http\Response $response Response object.
+     * @return void
      */
-    public function checkAjaxRedirect(object $event, string $url, object $response): object
+    public function checkAjaxRedirect(Event $event, mixed $url, Response $response): void
     {
         $controller = $event->getSubject();
         if ($controller->getRequest()->is('lilPopup')) {
             $controller->disableAutoRender();
             $controller->set('popupRedirect', true);
-            $event->result = $controller
+            $result = $controller
                 ->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);
             $event->stopPropagation();
 
-            return $event->result;
+            $event->setResult($result);
         }
     }
 }

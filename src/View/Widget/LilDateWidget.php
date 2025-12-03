@@ -81,14 +81,13 @@ class LilDateWidget implements WidgetInterface
             'name' => '',
         ];
 
-        $theDate = DateTime::parseDate($data['val'], 'yyyy-MM-dd');
-
         if (
             is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date')
             || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate')
         ) {
             $data['value'] = $data['val']->toDateString();
-        } elseif (!empty($data['val']) && ($theDate)) {
+        } elseif (!empty($data['val'])) {
+            $theDate = DateTime::parseDate($data['val'], 'yyyy-MM-dd');
             $data['value'] = $theDate->toDateString();
         }
 
