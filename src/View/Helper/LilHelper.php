@@ -69,7 +69,7 @@ class LilHelper extends Helper
                 '</li>',
 
             'popup' => '<div class="popup_{{name}} popup ui-widget ui-widget-content ui-helper-clearfix ui-corner-all {{class}}"><ul>{{content}}</ul></div>',
-            'popup-item' => '<li><a href="{{url}}" {{attrs}}>{{content}}</a></li>',
+            'popup-item' => '<li{{active}}><a href="{{url}}" {{attrs}}>{{content}}</a></li>',
             'popup-item-plain' => '<li>{{content}}</li>',
 
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
@@ -832,6 +832,7 @@ class LilHelper extends Helper
                     $itemsString .= $templater->format('popup-item', [
                         'content' => $item['title'],
                         'url' => isset($item['url']) ? Router::url($item['url']) : null,
+                        'active' => isset($item['active']) && $item['active'] === true ? ' class="active"' : '',
                         'attrs' => $templater->formatAttributes($params),
                     ]) . PHP_EOL;
                 }
@@ -1024,7 +1025,7 @@ class LilHelper extends Helper
      * @param mixed  $data      View compliant with LilIndex specifications
      * @param string $eventName Event name to be fired
      *
-     * @return void
+     * @return mixed
      */
     public function panels($data, $eventName = null)
     {
