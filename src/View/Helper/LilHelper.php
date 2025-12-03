@@ -1029,7 +1029,7 @@ class LilHelper extends Helper
     public function panels($data, $eventName = null)
     {
         if (is_array($data)) {
-            $panels = new LilForm();
+            $panels = new LilPanels();
 
             $panels->pre = isset($data['pre']) ? $data['pre'] : null;
             $panels->post = isset($data['post']) ? $data['post'] : null;

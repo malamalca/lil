@@ -15,4 +15,6 @@ class LilForm
     public $menu = null;
     public $title = null;
     public $form = null;
+    public $pre = null;
+    public $post = null;
 }
