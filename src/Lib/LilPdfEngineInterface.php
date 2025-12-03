@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Pdf Lib
  *
@@ -39,7 +41,7 @@ interface LilPdfEngineInterface
      * @param array $values Options values.
      * @return mixed
      */
-    public function options($values = null);
+    public function options($values = null): mixed;
 
     /**
      * Add a new HTML page to PDF
@@ -48,7 +50,7 @@ interface LilPdfEngineInterface
      * @param string $options Options array.
      * @return mixed
      */
-    public function newPage($html, $options = []);
+    public function newPage($html, $options = []): mixed;
 
     /**
      * Saves PDF to a file
@@ -56,6 +58,5 @@ interface LilPdfEngineInterface
      * @param string $fileName Options values.
      * @return mixed
      */
-    public function saveAs($fileName);
-
+    public function saveAs($fileName): mixed;
 }

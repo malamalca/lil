@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * UsersFixture
- *
  */
 class UsersFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -32,7 +30,7 @@ class UsersFixture extends TestFixture
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
         '_options' => [
-            'engine' => 'InnoDB', 'collation' => 'utf8_unicode_ci'
+            'engine' => 'InnoDB', 'collation' => 'utf8_unicode_ci',
         ],
     ];
     // @codingStandardsIgnoreEnd
@@ -54,7 +52,7 @@ class UsersFixture extends TestFixture
             'privileges' => 1,
             'active' => 1,
             'created' => '2015-02-23 17:50:37',
-            'modified' => '2015-02-23 17:50:37'
+            'modified' => '2015-02-23 17:50:37',
         ],
     ];
 }

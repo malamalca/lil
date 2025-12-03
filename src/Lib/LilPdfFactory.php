@@ -1,9 +1,7 @@
 <?php
+declare(strict_types=1);
 
 namespace Lil\Lib;
-
-use Lil\Lib\LilTCPDFEngine;
-use Lil\Lib\LilWKHTML2PDFEngine;
 
 /**
  * Factory class for PDF library.
@@ -14,18 +12,23 @@ use Lil\Lib\LilWKHTML2PDFEngine;
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     http://www.arhint.si
  */
- 
 class LilPdfFactory
 {
-    public static function create($engine, $enigneOptions, $viewOptions = [])
+    /**
+     * Create PDF engine instance.
+     *
+     * @param string $engine PDF engine name.
+     * @param array<string, mixed> $enigneOptions PDF engine options.
+     * @param array<string, mixed> $viewOptions PDF view options.
+     * @return \Lil\Lib\LilPdfEngineInterface PDF engine instance.
+     */
+    public static function create($engine, $enigneOptions, $viewOptions = []): LilPdfEngineInterface
     {
         switch ($engine) {
             case 'TCPDF':
                 return new LilTCPDFEngine($enigneOptions, $viewOptions);
-                break;
             case 'WKHTML2PDF':
                 return new LilWKHTML2PDFEngine($enigneOptions, $viewOptions);
-                break;
         }
     }
 }

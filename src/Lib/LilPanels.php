@@ -1,5 +1,9 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil\Lib;
+
+use Cake\Datasource\EntityInterface;
 
 /**
  * LilPanels Helper class for passing panels by reference.
@@ -12,11 +16,11 @@ namespace Lil\Lib;
  */
 class LilPanels
 {
-    public $menu = null;
-    public $title = null;
-    public $actions = null;
-    public $pre = null;
-    public $post = null;
-    public $entity = null;
-    public $panels = [];
+    public ?array $menu = null;
+    public ?string $title = null;
+    public ?array $actions = null;
+    public ?string $pre = null;
+    public ?string $post = null;
+    public ?EntityInterface $entity = null;
+    public array $panels = [];
 }

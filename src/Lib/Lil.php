@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Lil\Lib;
 
@@ -14,9 +15,8 @@ class Lil
      * @param array $options Insert options.
      * @return void
      */
-    public static function insertIntoArray(&$input, $element, $options = [])
+    public static function insertIntoArray(&$input, $element, $options = []): void
     {
-
         if (is_object($input)) {
             $dest = $input->getArrayCopy();
         } else {
@@ -24,9 +24,7 @@ class Lil
         }
 
         if (isset($options['after']) || isset($options['replace'])) {
-            $title = isset($options['after'])
-                ? $options['after']
-                : $options['replace'];
+            $title = $options['after'] ?? $options['replace'];
 
             $panels = array_keys($dest);
 
@@ -42,7 +40,7 @@ class Lil
                 if (isset($options['replace'])) {
                     unset($dest[$title]);
                     $i--;
-                };
+                }
 
                 if (isset($options['preserve']) && $options['preserve'] === false) {
                     $part1 = array_slice($dest, 0, $i + 1, true);
@@ -59,8 +57,8 @@ class Lil
                             $dest,
                             $i + 1,
                             count($dest) - $i,
-                            true
-                        )
+                            true,
+                        ),
                     );
                 } else {
                     // do this to preserve array keys
@@ -73,7 +71,9 @@ class Lil
         } elseif (isset($options['before'])) {
             $panels = array_keys($dest);
             $i = 0;
-            for ($i = 0; $i < count($dest); $i++) {
+            $destCount = count($dest);
+
+            for ($i = 0; $i < $destCount; $i++) {
                 if ($panels[$i] == $options['before']) {
                     break;
                 }
@@ -97,8 +97,8 @@ class Lil
                             $dest,
                             $i,
                             count($dest) - $i,
-                            true
-                        )
+                            true,
+                        ),
                     );
                 } else {
                     // do this to preserve array keys

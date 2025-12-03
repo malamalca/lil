@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
+
 /**
- *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
@@ -35,7 +36,8 @@ class CookieAuthenticate extends BaseAuthenticate
      *
      * @var string
      */
-    private $_cookieKey = 'lil_login';
+    private string $_cookieKey = 'lil_login';
+
     /**
      * Constructor
      *
@@ -58,7 +60,7 @@ class CookieAuthenticate extends BaseAuthenticate
      * @param array $fields The fields to be checked.
      * @return bool False if the fields have not been supplied. True if they exist.
      */
-    protected function _checkFields($data, array $fields)
+    protected function _checkFields(Request $data, array $fields): bool
     {
         foreach ([$fields['username'], $fields['password']] as $field) {
             if (empty($data[$field]) || !is_string($data[$field])) {
@@ -78,11 +80,12 @@ class CookieAuthenticate extends BaseAuthenticate
      * @param \Cake\Network\Response $response Unused response object.
      * @return mixed False on login failure.  An array of User data on success.
      */
-    public function authenticate(Request $request, Response $response)
+    public function authenticate(Request $request, Response $response): mixed
     {
         $fields = $this->_config['fields'];
 
-        if (!$cookie = $this->_controller->Cookie->read($this->_cookieKey)) {
+        $cookie = $this->_controller->Cookie->read($this->_cookieKey);
+        if (!$cookie) {
             return false;
         }
         if (!$this->_checkFields($cookie, $fields)) {
@@ -91,17 +94,17 @@ class CookieAuthenticate extends BaseAuthenticate
 
         return $this->_findUser(
             $cookie[$fields['username']],
-            $cookie[$fields['password']]
+            $cookie[$fields['password']],
         );
     }
+
     /**
      * Creates login cookie
      *
      * @param array $data Data containing username and password.
-
      * @return mixed False on failure.  An array of cookie data on success.
      */
-    public function createCookie($data)
+    public function createCookie(array $data): mixed
     {
         $fields = $this->_config['fields'];
 
@@ -111,21 +114,22 @@ class CookieAuthenticate extends BaseAuthenticate
 
         $cookie = [
             $fields['username'] => $data[$fields['username']],
-            $fields['password'] => $data[$fields['password']]
+            $fields['password'] => $data[$fields['password']],
         ];
         $this->_controller->Cookie->configKey(
             $this->_cookieKey,
-            ['expires' => '+30 days']
+            ['expires' => '+30 days'],
         );
 
         return $this->_controller->Cookie->write($this->_cookieKey, $cookie);
     }
+
     /**
      * Deletes login cookie
      *
      * @return bool Result.
      */
-    public function deleteCookie()
+    public function deleteCookie(): bool
     {
         return $this->_controller->Cookie->delete($this->_cookieKey);
     }

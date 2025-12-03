@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Users Controller
  *
@@ -12,15 +14,10 @@
  */
 namespace Lil\Controller;
 
-use Cake\Auth\DefaultPasswordHasher;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Event\EventManager;
 use Cake\Network\Exception\NotFoundException;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
-use Cake\Utility\Security;
-use Cake\Validation\Validator;
 use Lil\Auth\LilAuthTrait;
 
 /**
@@ -43,7 +40,7 @@ class UsersController extends AppController
      *
      * @var string
      */
-    private $_cookieKey = 'lil_login';
+    private string $_cookieKey = 'lil_login';
 
     /**
      * Initialize method.
@@ -59,7 +56,7 @@ class UsersController extends AppController
     /**
      * BeforeFilter method.
      *
-     * @param Cake\Event\Event $event Cake Event object.
+     * @param \Lil\Controller\Cake\Event\Event $event Cake Event object.
      * @return void
      */
     public function beforeFilter(EventInterface $event)
@@ -77,7 +74,7 @@ class UsersController extends AppController
      * @param array $user Authenticated user.
      * @return bool
      */
-    public function isAuthorized($user)
+    public function isAuthorized(array $user)
     {
         if (in_array($this->getRequest()->getParam('action'), ['properties'])) {
             return $this->getCurrentUser()->get('id');
@@ -121,7 +118,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit(?string $id = null)
     {
         $user_fields = Configure::read('Lil.authFields');
 
@@ -131,7 +128,11 @@ class UsersController extends AppController
             $user = $this->Users->newEntity([]);
         }
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->getRequest()->getData(), ['validate' => ($id ? 'properties' : 'registration')]);
+            $user = $this->Users->patchEntity(
+                $user,
+                $this->getRequest()->getData(),
+                ['validate' => ($id ? 'properties' : 'registration')],
+            );
 
             // remove user password when empty
             if (empty($this->getRequest()->getData($user_fields['password']))) {
@@ -141,7 +142,8 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success(__d('lil', 'The user has been saved.'));
 
-                if ($referer = $this->getRequest()->getData('referer')) {
+                $referer = $this->getRequest()->getData('referer');
+                if ($referer) {
                     return $this->redirect($referer);
                 }
 
@@ -161,7 +163,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete(?string $id = null)
     {
         $this->getRequest()->allowMethod(['post', 'delete', 'get']);
         $user = $this->Users->get($id);
@@ -178,6 +180,7 @@ class UsersController extends AppController
      * Login method.
      *
      * This method will display login form
+     *
      * @return mixed
      */
     public function login()
@@ -186,12 +189,14 @@ class UsersController extends AppController
             $this->redirect($this->Auth->redirectUrl());
         }
 
-        if ($user = $this->Auth->identify()) {
+        $user = $this->Auth->identify();
+        if ($user) {
             $this->Auth->setUser($user);
 
             // set cookie
             if (!empty($this->getRequest()->getData('remember_me'))) {
-                if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
+                $CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie');
+                if ($CookieAuth) {
                     $CookieAuth->createCookie($this->getRequest()->getData());
                 }
             }
@@ -217,7 +222,8 @@ class UsersController extends AppController
      */
     public function logout()
     {
-        if ($CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie')) {
+        $CookieAuth = $this->Auth->getAuthenticate('Lil.Cookie');
+        if ($CookieAuth) {
             $CookieAuth->deleteCookie();
         }
 
@@ -239,7 +245,11 @@ class UsersController extends AppController
 
         if ($this->getRequest()->is('post')) {
             if (!$user->getErrors() && $this->Users->save($user)) {
-                $event = new Event('Lil.Model.Users.afterRegister', $this->Users, [$user, $this->getRequest()->getData()]);
+                $event = new Event(
+                    'Lil.Model.Users.afterRegister',
+                    $this->Users,
+                    [$user, $this->getRequest()->getData()],
+                );
                 $this->eventManager()->dispatch($event);
 
                 $this->Flash->success(__d('lil', 'The user has been registered.'));
@@ -284,13 +294,14 @@ class UsersController extends AppController
      * @param string $resetKey Auto generated reset key.
      * @return void
      */
-    public function changePassword($resetKey = null)
+    public function changePassword(?string $resetKey = null)
     {
         if (!$resetKey) {
             throw new NotFoundException(__d('lil', 'Reset key does not exist.'));
         }
 
-        $user = $this->Users->{'findBy' . Inflector::camelize(Configure::read('Lil.passwordResetField'))}($resetKey)->first();
+        $user = $this->Users
+            ->{'findBy' . Inflector::camelize(Configure::read('Lil.passwordResetField'))}($resetKey)->first();
         if (!$user) {
             throw new NotFoundException(__d('lil', 'User does not exist.'));
         }

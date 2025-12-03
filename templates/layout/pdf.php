@@ -4,7 +4,7 @@
 </head>
 <body>
 <?php
-	echo $this->fetch('content');
+    echo $this->fetch('content');
 ?>
 </body>
 </html>

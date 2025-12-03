@@ -25,7 +25,7 @@ $config['Lil'] = array_merge(
             'pagePre' => '',
             'pagePost' => '',
             'footerHtml' => '',
-            'headerHtml' => ''
+            'headerHtml' => '',
         ],
         'TCPDF' => [],
         'WKHTML2PDF' => [
@@ -54,7 +54,7 @@ $config['Lil'] = array_merge(
         'userLevelRoot' => 2,
         'userLevelAdmin' => 5,
     ],
-    (array)Configure::read('Lil')
+    (array)Configure::read('Lil'),
 );
 
 return $config;

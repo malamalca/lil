@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil\Lib;
 
 /**
@@ -12,9 +14,9 @@ namespace Lil\Lib;
  */
 class LilForm
 {
-    public $menu = null;
-    public $title = null;
-    public $form = null;
-    public $pre = null;
-    public $post = null;
+    public ?array $menu = null;
+    public ?string $title = null;
+    public ?array $form = null;
+    public ?string $pre = null;
+    public ?string $post = null;
 }

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * User Entity
  *
@@ -29,7 +31,7 @@ class User extends Entity
      * @var array
      */
     protected array $_accessible = [
-        '*' => true
+        '*' => true,
     ];
 
     /**
@@ -38,7 +40,7 @@ class User extends Entity
      * @param int $role Users role.
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole(int $role): bool
     {
         return $this->privileges <= $role;
     }

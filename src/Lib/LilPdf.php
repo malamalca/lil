@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Pdf Lib
- * 
+ *
  * PHP version 5.3
  *
  * @category Lib
@@ -12,7 +14,7 @@
  */
 namespace Lil\Lib;
 
-use Cake\Core\Configure;
+use TCPDF;
 
 /**
  * LilPdf Lib
@@ -25,56 +27,59 @@ use Cake\Core\Configure;
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     http://www.arhint.si
  */
-class LilPdf extends \TCPDF
+class LilPdf extends TCPDF
 {
-
     /**
      * PDF options
      *
      * @var array
      */
-    private $_options = [];
-    
+    private array $_options = [];
+
     /**
      * __construct
-     * 
-     * @param array $options Array of options.
      *
+     * @param array $options Array of options.
      * @return void
      */
-    public function __construct($options) 
+    public function __construct($options)
     {
         $this->options($options);
         parent::__construct(
-            $options['orientation'], $options['unit'], $options['format'],
-            $options['unicode'], $options['encoding'], $options['diskcache']
+            $options['orientation'],
+            $options['unit'],
+            $options['format'],
+            $options['unicode'],
+            $options['encoding'],
+            $options['diskcache'],
         );
     }
-    
+
     /**
      * Header
      *
      * @return void
      */
-    function Header() 
+    public function Header(): void // phpcs:ignore
     {
         $this->SetFont(
             $this->_options['font'],
             '',
-            $this->_options['header']['font_size']
+            $this->_options['header']['font_size'],
         );
-        
+
         // data means base64 encoded image
         if (!empty($this->_options['header']['data'])) {
             if (substr($this->_options['header']['data'], 0, 2) == '{"') {
-                if ($data = json_decode($this->_options['header']['data'], true)
-                ) {
+                $data = json_decode($this->_options['header']['data'], true);
+                if ($data) {
                     $margins = $this->getMargins();
                     $decoded = base64_decode($data['image']);
                     $this->Image(
                         '@' . $decoded,
-                        $margins['left'], 0, 
-                        $this->getPageWidth() - $margins['left'] - $margins['right']
+                        $margins['left'],
+                        0,
+                        $this->getPageWidth() - $margins['left'] - $margins['right'],
                     );
                 }
             } else {
@@ -82,15 +87,17 @@ class LilPdf extends \TCPDF
                 $this->writeHTMLCell(
                     $this->getPageWidth() - $margins['left'] - $margins['right'],
                     0,
-                    $margins['left'], $this->_options['header']['margin'],
-                    $this->_options['header']['data']
+                    $margins['left'],
+                    $this->_options['header']['margin'],
+                    $this->_options['header']['data'],
                 );
             }
         }
-        
+
         if (!empty($this->_options['header']['lines'])) {
             foreach ($this->_options['header']['lines'] as $l) {
-                if (isset($l['image'])
+                if (
+                    isset($l['image'])
                     && is_string($l['image'])
                     && file_exists($l['image'])
                 ) {
@@ -99,70 +106,73 @@ class LilPdf extends \TCPDF
                         $l['image'],
                         $margins['left'],
                         0,
-                        $this->getPageWidth() 
-                        - $margins['left'] 
-                        - $margins['right']
+                        $this->getPageWidth()
+                        - $margins['left']
+                        - $margins['right'],
                     );
-                } else if (isset($l['image']) 
-                    && is_array($l['image']) 
+                } elseif (
+                    isset($l['image'])
+                    && is_array($l['image'])
                     && file_exists(reset($l['image']))
                 ) {
-                    call_user_func_array(array($this, 'Image'), $l['image']);
-                } else if (isset($l['text']) && is_array($l['text'])) {
-                    call_user_func_array(array($this, 'Text'), $l['text']);
-                } else if (isset($l['write']) && is_array($l['write'])) {
-                    call_user_func_array(array($this, 'Write'), $l['write']);
-                } else if (isset($l['line']) && is_array($l['line'])) {
-                    call_user_func_array(array($this, 'Line'), $l['line']);
+                    call_user_func_array([$this, 'Image'], $l['image']);
+                } elseif (isset($l['text']) && is_array($l['text'])) {
+                    call_user_func_array([$this, 'Text'], $l['text']);
+                } elseif (isset($l['write']) && is_array($l['write'])) {
+                    call_user_func_array([$this, 'Write'], $l['write']);
+                } elseif (isset($l['line']) && is_array($l['line'])) {
+                    call_user_func_array([$this, 'Line'], $l['line']);
                 }
-                
             }
         }
     }
-    
+
     /**
      * Footer
      *
      * @return void
      */
-    function Footer() 
+    public function Footer(): void // phpcs:ignore
     {
         $this->SetFont(
             $this->_options['font'],
             '',
-            $this->_options['footer']['font_size']
+            $this->_options['footer']['font_size'],
         );
-        
+
         // data means base64 encoded image
         if (!empty($this->_options['footer']['data'])) {
             if (substr($this->_options['footer']['data'], 0, 2) == '{"') {
-                if ($data = json_decode($this->_options['footer']['data'], true)
-                ) {
+                $data = json_decode($this->_options['footer']['data'], true);
+                if ($data) {
                     $margins = $this->getMargins();
                     $decoded = base64_decode($data['image']);
                     $this->Image(
                         '@' . $decoded,
                         $margins['left'],
-                        0, 
+                        0,
                         $this->getPageWidth()
                         - $margins['left']
-                        - $margins['right']
+                        - $margins['right'],
                     );
                 }
             } else {
                 $margins = $this->getMargins();
                 $this->writeHTMLCell(
-                    $this->getPageWidth() - $margins['left'] - $margins['right'], 20,
-                    $margins['left'], $this->getPageHeight() - 20,
-                    $this->_options['footer']['data']
+                    $this->getPageWidth() - $margins['left'] - $margins['right'],
+                    20,
+                    $margins['left'],
+                    $this->getPageHeight() - 20,
+                    $this->_options['footer']['data'],
                 );
             }
         }
-        
+
         if (!empty($this->_options['footer']['lines'])) {
             foreach ($this->_options['footer']['lines'] as $l) {
-                if (isset($l['image']) 
-                    && is_string($l['image']) 
+                if (
+                    isset($l['image'])
+                    && is_string($l['image'])
                     && file_exists($l['image'])
                 ) {
                     $margins = $this->getMargins();
@@ -172,67 +182,66 @@ class LilPdf extends \TCPDF
                         275,
                         $this->getPageWidth()
                         - $margins['left']
-                        - $margins['right']
+                        - $margins['right'],
                     );
-                } else if (isset($l['image']) 
-                    && is_array($l['image']) 
+                } elseif (
+                    isset($l['image'])
+                    && is_array($l['image'])
                     && file_exists(reset($l['image']))
                 ) {
-                    call_user_func_array(array($this, 'Image'), $l['image']);
-                } else if (isset($l['text']) && is_array($l['text'])) {
-                    call_user_func_array(array($this, 'Text'), $l['text']);
-                } else if (isset($l['write']) && is_array($l['write'])) {
-                    call_user_func_array(array($this, 'Write'), $l['write']);
-                } else if (isset($l['line']) && is_array($l['line'])) {
-                    call_user_func_array(array($this, 'Line'), $l['line']);
+                    call_user_func_array([$this, 'Image'], $l['image']);
+                } elseif (isset($l['text']) && is_array($l['text'])) {
+                    call_user_func_array([$this, 'Text'], $l['text']);
+                } elseif (isset($l['write']) && is_array($l['write'])) {
+                    call_user_func_array([$this, 'Write'], $l['write']);
+                } elseif (isset($l['line']) && is_array($l['line'])) {
+                    call_user_func_array([$this, 'Line'], $l['line']);
                 }
             }
         }
     }
-    
+
     /**
      * Options
      *
      * @param array $values Options values.
-     * 
      * @return mixed
      */
-    public function options($values = null) 
+    public function options($values = null): mixed
     {
         if ($values === null) {
             return $this->_options;
         }
         $this->_options = $values;
+
         return $this;
     }
-    
+
     /**
      * SetHeaderOptions
      *
      * @param array $options Array with options
-     * 
      * @return void
      */
-    public function setHeaderOptions($options = null) 
+    public function setHeaderOptions($options = null): void
     {
         $this->_options['header'] = array_merge(
             (array)$this->_options['header'],
-            (array)$options
+            (array)$options,
         );
     }
-    
+
     /**
      * SetFooterOptions
      *
      * @param array $options Array with options.
-     * 
      * @return void
      */
-    public function setFooterOptions($options = null) 
+    public function setFooterOptions($options = null): void
     {
         $this->_options['footer'] = array_merge(
             (array)$this->_options['footer'],
-            (array)$options
+            (array)$options,
         );
     }
 }

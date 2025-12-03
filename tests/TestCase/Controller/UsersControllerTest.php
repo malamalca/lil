@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil\Test\TestCase\Controller;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
-use Lil\Controller\UsersController;
 
 /**
  * Lil\Controller\UsersController Test Case
@@ -28,8 +29,8 @@ class UsersControllerTest extends IntegrationTestCase
                 'reset_key' => 'xxyyzz',
                 'privileges' => 1,
                 'active' => 1,
-            ]
-        ]
+            ],
+        ],
     ];
 
     /**
@@ -38,7 +39,7 @@ class UsersControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.lil.users'
+        'plugin.lil.users',
     ];
 
     /**
@@ -123,14 +124,14 @@ class UsersControllerTest extends IntegrationTestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $this->post('/lil/Users/change_password/xxyyzz', $data);
 
         $this->assertResponseSuccess();
         $users = TableRegistry::get('Lil.Users');
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
-        $this->assertTrue((new DefaultPasswordHasher)->check('testtest2', $user->passwd));
+        $this->assertTrue((new DefaultPasswordHasher())->check('testtest2', $user->passwd));
 
         $this->assertRedirect();
     }
@@ -153,14 +154,14 @@ class UsersControllerTest extends IntegrationTestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $this->post('/lil/Users/properties', $data);
 
         $this->assertResponseSuccess();
         $users = TableRegistry::get('Lil.Users');
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
-        $this->assertTrue((new DefaultPasswordHasher)->check('testtest2', $user->passwd));
+        $this->assertTrue((new DefaultPasswordHasher())->check('testtest2', $user->passwd));
 
         $this->assertRedirect();
     }

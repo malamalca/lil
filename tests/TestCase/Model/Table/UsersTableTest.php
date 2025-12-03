@@ -1,24 +1,24 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil\Test\TestCase\Model\Table;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Lil\Model\Table\UsersTable;
 
 /**
  * Lil\Model\Table\UsersTable Test Case
  */
 class UsersTableTest extends TestCase
 {
-
     /**
      * Fixtures
      *
      * @var array
      */
     public array $fixtures = [
-        'Users' => 'plugin.lil.users'
+        'Users' => 'plugin.lil.users',
     ];
 
     /**
@@ -54,6 +54,7 @@ class UsersTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
     /**
      * Test properties save
      *
@@ -70,7 +71,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test2',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
@@ -84,7 +85,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => '123223',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
@@ -98,7 +99,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => '',
             'passwd' => 'a',
-            'repeat_pass' => 'a'
+            'repeat_pass' => 'a',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
@@ -111,15 +112,16 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
 
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'properties']);
         $errors = $user->getErrors();
         $this->assertTrue(empty($errors));
-        $this->assertTrue((new DefaultPasswordHasher)->check('testtest2', $user->passwd));
+        $this->assertTrue((new DefaultPasswordHasher())->check('testtest2', $user->passwd));
     }
+
     /**
      * Test password validation method
      *
@@ -136,13 +138,13 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test2',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
         $errors = $user->getErrors();
         $this->assertTrue(!empty($errors));
-        $this->assertEquals(1, sizeof($errors));
+        $this->assertEquals(1, count($errors));
         $this->assertTrue(!empty($errors['old_pass']));
 
         // passwords do not match
@@ -150,7 +152,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => '123223',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
@@ -164,7 +166,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => '',
-            'repeat_pass' => ''
+            'repeat_pass' => '',
         ];
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');
         $users->patchEntity($user, $data, ['validate' => 'resetPassword']);
@@ -178,7 +180,7 @@ class UsersTableTest extends TestCase
             'user_id' => '28233ae2-d3ac-4121-aec7-3878ef19fac5',
             'old_pass' => 'test',
             'passwd' => 'testtest2',
-            'repeat_pass' => 'testtest2'
+            'repeat_pass' => 'testtest2',
         ];
 
         $user = $users->get('28233ae2-d3ac-4121-aec7-3878ef19fac5');

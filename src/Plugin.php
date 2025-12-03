@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil;
 
 use Cake\Cache\Cache;
 use Cake\Core\BasePlugin;
 use Cake\Core\Configure;
-use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
@@ -57,10 +58,10 @@ class Plugin extends BasePlugin
         $routes->plugin(
             'Lil',
             ['path' => '/lil'],
-            function (RouteBuilder $builder) {
+            function (RouteBuilder $builder): void {
                 // Add custom routes here
                 $builder->fallbacks();
-            }
+            },
         );
         parent::routes($routes);
     }

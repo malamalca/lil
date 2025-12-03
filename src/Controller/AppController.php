@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
+
 /**
  * App Controller.
- * 
+ *
  * PHP version 5.3
  *
  * @category Controller
@@ -25,5 +27,4 @@ use App\Controller\AppController as BaseController;
  */
 class AppController extends BaseController
 {
-
 }

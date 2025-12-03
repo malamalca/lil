@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * LilDateWidget Form widget for date input
  *
@@ -13,8 +15,10 @@
 namespace Lil\View\Widget;
 
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\View\Form\ContextInterface;
+use Cake\View\StringTemplate;
+use Cake\View\View;
 use Cake\View\Widget\WidgetInterface;
 
 /**
@@ -33,14 +37,14 @@ class LilDateWidget implements WidgetInterface
      *
      * @var \Cake\View\StringTemplate
      */
-    protected $templates;
+    protected StringTemplate $templates;
 
     /**
      * View instance.
      *
      * @var \Cake\View\View
      */
-    protected $view;
+    protected View $view;
 
     /**
      * Constructor.
@@ -48,7 +52,7 @@ class LilDateWidget implements WidgetInterface
      * @param \Cake\View\StringTemplate $templates Templates list.
      * @param \Cake\View\View $view Reference to view.
      */
-    public function __construct($templates, $view)
+    public function __construct(StringTemplate $templates, View $view)
     {
         $this->templates = $templates;
         $this->view = $view;
@@ -67,7 +71,7 @@ class LilDateWidget implements WidgetInterface
      * Any other keys provided in $data will be converted into HTML attributes.
      *
      * @param array            $data    The data to build a button with.
-     * @param ContextInterface $context The form context.
+     * @param \Cake\View\Form\ContextInterface $context The form context.
      * @return string
      */
     public function render(array $data, ContextInterface $context): string
@@ -77,11 +81,14 @@ class LilDateWidget implements WidgetInterface
             'name' => '',
         ];
 
-        if (is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date')
+        $theDate = DateTime::parseDate($data['val'], 'yyyy-MM-dd');
+
+        if (
+            is_a($data['val'], 'Cake\I18n\Time') || is_a($data['val'], 'Cake\I18n\Date')
             || is_a($data['val'], 'Cake\I18n\FrozenTime') || is_a($data['val'], 'Cake\I18n\FrozenDate')
         ) {
             $data['value'] = $data['val']->toDateString();
-        } elseif (!empty($data['val']) && ($theDate = \Cake\I18n\DateTime::parseDate($data['val'], 'yyyy-MM-dd'))) {
+        } elseif (!empty($data['val']) && ($theDate)) {
             $data['value'] = $theDate->toDateString();
         }
 
@@ -91,7 +98,8 @@ class LilDateWidget implements WidgetInterface
         // localized date input with jquery date picker
         if (Configure::read('Lil.legacyDateFields')) {
             $fieldType = 'text';
-            if ($theDate = \Cake\I18n\DateTime::parseDate($data['value'], 'yyyy-MM-dd')) {
+            $theDate = DateTime::parseDate($data['value'], 'yyyy-MM-dd');
+            if ($theDate) {
                 $parts = str_split(Configure::read('Lil.dateFormat'));
                 $partsCount = count($parts);
                 for ($i = 0; $i < $partsCount; $i++) {
@@ -100,8 +108,8 @@ class LilDateWidget implements WidgetInterface
                         [
                             'D' => str_pad($theDate->day, 2, '0', STR_PAD_LEFT),
                             'M' => str_pad($theDate->month, 2, '0', STR_PAD_LEFT),
-                            'Y' => $theDate->year
-                        ]
+                            'Y' => $theDate->year,
+                        ],
                     );
                 }
 
@@ -111,8 +119,8 @@ class LilDateWidget implements WidgetInterface
                 sprintf(
                     '$("#%1$s").datepicker(%2$s);',
                     $data['id'],
-                    $this->_jsOptions()
-                )
+                    $this->_jsOptions(),
+                ),
             );
         }
 
@@ -121,8 +129,8 @@ class LilDateWidget implements WidgetInterface
             [
                 'type' => $fieldType,
                 'name' => $data['name'],
-                'attrs' => $this->templates->formatAttributes($data, ['name', 'val'])
-            ]
+                'attrs' => $this->templates->formatAttributes($data, ['name', 'val']),
+            ],
         );
     }
 
@@ -142,7 +150,7 @@ class LilDateWidget implements WidgetInterface
      *
      * @return string
      */
-    private function _jsOptions()
+    private function _jsOptions(): string
     {
         $jsOptions = [];
 
@@ -152,10 +160,10 @@ class LilDateWidget implements WidgetInterface
             str_split(
                 strtr(
                     Configure::read('Lil.dateFormat'),
-                    ['D' => 'dd', 'M' => 'mm', 'Y' => 'yy']
+                    ['D' => 'dd', 'M' => 'mm', 'Y' => 'yy'],
                 ),
-                2
-            )
+                2,
+            ),
         );
         $jsOptions['dateFormat'] = sprintf('"%s"', $dateFormat);
         $jsOptions['firstDay'] = 1;

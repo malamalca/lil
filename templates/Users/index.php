@@ -1,7 +1,7 @@
 <?php
 
     use Cake\Core\Configure;
-    
+
     $usersIndex = [
         'title_for_layout' => __d('lil', 'Users'),
         'menu' => [
@@ -10,39 +10,40 @@
                 'visible' => true,
                 'url' => [
                     'action' => 'add',
-                ]
-            ]
+                ],
+            ],
         ],
         'table' => [
             'parameters' => [
                 'width' => '100%', 'cellspacing' => 0, 'cellpadding' => 0,
-                'id' => 'UsersIndex', 'class' => 'index'
+                'id' => 'UsersIndex', 'class' => 'index',
             ],
             'head' => ['rows' => [['columns' => [
                 'title' => __d('lil', 'Title'),
-                'username' => __d('lil', 'Username')
+                'username' => __d('lil', 'Username'),
             ]]]],
-        ]
+        ],
     ];
 
     foreach ($users as $user) {
-        if (!$userTitle = $user->{Configure::read('Lil.userDisplayField')}) {
+        $userTitle = $user->{Configure::read('Lil.userDisplayField')};
+        if (!$userTitle) {
             $userTitle = __d('lil', 'N/A');
         }
-        
+
         $usersIndex['table']['body']['rows'][]['columns'] = [
             'title' => [
                 'html' => $this->Html->link(
                     $userTitle,
                     [
                         'action' => 'edit',
-                        $user->id
-                    ]
-                )
+                        $user->id,
+                    ],
+                ),
             ],
             'username' => [
-                'html' => h($user->{Configure::read('Lil.authFields.username')})
-            ]
+                'html' => h($user->{Configure::read('Lil.authFields.username')}),
+            ],
         ];
     }
 

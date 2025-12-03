@@ -1,10 +1,14 @@
 <?php
-use Phinx\Migration\AbstractMigration;
+
 use Cake\ORM\TableRegistry;
+use Phinx\Migration\AbstractMigration;
 
 class Initial extends AbstractMigration
 {
-    public function up()
+    /**
+     * Migrate Up.
+     */
+    public function up(): void
     {
         $table = $this->table('settings');
         $table
@@ -112,7 +116,10 @@ class Initial extends AbstractMigration
         $Users->save($user);
     }
 
-    public function down()
+    /**
+     * Migrate Down.
+     */
+    public function down(): void
     {
         $this->dropTable('settings');
         $this->dropTable('users');

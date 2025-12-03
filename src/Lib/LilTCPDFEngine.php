@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * TcPDF LilPdf Engine
  *
@@ -10,9 +12,8 @@
  */
 namespace Lil\Lib;
 
-use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use Lil\Lib\LilPdfEngineInterface;
+use TCPDF;
 
 /**
  * LilTCPDFEngine Lib
@@ -25,17 +26,19 @@ use Lil\Lib\LilPdfEngineInterface;
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     http://www.arhint.si
  */
-class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
+class LilTCPDFEngine extends TCPDF implements LilPdfEngineInterface
 {
-
     /**
      * PDF options
      *
      * @var array
      */
-    private $_options = [];
+    private array $_options = [];
 
-    private $_defaultOptions = [
+    /**
+     * @var array<string, mixed>
+     */
+    private array $_defaultOptions = [
         'orientation' => PDF_PAGE_ORIENTATION, // 'P' or 'L'
         'unit' => PDF_UNIT, // default 'mm'
         'format' => PDF_PAGE_FORMAT, // default 'A4'
@@ -52,12 +55,12 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
         'language' => [
             'a_meta_charset' => 'UTF-8',
             'a_meta_dir' => 'ltr',
-            'a_meta_language' => 'sl'
+            'a_meta_language' => 'sl',
         ],
         'margin' => [
             'left' => PDF_MARGIN_LEFT,
             'top' => PDF_MARGIN_TOP,
-            'right' => PDF_MARGIN_RIGHT
+            'right' => PDF_MARGIN_RIGHT,
         ],
         'header' => [
             'margin' => PDF_MARGIN_HEADER, // minimum distance between header and top page margin
@@ -73,7 +76,6 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      * __construct
      *
      * @param array $enigneOptions Array of options.
-     *
      * @return void
      */
     public function __construct($enigneOptions)
@@ -86,7 +88,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
             $options['format'],
             $options['unicode'],
             $options['encoding'],
-            $options['diskcache']
+            $options['diskcache'],
         );
 
         mb_internal_encoding('UTF-8');
@@ -113,7 +115,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
             $options['margin']['left'],
             $options['margin']['top'],
             $options['margin']['right'],
-            true // keep margins
+            true, // keep margins
         );
 
         if (empty($options['header'])) {
@@ -133,10 +135,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      * Save PDF as file.
      *
      * @param string $fileName Filename.
-     *
      * @return bool
      */
-    public function saveAs($fileName)
+    public function saveAs($fileName): bool
     {
         $this->Output($fileName, 'F');
 
@@ -148,10 +149,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @param string $html Html page content.
      * @param array $options Page options.
-     *
      * @return void
      */
-    public function newPage($html, $options = [])
+    public function newPage($html, $options = []): void
     {
         $this->addPage();
         $this->writeHTML($html);
@@ -160,9 +160,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
     /**
      * Get last error.
      *
-     * @return null|string
+     * @return string|null
      */
-    public function getError()
+    public function getError(): ?string
     {
         return null;
     }
@@ -173,7 +173,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      * @param string $html Html page content.
      * @return void
      */
-    public function setHeaderHtml($html)
+    public function setHeaderHtml($html): void
     {
         $this->_options['header']['data'] = $html;
     }
@@ -184,7 +184,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      * @param string $html Html page content.
      * @return void
      */
-    public function setFooterHtml($html)
+    public function setFooterHtml($html): void
     {
         $this->_options['footer']['data'] = $html;
     }
@@ -193,10 +193,9 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      * Get/set options.
      *
      * @param array $values Options values.
-     *
      * @return mixed
      */
-    public function options($values = null)
+    public function options($values = null): mixed
     {
         if ($values === null) {
             return $this->_options;
@@ -211,26 +210,26 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function Header()
+    public function Header(): void // phpcs:ignore
     {
         $this->SetFont(
             $this->_options['font'],
             '',
-            $this->_options['header']['font_size']
+            $this->_options['header']['font_size'],
         );
 
         // data means base64 encoded image
         if (!empty($this->_options['header']['data'])) {
             if (substr($this->_options['header']['data'], 0, 2) == '{"') {
-                if ($data = json_decode($this->_options['header']['data'], true)
-                ) {
+                $data = json_decode($this->_options['header']['data'], true);
+                if ($data) {
                     $margins = $this->getMargins();
                     $decoded = base64_decode($data['image']);
                     $this->Image(
                         '@' . $decoded,
                         $margins['left'],
                         0,
-                        $this->getPageWidth() - $margins['left'] - $margins['right']
+                        $this->getPageWidth() - $margins['left'] - $margins['right'],
                     );
                 }
             } else {
@@ -240,14 +239,15 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                     0,
                     $margins['left'],
                     $this->_options['header']['margin'],
-                    $this->_options['header']['data']
+                    $this->_options['header']['data'],
                 );
             }
         }
 
         if (!empty($this->_options['header']['lines'])) {
             foreach ($this->_options['header']['lines'] as $l) {
-                if (isset($l['image'])
+                if (
+                    isset($l['image'])
                     && is_string($l['image'])
                     && file_exists($l['image'])
                 ) {
@@ -258,9 +258,10 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                         0,
                         $this->getPageWidth()
                         - $margins['left']
-                        - $margins['right']
+                        - $margins['right'],
                     );
-                } elseif (isset($l['image'])
+                } elseif (
+                    isset($l['image'])
                     && is_array($l['image'])
                     && file_exists(reset($l['image']))
                 ) {
@@ -285,19 +286,19 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
      *
      * @return void
      */
-    public function Footer()
+    public function Footer(): void // phpcs:ignore
     {
         $this->SetFont(
             $this->_options['font'],
             '',
-            $this->_options['footer']['font_size']
+            $this->_options['footer']['font_size'],
         );
 
         // data means base64 encoded image
         if (!empty($this->_options['footer']['data'])) {
             if (substr($this->_options['footer']['data'], 0, 2) == '{"') {
-                if ($data = json_decode($this->_options['footer']['data'], true)
-                ) {
+                $data = json_decode($this->_options['footer']['data'], true);
+                if ($data) {
                     $margins = $this->getMargins();
                     $decoded = base64_decode($data['image']);
                     $this->Image(
@@ -306,7 +307,7 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                         0,
                         $this->getPageWidth()
                         - $margins['left']
-                        - $margins['right']
+                        - $margins['right'],
                     );
                 }
             } else {
@@ -316,14 +317,15 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                     20,
                     $margins['left'],
                     $this->getPageHeight() - 20,
-                    $this->_options['footer']['data']
+                    $this->_options['footer']['data'],
                 );
             }
         }
 
         if (!empty($this->_options['footer']['lines'])) {
             foreach ($this->_options['footer']['lines'] as $l) {
-                if (isset($l['image'])
+                if (
+                    isset($l['image'])
                     && is_string($l['image'])
                     && file_exists($l['image'])
                 ) {
@@ -334,9 +336,10 @@ class LilTCPDFEngine extends \TCPDF implements LilPdfEngineInterface
                         275,
                         $this->getPageWidth()
                         - $margins['left']
-                        - $margins['right']
+                        - $margins['right'],
                     );
-                } elseif (isset($l['image'])
+                } elseif (
+                    isset($l['image'])
                     && is_array($l['image'])
                     && file_exists(reset($l['image']))
                 ) {

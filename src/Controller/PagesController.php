@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Pages Controller
  *
@@ -15,7 +17,6 @@ namespace Lil\Controller;
 use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
-use Lil\Controller\AppController;
 
 /**
  * Static content controller
@@ -34,17 +35,17 @@ class PagesController extends AppController
      * IsAuthorized method.
      *
      * @param array $user User data
-     *
      * @return bool
      */
-    public function isAuthorized($user)
+    public function isAuthorized(array $user)
     {
         return true;
     }
+
     /**
      * Displays a view
      *
-     * @return void|\Cake\Network\Response
+     * @return \Cake\Network\Response|void
      * @throws \Cake\Network\Exception\NotFoundException When the view file could not
      *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
      */
@@ -75,6 +76,7 @@ class PagesController extends AppController
             throw new NotFoundException();
         }
     }
+
     /**
      * Datatables method
      *
@@ -94,19 +96,19 @@ class PagesController extends AppController
      * Dashboard Order method
      *
      * @param array $panelOrder Order of panels
-     *
      * @return void
      */
-    public function dashboardOrder($panelOrder)
+    public function dashboardOrder(array $panelOrder)
     {
         if (!empty($panelOrder)) {
             $data = [
             'user_id' => $this->currentUser->get('id'),
-            'name' => 'Lil.DashboardOrder'
+            'name' => 'Lil.DashboardOrder',
             ];
 
             $Setting = ClassRegistry::init('Lil.Setting');
-            if ($id = $Setting->field('id', $data)) {
+            $id = $Setting->field('id', $data);
+            if ($id) {
                 $data['id'] = $id;
             }
 

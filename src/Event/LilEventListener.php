@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Lil\Event;
 
 use ArrayObject;
@@ -28,7 +30,7 @@ class LilEventListener implements EventListenerInterface
      * @param object $event Event object.
      * @return void
      */
-    public function beforeRender(Event $event)
+    public function beforeRender(Event $event): void
     {
         $controller = $event->getSubject();
 
@@ -48,7 +50,7 @@ class LilEventListener implements EventListenerInterface
             $controller->viewBuilder()->setLayout('Lil.popup_iframe');
         }
 
-        $adminSidebar = new ArrayObject;
+        $adminSidebar = new ArrayObject();
         $event = new Event('Lil.Sidebar.beforeRender', $controller, ['sidebar' => $adminSidebar]);
         EventManager::instance()->dispatch($event);
 
@@ -63,13 +65,14 @@ class LilEventListener implements EventListenerInterface
      * @param object $response Response object.
      * @return object
      */
-    public function checkAjaxRedirect($event, $url, $response)
+    public function checkAjaxRedirect(object $event, string $url, object $response): object
     {
         $controller = $event->getSubject();
         if ($controller->getRequest()->is('lilPopup')) {
             $controller->disableAutoRender();
             $controller->set('popupRedirect', true);
-            $event->result = $controller->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);
+            $event->result = $controller
+                ->render('Lil.Element' . DS . 'popup_redirect', 'Lil.popup_iframe')->withStatus(200);
             $event->stopPropagation();
 
             return $event->result;

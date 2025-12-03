@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * WKHtml2Pdf LilPdf Engine
  *
@@ -10,9 +12,7 @@
  */
 namespace Lil\Lib;
 
-use Cake\Core\Configure;
 use Cake\Utility\Hash;
-use Lil\Lib\LilPdfEngineInterface;
 use mikehaertl\wkhtmlto\Pdf;
 
 /**
@@ -28,15 +28,17 @@ use mikehaertl\wkhtmlto\Pdf;
  */
 class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
 {
-
     /**
      * PDF options
      *
      * @var array
      */
-    private $_localOptions = [];
+    private array $_localOptions = [];
 
-    private $_defaultOptions = [
+    /**
+     * @var array<string, mixed>
+     */
+    private array $_defaultOptions = [
             'binary' => 'C:\bin\wkhtmltopdf\bin\wkhtmltopdf.exe',
             'no-outline', // Make Chrome not complain
             'print-media-type',
@@ -50,19 +52,22 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
             //'user-style-sheet' => dirname(dirname(__FILE__)) . DS . 'webroot' . DS . 'css' . DS . 'lil_pdf.css',
     ];
 
-    private $_tempFiles = [];
+    /**
+     * Temporary files
+     *
+     * @var array<string>
+     */
+    private array $_tempFiles = [];
 
     /**
      * __construct
      *
      * @param array $enigneOptions Array of options.
-     *
      * @return void
      */
     public function __construct($enigneOptions)
     {
         $this->options(Hash::merge($this->_defaultOptions, $enigneOptions));
-        $options = $this->options();
         parent::__construct($enigneOptions);
 
         if (!empty($enigneOptions['headerHtml'])) {
@@ -90,10 +95,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * Save PDF as file.
      *
      * @param string $fileName Filename.
-     *
      * @return bool
      */
-    public function saveAs($fileName)
+    public function saveAs($fileName): bool
     {
         $result = parent::saveAs($fileName);
 
@@ -105,10 +109,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      *
      * @param string $html Html page content.
      * @param array $options Page options.
-     *
      * @return void
      */
-    public function newPage($html, $options = [])
+    public function newPage($html, $options = []): void
     {
         $fileName = TMP . uniqid('', true) . '.html';
         file_put_contents($fileName, $html);
@@ -123,9 +126,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
     /**
      * Get last error.
      *
-     * @return null|string
+     * @return string|null
      */
-    public function getError()
+    public function getError(): ?string
     {
         return parent::getError();
     }
@@ -136,7 +139,8 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @param string $binary Binary data
      * @return string|bool
      */
-    private function getImageType($binary) {
+    private function getImageType($binary): string|bool
+    {
         $types = [
             'jpeg' => "\xFF\xD8\xFF",
             'gif' => 'GIF',
@@ -160,10 +164,11 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @param string $html Html page content.
      * @return void
      */
-    public function setHeaderHtml($html)
+    public function setHeaderHtml($html): void
     {
         if (substr($html, 0, 2) == '{"') {
-            if ($data = json_decode($html, true)) {
+            $data = json_decode($html, true);
+            if ($data) {
                 $binary = base64_decode($data['image']);
                 $type = $this->getImageType($binary);
                 if ($type) {
@@ -185,10 +190,11 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * @param string $html Html page content.
      * @return void
      */
-    public function setFooterHtml($html)
+    public function setFooterHtml($html): void
     {
         if (substr($html, 0, 2) == '{"') {
-            if ($data = json_decode($html, true)) {
+            $data = json_decode($html, true);
+            if ($data) {
                 $binary = base64_decode($data['image']);
                 $type = $this->getImageType($binary);
                 if ($type) {
@@ -208,10 +214,9 @@ class LilWKHTML2PDFEngine extends Pdf implements LilPdfEngineInterface
      * Get/set options.
      *
      * @param array $values Options values.
-     *
      * @return mixed
      */
-    public function options($values = null)
+    public function options($values = null): mixed
     {
         if ($values === null) {
             return $this->_localOptions;

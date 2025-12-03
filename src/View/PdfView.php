@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * PdfView Pdf view class
  *
@@ -16,11 +18,8 @@ use App\View\AppView;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
-use Cake\Utility\Hash;
-use Cake\View\View;
-
+use Cake\Http\ServerRequest;
 use Lil\Lib\LilPdfFactory;
 
 /**
@@ -57,13 +56,14 @@ class PdfView extends AppView
      *
      * @var object
      */
-    protected $pdf = null;
+    protected object $pdf = null;
     /**
      * viewOptions Class
      *
      * @var array
      */
-    protected $viewOptions = [];
+    protected array $viewOptions = [];
+
     /**
      * Constructor
      *
@@ -73,10 +73,10 @@ class PdfView extends AppView
      * @param array                    $viewOptions  An array of view options
      */
     public function __construct(
-        ServerRequest $request = null,
-        Response $response = null,
-        EventManager $eventManager = null,
-        array $viewOptions = []
+        ?ServerRequest $request = null,
+        ?Response $response = null,
+        ?EventManager $eventManager = null,
+        array $viewOptions = [],
     ) {
         parent::__construct($request, $response, $eventManager, $viewOptions);
 
@@ -84,7 +84,11 @@ class PdfView extends AppView
         $pdfEngineSettings = Configure::read('Lil.' . $pdfEngine);
         $pdfOptions = Configure::read('Lil.pdfOptions');
 
-        $event = new Event('Lil.Pdf.init', $this, ['engine' => $pdfEngine, 'settings' => $pdfEngineSettings, 'options' => $pdfOptions]);
+        $event = new Event('Lil.Pdf.init', $this, [
+            'engine' => $pdfEngine,
+            'settings' => $pdfEngineSettings,
+            'options' => $pdfOptions,
+        ]);
         EventManager::instance()->dispatch($event);
 
         $pdfEngine = $event->getData('engine');
@@ -101,10 +105,9 @@ class PdfView extends AppView
      *
      * @param string $method Name of the method to execute.
      * @param array  $args   Arguments for called method.
-     *
      * @return mixed
      */
-    public function __call($method, $args)
+    public function __call(string $method, array $args): mixed
     {
         if (is_callable([$this->pdf, $method])) {
             return call_user_func_array([$this->pdf, $method], $args);
@@ -116,10 +119,9 @@ class PdfView extends AppView
      *
      * @param string|null $view   The view being rendered.
      * @param string|null $layout The layout being rendered.
-     *
      * @return string|null The rendered view.
      */
-    public function render(?string $template = null, $layout = null): string
+    public function render(?string $template = null, ?string $layout = null): string
     {
         $data = parent::render($template, $layout);
 
@@ -139,7 +141,6 @@ class PdfView extends AppView
             return false;
         }
         if (!file_exists($tmpFilename)) {
-            die('File does not exist ' . $tmpFilename);
             $this->lastError = 'PDF file doesn\'t exist.';
 
             return false;

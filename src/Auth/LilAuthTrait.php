@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Lil\Auth;
 
@@ -6,9 +7,15 @@ use Cake\Core\Configure;
 
 trait LilAuthTrait
 {
-    private $_Auth = false;
+    private mixed $_Auth = false;
 
-    protected function setAuth($Auth)
+    /**
+     * Set Auth component instance
+     *
+     * @param mixed $Auth Auth component.
+     * @return void
+     */
+    protected function setAuth(mixed $Auth): void
     {
         $this->_Auth = $Auth;
     }
@@ -17,10 +24,10 @@ trait LilAuthTrait
      * Checks if user has specified role
      *
      * @param string|int $role User role.
-     * @param array|object|null $user User data.
+     * @param object|array|null $user User data.
      * @return bool
      */
-    public function userLevel($role, $user = null)
+    public function userLevel(string|int $role, array|object|null $user = null): bool
     {
         if (!empty($user)) {
             if (is_array($user)) {

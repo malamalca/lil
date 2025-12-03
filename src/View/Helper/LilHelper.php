@@ -485,7 +485,7 @@ class LilHelper extends Helper
         if ($br) {
             $pee = (string)preg_replace_callback(
                 '/<(script|style).*?<\/\\1>/s',
-                fn ($matches) => str_replace("\n", '<PreserveNewline />', $matches[0]),
+                fn($matches) => str_replace("\n", '<PreserveNewline />', $matches[0]),
                 $pee,
             );
             $pee = (string)preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee);
@@ -500,7 +500,7 @@ class LilHelper extends Helper
         if (strpos($pee, '<pre') !== false) {
             $pee = (string)preg_replace_callback(
                 '!(<pre[^>]*>)(.*?)</pre>!is',
-                fn ($matches) => cleanPre($matches),
+                fn($matches) => cleanPre($matches),
                 $pee,
             );
         }
@@ -516,7 +516,7 @@ class LilHelper extends Helper
      * @param mixed $width Optional. Max line length or array with options:
      * @param string $break Optional. EOL character or string.
      * @param bool $cut Optional. Cut words or shorten to whole words.
-     * @return string|array<string>
+     * @return array<string>|string
      */
     public function mbWordWrap(string $str, mixed $width = 75, string $break = "\n", bool $cut = false): mixed
     {
