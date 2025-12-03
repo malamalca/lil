@@ -48,9 +48,9 @@ interface LilPdfEngineInterface
      *
      * @param string $html Options values.
      * @param array $options Options array.
-     * @return mixed
+     * @return void
      */
-    public function newPage($html, array $options = []): mixed;
+    public function newPage($html, array $options = []): void;
 
     /**
      * Saves PDF to a file
