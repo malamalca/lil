@@ -15,6 +15,8 @@ class LilPanels
     public $menu = null;
     public $title = null;
     public $actions = null;
+    public $pre = null;
+    public $post = null;
     public $entity = null;
     public $panels = [];
 }

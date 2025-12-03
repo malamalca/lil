@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * LilHelper Lil View helper.
  *
@@ -15,9 +17,14 @@ namespace Lil\View\Helper;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
+use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
+use Cake\View\StringTemplate;
 use Cake\View\StringTemplateTrait;
 use Cake\View\View;
 use Lil\Auth\LilAuthTrait;
@@ -32,15 +39,17 @@ use Lil\Lib\LilPanels;
  * @author   Arhim d.o.o. <info@arhim.si>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     http://www.arhint.si
+ * @property \Cake\View\Helper\HtmlHelper $Html
  */
 class LilHelper extends Helper
 {
     use LilAuthTrait;
     use StringTemplateTrait;
+
     /**
      * Default config for this class
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $_defaultConfig = [
         'templates' => [
@@ -63,39 +72,42 @@ class LilHelper extends Helper
 
             'navbar-menu' => '<ul class="nav navbar-nav {{class}}">{{items}}</ul>',
             'navbar-item' => '<li><a href="{{url}}" class="btn {{class}}" {{attrs}}>{{content}}</a></li>',
-            'navbar-submenu' => '<li><a href="#{{subid}}" class="popup_link" id="popup_{{subid}}" {{attrs}}>{{content}}<b class="carret"></b></a>' .
-                '<div class="popup popup_{{subid}} ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" style="display: none;">' .
+            'navbar-submenu' => '<li><a href="#{{subid}}" class="popup_link" id="popup_{{subid}}" ' .
+                '{{attrs}}>{{content}}<b class="carret"></b></a>' .
+                '<div class="popup popup_{{subid}} ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" ' .
+                'style="display: none;">' .
                 '<ul class="nav nav-sub">{{subitems}}</ul></div>' .
                 '</li>',
 
-            'popup' => '<div class="popup_{{name}} popup ui-widget ui-widget-content ui-helper-clearfix ui-corner-all {{class}}"><ul>{{content}}</ul></div>',
-            'popup-item' => '<li{{active}}><a href="{{url}}" {{attrs}}>{{content}}</a></li>',
+            'popup' => '<div class="popup_{{name}} popup ' .
+                'ui-widget ui-widget-content ui-helper-clearfix ui-corner-all {{class}}"><ul>{{content}}</ul></div>',
+            'popup-item' => '<li><a href="{{url}}" {{attrs}}>{{content}}</a></li>',
             'popup-item-plain' => '<li>{{content}}</li>',
 
             'linkdelete' => '<a href="{{url}}" onclick="return confirm(\'{{confirmation}}\');"{{attrs}}>delete</a>',
             'linkedit' => '<a href="{{url}}" {{attrs}}>edit</a>',
             'linkview' => '<a href="{{url}}" {{attrs}}>view</a>',
-            'linkpopup' => '<a href="{{url}}" id="popup_{{name}}" class="popup_link"{{attrs}}>{{content}}</a>'
-        ]
+            'linkpopup' => '<a href="{{url}}" id="popup_{{name}}" class="popup_link"{{attrs}}>{{content}}</a>',
+        ],
     ];
     /**
      * Helpers property
      *
-     * @var array
+     * @var array<string>
      */
     public array $helpers = ['Html'];
     /**
      * Cache for jQuery ready script.
      *
-     * @var array
+     * @var array<string>
      */
-    private $_jsReady = [];
+    private array $_jsReady = [];
     /**
      * Cache for stored popups.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    private $_popups = [];
+    private array $_popups = [];
 
     /**
      * __call method
@@ -104,13 +116,15 @@ class LilHelper extends Helper
      * @param mixed $params Passed Parameters.
      * @return bool
      */
-    public function __call($method, $params)
+    public function __call(mixed $method, mixed $params): bool
     {
-        if (!empty($params[0]) && ($model = TableRegistry::get($params[0]))) {
-            if (is_callable([$model, $method])) {
+        $model = TableRegistry::getTableLocator()->get($params[0]);
+        if (!empty($params[0])) {
+            $callable = [$model, $method];
+            if (is_callable($callable)) {
                 unset($params[0]);
 
-                return (call_user_func_array([$model, $method], array_values($params)));
+                return call_user_func_array($callable, array_values($params));
             }
         }
 
@@ -131,7 +145,7 @@ class LilHelper extends Helper
      * Using the `templates` option you can redefine the tag HtmlHelper will use.
      *
      * @param \Cake\View\View $View The View this helper is being attached to.
-     * @param array $config Configuration settings for the helper.
+     * @param array<string, mixed> $config Configuration settings for the helper.
      */
     public function __construct(View $View, array $config = [])
     {
@@ -141,7 +155,7 @@ class LilHelper extends Helper
     /**
      * Initialize method
      *
-     * @param array $config Config Data.
+     * @param array<string> $config Config Data.
      * @return void
      */
     public function initialize(array $config): void
@@ -157,7 +171,7 @@ class LilHelper extends Helper
      * @param mixed $block JQuery text block.
      * @return void
      */
-    public function jsReady($block)
+    public function jsReady(mixed $block): void
     {
         $this->_jsReady[] = $block;
     }
@@ -167,19 +181,9 @@ class LilHelper extends Helper
      *
      * @return string
      */
-    public function jsReadyOut()
+    public function jsReadyOut(): string
     {
         return implode(PHP_EOL . CHR(9) . CHR(9) . CHR(9), $this->_jsReady);
-    }
-
-    /**
-     * Referer method
-     *
-     * @return string
-     */
-    public function referer()
-    {
-        return base64_encode($this->getRequest()->referer());
     }
 
     /**
@@ -187,19 +191,18 @@ class LilHelper extends Helper
      *
      * @return string
      */
-    public function dateFormat()
+    public function dateFormat(): string
     {
         $dateFormat = strtr(
             implode(
                 Configure::read('Lil.dateSeparator'),
-                str_split(Configure::read('Lil.dateFormat'))
+                str_split(Configure::read('Lil.dateFormat')),
             ),
-            ['Y' => 'yyyy', 'M' => 'MM', 'D' => 'dd']
+            ['Y' => 'yyyy', 'M' => 'MM', 'D' => 'dd'],
         );
 
         return $dateFormat;
     }
-
 
     /**
      * Output date in format for css component
@@ -208,7 +211,7 @@ class LilHelper extends Helper
      * @param bool $isHoliday Marks date as holiday. Defaults to false.
      * @return string
      */
-    public function calendarDay($day, bool $isHoliday = false)
+    public function calendarDay(Date $day, bool $isHoliday = false): string
     {
         $ret = sprintf(
             '<span class="calendar-day">' .
@@ -218,7 +221,7 @@ class LilHelper extends Helper
             $day->i18nFormat('MMMM'),
             $day->i18nFormat('dd'),
             $day->i18nFormat('y'),
-            ($day->isWeekend() ? ' weekend' : '')
+            ($day->isWeekend() ? ' weekend' : ''),
         );
 
         return $ret;
@@ -230,7 +233,7 @@ class LilHelper extends Helper
      * @param \Cake\I18n\Time|\Cake\I18n\DateTime|string $time Specified time.
      * @return string
      */
-    public function timePanel($time)
+    public function timePanel(Time|DateTime|string $time): string
     {
         if (!is_string($time)) {
             $time = (string)$time->i18nFormat('HH:mm');
@@ -243,7 +246,7 @@ class LilHelper extends Helper
             substr($time, 0, 1),
             substr($time, 1, 1),
             substr($time, 3, 1),
-            substr($time, 4, 1)
+            substr($time, 4, 1),
         );
 
         return $ret;
@@ -257,7 +260,7 @@ class LilHelper extends Helper
      *
      * @return string An <a /> element.
      */
-    public function link()
+    public function link(): string
     {
         $params = func_get_args();
 
@@ -271,9 +274,8 @@ class LilHelper extends Helper
 
                 $link = $this->Html->link(
                     $matches[3][$k],
-                    isset($params[1][$index][0]) ? $params[1][$index][0] : null,
-                    isset($params[1][$index][1]) ? $params[1][$index][1] : [],
-                    isset($params[1][$index][2]) ? $params[1][$index][2] : []
+                    $params[1][$index][0] ?? null,
+                    $params[1][$index][1] ?? [],
                 );
                 $ret = str_replace($match, $link, $ret);
             }
@@ -282,9 +284,8 @@ class LilHelper extends Helper
         } else {
             return $this->Html->link(
                 $params[0],
-                isset($params[1]) ? $params[1] : null,
-                isset($params[2]) ? $params[2] : null,
-                isset($params[3]) ? $params[3] : null
+                $params[1] ?? null,
+                $params[2] ?? null,
             );
         }
     }
@@ -298,12 +299,12 @@ class LilHelper extends Helper
      * @param mixed $params  Array with options applied to link element
      * @return mixed
      */
-    public function deleteLink($url = [], $params = [])
+    public function deleteLink(mixed $url = [], mixed $params = []): mixed
     {
         $templater = $this->templater();
 
         $url_defaults = [
-            'action' => 'delete'
+            'action' => 'delete',
         ];
 
         $defaultConfirmation = __d('lil', 'Are you sure you want to delete this item?');
@@ -312,13 +313,13 @@ class LilHelper extends Helper
             'linkdelete',
             [
                 'url' => Router::url(array_merge($url_defaults, (array)$url)),
-                'class' => isset($params['class']) ? $params['class'] : [],
-                'confirmation' => isset($params['confirm']) ? $params['confirm'] : $defaultConfirmation,
+                'class' => $params['class'] ?? [],
+                'confirmation' => $params['confirm'] ?? $defaultConfirmation,
                 'attrs' => $templater->formatAttributes(
                     $params,
-                    ['confirm', 'class']
+                    ['confirm', 'class'],
                 ),
-            ]
+            ],
         );
 
         return $ret;
@@ -333,24 +334,24 @@ class LilHelper extends Helper
      * @param mixed $params  Array with options applied to link element
      * @return mixed
      */
-    public function editLink($url = [], $params = [])
+    public function editLink(mixed $url = [], mixed $params = []): mixed
     {
         $templater = $this->templater();
 
         $url_defaults = [
-            'action' => 'edit'
+            'action' => 'edit',
         ];
 
         $ret = $templater->format(
             'linkedit',
             [
                 'url' => Router::url(array_merge($url_defaults, (array)$url)),
-                'class' => isset($params['class']) ? $params['class'] : [],
+                'class' => $params['class'] ?? [],
                 'attrs' => $templater->formatAttributes(
                     $params,
-                    ['class']
-                )
-            ]
+                    ['class'],
+                ),
+            ],
         );
 
         return $ret;
@@ -365,24 +366,24 @@ class LilHelper extends Helper
      * @param mixed $params  Array with options applied to link element
      * @return mixed
      */
-    public function viewLink($url = [], $params = [])
+    public function viewLink(mixed $url = [], mixed $params = []): mixed
     {
         $templater = $this->templater();
 
         $url_defaults = [
-            'action' => 'view'
+            'action' => 'view',
         ];
 
         $ret = $templater->format(
             'linkview',
             [
                 'url' => Router::url(array_merge($url_defaults, (array)$url)),
-                'class' => isset($params['class']) ? $params['class'] : [],
+                'class' => $params['class'] ?? [],
                 'attrs' => $templater->formatAttributes(
                     $params,
-                    ['class']
-                )
-            ]
+                    ['class'],
+                ),
+            ],
         );
 
         return $ret;
@@ -399,13 +400,13 @@ class LilHelper extends Helper
      * @param mixed $options  Array with options applied to link element
      * @return mixed
      */
-    public function popupLink($name, $title, $url = [], $options = [])
+    public function popupLink(string $name, string $title, mixed $url = [], mixed $options = []): mixed
     {
         $templater = $this->templater();
 
         $defaultAttributes = [
             'id' => 'popup_' . $name,
-            'class' => 'popup_link'
+            'class' => 'popup_link',
         ];
 
         $ret = $templater->format(
@@ -416,9 +417,9 @@ class LilHelper extends Helper
                 'name' => $name,
                 'attrs' => $templater->formatAttributes(
                     array_merge($defaultAttributes, $options),
-                    ['id', 'class']
-                )
-            ]
+                    ['id', 'class'],
+                ),
+            ],
         );
 
         return $ret;
@@ -437,75 +438,73 @@ class LilHelper extends Helper
      * line-breaks after paragraphing. Default true.
      * @return string Text which has been converted into correct paragraph tags.
      */
-    public function autop($pee, $br = 1)
+    public function autop(string $pee, int|bool $br = 1): string
     {
         if (trim($pee) === '') {
             return '';
         }
         $pee = $pee . "\n"; // just to make things a little easier, pad the end
-        $pee = preg_replace('|<br />\s*<br />|', "\n\n", $pee);
+        $pee = (string)preg_replace('|<br />\s*<br />|', "\n\n", $pee);
         // Space things out a little
         $allblocks = '(?:table|thead|tfoot|caption|col|colgroup|tbody|tr|td|th|' .
             'div|dl|dd|dt|ul|ol|li|pre|select|form|map|area|blockquote|address|' .
             'math|style|input|p|h[1-6]|hr)';
-        $pee = preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
-        $pee = preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
+        $pee = (string)preg_replace('!(<' . $allblocks . '[^>]*>)!', "\n$1", $pee);
+        $pee = (string)preg_replace('!(</' . $allblocks . '>)!', "$1\n\n", $pee);
         $pee = str_replace(["\r\n", "\r"], "\n", $pee); // cross-platform NL
         if (strpos($pee, '<object') !== false) {
-            $pee = preg_replace('|\s*<param([^>]*)>\s*|', "<param$1>", $pee);
-            $pee = preg_replace('|\s*</embed>\s*|', '</embed>', $pee);
+            $pee = (string)preg_replace('|\s*<param([^>]*)>\s*|', '<param$1>', $pee);
+            $pee = (string)preg_replace('|\s*</embed>\s*|', '</embed>', $pee);
         }
         //$pee = preg_replace("/\n\n+/", "\n\n", $pee); // take care of duplicates
         // make paragraphs, including one at the end
         //miha: $pees = preg_split('/\n\s*\n/', $pee, -1, PREG_SPLIT_NO_EMPTY);
         $pees = preg_split('/\n/', $pee, -1);
         $pee = '';
-        foreach ($pees as $tinkle) {
-            $pee .= '<p>' . trim($tinkle, "\n") . "</p>\n";
+        foreach ((array)$pees as $tinkle) {
+            $pee .= '<p>' . trim((string)$tinkle, "\n") . "</p>\n";
         }
         // under certain conditions it could create a P of entirely whitespace
         // miha: $pee = preg_replace('|<p>\s*</p>|', '', $pee);
-        $pee = preg_replace('|<p>\s*</p>|', '<br />', $pee);
-        $pee = preg_replace(
+        $pee = (string)preg_replace('|<p>\s*</p>|', '<br />', $pee);
+        $pee = (string)preg_replace(
             '!<p>([^<]+)</(div|address|form)>!',
-            "<p>$1</p></$2>",
-            $pee
+            '<p>$1</p></$2>',
+            $pee,
         );
-        $pee = preg_replace(
+        $pee = (string)preg_replace(
             '!<p>\s*(</?' . $allblocks . '[^>]*>)\s*</p>!',
-            "$1",
-            $pee
+            '$1',
+            $pee,
         ); // don't pee all over a tag
-        $pee = preg_replace("|<p>(<li.+?)</p>|", "$1", $pee); // nested lists
-        $pee = preg_replace('|<p><blockquote([^>]*)>|i', "<blockquote$1><p>", $pee);
+        $pee = (string)preg_replace('|<p>(<li.+?)</p>|', '$1', $pee); // nested lists
+        $pee = (string)preg_replace('|<p><blockquote([^>]*)>|i', '<blockquote$1><p>', $pee);
         $pee = str_replace('</blockquote></p>', '</p></blockquote>', $pee);
-        $pee = preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', "$1", $pee);
-        $pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', "$1", $pee);
+        $pee = (string)preg_replace('!<p>\s*(</?' . $allblocks . '[^>]*>)!', '$1', $pee);
+        $pee = (string)preg_replace('!(</?' . $allblocks . '[^>]*>)\s*</p>!', '$1', $pee);
         if ($br) {
-            $pee = preg_replace_callback(
+            $pee = (string)preg_replace_callback(
                 '/<(script|style).*?<\/\\1>/s',
-                function ($matches) {
-                    return str_replace("\n", "<PreserveNewline />", $matches[0]);
-                },
-                $pee
+                fn ($matches) => str_replace("\n", '<PreserveNewline />', $matches[0]),
+                $pee,
             );
-            $pee = preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee);
+            $pee = (string)preg_replace('|(?<!<br />)\s*\n|', "<br />\n", $pee);
             $pee = str_replace('<PreserveNewline />', "\n", $pee);
         }
-        $pee = preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', "$1", $pee);
-        $pee = preg_replace(
+        $pee = (string)preg_replace('!(</?' . $allblocks . '[^>]*>)\s*<br />!', '$1', $pee);
+        $pee = (string)preg_replace(
             '!<br />(\s*</?(?:p|li|div|dl|dd|dt|th|pre|td|ul|ol)[^>]*>)!',
             '$1',
-            $pee
+            $pee,
         );
         if (strpos($pee, '<pre') !== false) {
-            $pee = preg_replace_callback(
+            $pee = (string)preg_replace_callback(
                 '!(<pre[^>]*>)(.*?)</pre>!is',
-                'cleanPre',
-                $pee
+                fn ($matches) => cleanPre($matches),
+                $pee,
             );
         }
-        $pee = preg_replace("|\n</p>$|", '</p>', $pee);
+        $pee = (string)preg_replace("|\n</p>$|", '</p>', $pee);
 
         return $pee;
     }
@@ -513,13 +512,13 @@ class LilHelper extends Helper
     /**
      * Wraps long text
      *
-     * @param string  $str   The text which has to be wrapped.
-     * @param int     $width Optional. Max line length.
-     * @param string  $break Optional. EOL character or string.
-     * @param bool    $cut   Optional. Cut words or shorten to whole words.
-     * @return string
+     * @param string $str The text which has to be wrapped.
+     * @param mixed $width Optional. Max line length or array with options:
+     * @param string $break Optional. EOL character or string.
+     * @param bool $cut Optional. Cut words or shorten to whole words.
+     * @return string|array<string>
      */
-    public function mbWordWrap($str, $width = 75, $break = "\n", $cut = false)
+    public function mbWordWrap(string $str, mixed $width = 75, string $break = "\n", bool $cut = false): mixed
     {
         $maxlines = 0;
         $result = 'string';
@@ -527,27 +526,13 @@ class LilHelper extends Helper
         $startWith = 0;
 
         if (is_array($width)) {
-            if (isset($width['maxlines'])) {
-                $maxlines = $width['maxlines'];
-            }
-            if (isset($width['result'])) {
-                $result = $width['result'];
-            }
-            if (isset($width['prefix'])) {
-                $prefix = $width['prefix'];
-            }
-            if (isset($width['startwith'])) {
-                $startWith = $width['startwith'];
-            }
-            if (isset($width['break'])) {
-                $break = $width['break'];
-            }
-            if (isset($width['cut'])) {
-                $cut = $width['cut'];
-            }
-            if (isset($width['width'])) {
-                $width = $width['width'];
-            }
+            $maxlines = $width['maxlines'] ?? $maxlines;
+            $result = $width['result'] ?? $result;
+            $prefix = $width['prefix'] ?? $prefix;
+            $startWith = $width['startWith'] ?? $startWith;
+            $break = $width['break'] ?? $break;
+            $cut = $width['cut'] ?? $cut;
+            $width = $width['width'] ?? $width;
         }
 
         $ret = [];
@@ -605,17 +590,15 @@ class LilHelper extends Helper
      *
      * Insert a new element into array
      *
-     * @param array $dest    Destination for insert operation.
-     * @param array $element Element to be inserted.
-     * @param array $options Insert options.
+     * @param array<string, mixed> $dest Destination for insert operation.
+     * @param array<string, mixed> $element Element to be inserted.
+     * @param array<string, mixed> $options Insert options.
      * @return void
      */
-    public function insertIntoArray(&$dest, $element, $options = [])
+    public function insertIntoArray(array &$dest, array $element, array $options = []): void
     {
         if (isset($options['after']) || isset($options['replace'])) {
-            $title = isset($options['after'])
-                ? $options['after']
-                : $options['replace'];
+            $title = $options['after'] ?? $options['replace'];
 
             $panels = array_keys($dest);
             $i = 0;
@@ -630,7 +613,7 @@ class LilHelper extends Helper
                 if (isset($options['replace'])) {
                     unset($dest[$title]);
                     $i--;
-                };
+                }
 
                 if (isset($options['preserve']) && $options['preserve'] === false) {
                     $part1 = array_slice($dest, 0, $i + 1, true);
@@ -647,8 +630,8 @@ class LilHelper extends Helper
                             $dest,
                             $i + 1,
                             count($dest) - $i,
-                            true
-                        )
+                            true,
+                        ),
                     );
                 } else {
                     // do this to preserve array keys
@@ -661,7 +644,8 @@ class LilHelper extends Helper
         } elseif (isset($options['before'])) {
             $panels = array_keys($dest);
             $i = 0;
-            for ($i = 0; $i < count($dest); $i++) {
+            $destCount = count($dest);
+            for ($i = 0; $i < $destCount; $i++) {
                 if ($panels[$i] == $options['before']) {
                     break;
                 }
@@ -685,8 +669,8 @@ class LilHelper extends Helper
                             $dest,
                             $i,
                             count($dest) - $i,
-                            true
-                        )
+                            true,
+                        ),
                     );
                 } else {
                     // do this to preserve array keys
@@ -706,15 +690,15 @@ class LilHelper extends Helper
      * Display main menu from LilArray
      *
      * @param mixed $data Menu compliant with LilMenu specifications.
-     * @param array $options Options for menu.
+     * @param array<string, mixed> $options Options for menu.
      * @return string
      */
-    public function menu($data, $options = [])
+    public function menu(mixed $data, array $options = []): string
     {
         $templater = $this->templater();
 
         $defaultOptions = [
-            'prefix' => 'navbar'
+            'prefix' => 'navbar',
         ];
 
         $options = Hash::merge($defaultOptions, $options);
@@ -736,7 +720,7 @@ class LilHelper extends Helper
                         $submenuId = $menu_item_name;
 
                         foreach ($menu_item['submenu'] as $subitem) {
-                            $params = isset($subitem['params']) ? $subitem['params'] : [];
+                            $params = $subitem['params'] ?? [];
                             $params = Hash::merge($params, ['id' => $menu_item_name]);
 
                             $subitemTemplate = $options['prefix'] . '-item';
@@ -747,19 +731,19 @@ class LilHelper extends Helper
                             $subitemsString .= $templater->format(
                                 $subitemTemplate,
                                 [
-                                    'class' => isset($subitem['params']['class']) ? $subitem['params']['class'] : [],
+                                    'class' => $subitem['params']['class'] ?? [],
                                     'url' => isset($subitem['url']) ? Router::url($subitem['url']) : [],
-                                    'content' => isset($subitem['title']) ? $subitem['title'] : [],
-                                    'icon' => isset($subitem['icon']) ? $subitem['icon'] : [],
-                                    'attrs' => $templater->formatAttributes($params, ['class'])
-                                ]
+                                    'content' => $subitem['title'] ?? [],
+                                    'icon' => $subitem['icon'] ?? [],
+                                    'attrs' => $templater->formatAttributes($params, ['class']),
+                                ],
                             ) . PHP_EOL;
                         }
                     } elseif (!empty($menu_item['active'])) {
                         $itemTemplate = $options['prefix'] . '-active';
                     }
 
-                    $attrs = isset($menu_item['params']) ? $menu_item['params'] : [];
+                    $attrs = $menu_item['params'] ?? [];
                     if (!empty($attrs['confirm'])) {
                         $attrs['data-confirm'] = h($attrs['confirm']);
                     }
@@ -767,17 +751,17 @@ class LilHelper extends Helper
                     $itemsString .= $templater->format(
                         $itemTemplate,
                         [
-                            'class' => isset($menu_item['params']['class']) ? $menu_item['params']['class'] : [],
+                            'class' => $menu_item['params']['class'] ?? [],
                             'url' => isset($menu_item['url']) ? Router::url($menu_item['url']) : [],
-                            'content' => isset($menu_item['title']) ? $menu_item['title'] : [],
-                            'icon' => isset($menu_item['icon']) ? $menu_item['icon'] : [],
+                            'content' => $menu_item['title'] ?? [],
+                            'icon' => $menu_item['icon'] ?? [],
                             'subitems' => $subitemsString,
                             'subid' => $submenuId,
                             'attrs' => $templater->formatAttributes(
                                 $attrs,
-                                ['class', 'confirm']
+                                ['class', 'confirm'],
                             ),
-                        ]
+                        ],
                     ) . PHP_EOL;
                 }
             }
@@ -786,13 +770,13 @@ class LilHelper extends Helper
         $ret = $templater->format(
             $options['prefix'] . '-menu',
             [
-                'class' => isset($data['params']['class']) ? $data['params']['class'] : [],
+                'class' => $data['params']['class'] ?? [],
                 'items' => $itemsString,
                 'attrs' => $templater->formatAttributes(
-                    isset($data['params']) ? $data['params'] : [],
-                    ['class']
+                    $data['params'] ?? [],
+                    ['class'],
                 ),
-            ]
+            ],
         ) . PHP_EOL;
 
         return $ret;
@@ -803,13 +787,13 @@ class LilHelper extends Helper
      *
      * Display popup from LilArray
      *
-     * @param string  $name   Popup name
-     * @param array   $data   Popup compliant with LilPopup specifications
-     * @param bool    $inline Display popup inline or store in cache
-     * @param array   $options Additional options
-     * @return string
+     * @param string $name Popup name
+     * @param array<string, mixed> $data   Popup compliant with LilPopup specifications
+     * @param bool $inline Display popup inline or store in cache
+     * @param array<string, mixed> $options Additional options
+     * @return string|void
      */
-    public function popup($name, $data, $inline = false, $options = [])
+    public function popup(string $name, array $data, bool $inline = false, array $options = [])
     {
         $items = [];
         if (isset($data['items'])) {
@@ -832,7 +816,6 @@ class LilHelper extends Helper
                     $itemsString .= $templater->format('popup-item', [
                         'content' => $item['title'],
                         'url' => isset($item['url']) ? Router::url($item['url']) : null,
-                        'active' => isset($item['active']) && $item['active'] === true ? ' class="active"' : '',
                         'attrs' => $templater->formatAttributes($params),
                     ]) . PHP_EOL;
                 }
@@ -842,7 +825,7 @@ class LilHelper extends Helper
         $ret = $templater->format('popup', [
             'name' => $name,
             'content' => $itemsString,
-            'class' => isset($options['class']) ? $options['class'] : null,
+            'class' => $options['class'] ?? null,
             'attrs' => $templater->formatAttributes($options, ['class']),
         ]);
 
@@ -864,28 +847,24 @@ class LilHelper extends Helper
      * @param string $eventName Name of the event to be fired
      * @return string
      */
-    public function form($data, $eventName = null)
+    public function form(mixed $data, ?string $eventName = null): string
     {
         if (is_array($data)) {
             $form = new LilForm();
 
-            $form->pre = isset($data['pre']) ? $data['pre'] : null;
-            $form->post = isset($data['post']) ? $data['post'] : null;
+            $form->pre = $data['pre'] ?? null;
+            $form->post = $data['post'] ?? null;
 
-            $form->form = isset($data['form']) ? $data['form'] : null;
-            $form->menu = isset($data['menu']) ? $data['menu'] : null;
-            $form->title = isset($data['title_for_layout'])
-                ? $data['title_for_layout']
-                : (isset($data['title']) ? $data['title'] : null);
+            $form->form = $data['form'] ?? null;
+            $form->menu = $data['menu'] ?? null;
+            $form->title = $data['title_for_layout'] ?? ($data['title'] ?? null);
         } else {
             $form = $data;
         }
 
-        $event = new Event('Lil.Form.' . $eventName, $this->_View, [$form]);
+        $event = new Event('Lil.Form.' . $eventName, $this->_View, ['form' => $form]);
         EventManager::instance()->dispatch($event);
-        if (!empty($event->result)) {
-            $form = $event->result;
-        }
+        $form = $event->getData()['form'];
 
         // display title
         if (isset($form->title)) {
@@ -910,7 +889,7 @@ class LilHelper extends Helper
             }
         }
 
-        foreach ($form->form['lines'] as $name => $line) {
+        foreach ($form->form['lines'] as $line) {
             if (is_string($line)) {
                 $ret .= $line;
             } else {
@@ -933,13 +912,12 @@ class LilHelper extends Helper
                         $use_object =& $this->_View->{$line['class']};
                     }
 
-                    $lineResult = call_user_func_array(
-                        [
-                            $use_object,
-                           $line['method']
-                        ],
-                        array_values($parameters)
-                    );
+                    $callable = [$use_object, $line['method']];
+                    if (!is_callable($callable)) {
+                        continue;
+                    }
+
+                    $lineResult = call_user_func_array($callable, array_values($parameters));
 
                     if (is_string($lineResult)) {
                         $ret .= $lineResult;
@@ -968,10 +946,9 @@ class LilHelper extends Helper
      *
      * @param mixed $data    Table compliant with LilIndex specifications
      * @param mixed $options Options: showEmpty - display empty table
-     *
-     * @return void
+     * @return string
      */
-    public function index($data, $options = [])
+    public function index(mixed $data, mixed $options = []): string
     {
         $ret = '';
 
@@ -1024,24 +1001,21 @@ class LilHelper extends Helper
      *
      * @param mixed  $data      View compliant with LilIndex specifications
      * @param string $eventName Event name to be fired
-     *
-     * @return mixed
+     * @return string
      */
-    public function panels($data, $eventName = null)
+    public function panels(mixed $data, ?string $eventName = null): string
     {
         if (is_array($data)) {
-            $panels = new LilForm();
+            $panels = new LilPanels();
 
-            $panels->pre = isset($data['pre']) ? $data['pre'] : null;
-            $panels->post = isset($data['post']) ? $data['post'] : null;
-            $panels->actions = isset($data['actions']) ? $data['actions'] : null;
-            $panels->entity = isset($data['entity']) ? $data['entity'] : null;
+            $panels->pre = $data['pre'] ?? null;
+            $panels->post = $data['post'] ?? null;
+            $panels->actions = $data['actions'] ?? null;
+            $panels->entity = $data['entity'] ?? null;
 
-            $panels->panels = isset($data['panels']) ? $data['panels'] : null;
-            $panels->menu = isset($data['menu']) ? $data['menu'] : null;
-            $panels->title = isset($data['title_for_layout'])
-                ? $data['title_for_layout']
-                : (isset($data['title']) ? $data['title'] : null);
+            $panels->panels = $data['panels'] ?? null;
+            $panels->menu = $data['menu'] ?? null;
+            $panels->title = $data['title_for_layout'] ?? ($data['title'] ?? null);
 
             if (isset($data['head_for_layout'])) {
                 $this->_View->set('head_for_layout', $data['head_for_layout']);
@@ -1054,12 +1028,10 @@ class LilHelper extends Helper
             $event = new Event(
                 'Lil.Panels.' . $eventName,
                 $this->_View,
-                [$panels]
+                ['panels' => $panels],
             );
             EventManager::instance()->dispatch($event);
-            if (!empty($event->result)) {
-                $panels = $event->result;
-            }
+            $panels = $event->getData()['panels'];
         }
 
         // display title
@@ -1107,7 +1079,7 @@ class LilHelper extends Helper
 
                 $ret .= $templater->format('panelstart', [
                     'attrs' => $templater->formatAttributes($params),
-                    'class' => $class
+                    'class' => $class,
                 ]);
 
                 if (isset($panel['lines']) && is_array($panel['lines'])) {
@@ -1127,11 +1099,11 @@ class LilHelper extends Helper
                             if (isset($line['label'])) {
                                 $ret .= $templater->format('panellinestart', [
                                     'attrs' => $templater->formatAttributes($lineParams),
-                                    'class' => $lineClass
+                                    'class' => $lineClass,
                                 ]);
 
                                 $ret .= $templater->format('panellinelabel', [
-                                    'content' => $line['label']
+                                    'content' => $line['label'],
                                 ]);
                             }
 
@@ -1181,23 +1153,25 @@ class LilHelper extends Helper
      * Additional lines after heading
      *
      * @param mixed $actions Actions array
-     *
-     * @return void
+     * @return string
      */
-    private function _actions($actions)
+    private function _actions(mixed $actions): string
     {
         $ret = '';
         if (!empty($actions['pre'])) {
             $ret .= $actions['pre'];
         }
         if (!empty($actions['lines'])) {
-            foreach ((array)$actions['lines'] as $name => $line) {
+            foreach ((array)$actions['lines'] as $line) {
                 if (is_array($line) && !empty($line['class'])) {
                     $parameters = [];
                     if (!empty($line['parameters'])) {
                         $parameters = (array)$line['parameters'];
                     }
-                    $ret .= call_user_func_array([$line['class'], $line['method']], array_values($parameters));
+                    $callable = [$line['class'], $line['method']];
+                    if (is_callable($callable)) {
+                        $ret .= call_user_func_array($callable, array_values($parameters));
+                    }
                 } else {
                     $ret .= $line;
                 }
@@ -1216,10 +1190,9 @@ class LilHelper extends Helper
      * Display table from LilTable
      *
      * @param mixed $data Data compliant to LilTable specification.
-     *
-     * @return void
+     * @return string
      */
-    public function table($data)
+    public function table(mixed $data): string
     {
         $ret = '';
         $templater = $this->templater();
@@ -1248,12 +1221,12 @@ class LilHelper extends Helper
                         if (is_string($col)) {
                             $col = ['html' => $col];
                         }
-                        $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                        $content = $col['html'] ?? '&nbsp;';
                         $ret .= $this->_formatParams(
                             $row['column'],
                             array_merge((array)$col, ['content' => $content]),
                             $templater,
-                            false
+                            false,
                         );
                     }
                 }
@@ -1276,12 +1249,12 @@ class LilHelper extends Helper
                             if (is_string($col)) {
                                 $col = ['html' => $col];
                             }
-                            $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                            $content = $col['html'] ?? '&nbsp;';
                             $ret .= $this->_formatParams(
                                 'td',
                                 array_merge((array)$col, ['content' => $content]),
                                 $templater,
-                                false
+                                false,
                             );
                         }
                     }
@@ -1307,12 +1280,12 @@ class LilHelper extends Helper
                             if (is_string($col)) {
                                 $col = ['html' => $col];
                             }
-                            $content = isset($col['html']) ? $col['html'] : '&nbsp;';
+                            $content = $col['html'] ?? '&nbsp;';
                             $ret .= $this->_formatParams(
                                 $row['column'],
                                 array_merge((array)$col, ['content' => $content]),
                                 $templater,
-                                false
+                                false,
                             );
                         }
                     }
@@ -1337,10 +1310,9 @@ class LilHelper extends Helper
      * Display list
      *
      * @param mixed $data Data compliant to LilList specifications.
-     *
-     * @return void
+     * @return string
      */
-    private function _list($data)
+    private function _list(mixed $data): string
     {
         $ret = '';
         if (isset($data['pre'])) {
@@ -1397,13 +1369,17 @@ class LilHelper extends Helper
      * with data['parameters'] or data['params'] and {{attrs}} with all other attributes.
      *
      * @param string $templateName Template name.
-     * @param array $data Array with data
-     * @param object $templater Templater object.
-     *
+     * @param array<string, mixed> $data Array with data
+     * @param \Cake\View\StringTemplate $templater Templater object.
+     * @param bool $hasClassInTemplate Whether the template has class attribute.
      * @return string
      */
-    private function _formatParams($templateName, $data, $templater, $hasClassInTemplate = true)
-    {
+    private function _formatParams(
+        string $templateName,
+        array $data,
+        StringTemplate $templater,
+        bool $hasClassInTemplate = true,
+    ): string {
         $attrs = [];
 
         $parameters = [];
@@ -1414,7 +1390,6 @@ class LilHelper extends Helper
             $parameters = $data['params'];
         }
 
-        $content = null;
         if (isset($data['content'])) {
             $attrs['content'] = $data['content'];
             unset($data['content']);
@@ -1445,15 +1420,14 @@ class LilHelper extends Helper
  * Callback function from regex which removes new lines
  *
  * @param mixed $matches Regex matches
- *
  * @return string
  */
-function cleanPre($matches)
+function cleanPre(mixed $matches): string
 {
     if (is_array($matches)) {
-        $text = $matches[1] . $matches[2] . "</pre>";
+        $text = (string)$matches[1] . (string)$matches[2] . '</pre>';
     } else {
-        $text = $matches;
+        $text = (string)$matches;
     }
 
     $text = str_replace('<br />', '', $text);
